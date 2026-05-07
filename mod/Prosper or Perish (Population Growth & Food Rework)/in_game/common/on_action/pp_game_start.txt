@@ -1,16 +1,16 @@
 ﻿# Prosper or Perish - Game Start Building Setup
 # Adds cookeries to towns and cities based on population and development thresholds.
+# pp_reset_rgo_max_workers
+# pp_apply_adjacent_to_lake_modifier
 on_game_start = {
 	on_actions = {
-		# pp_reset_rgo_max_workers
-		pp_apply_location_modifiers
+		# pp_apply_location_modifiers
 		pp_mod_welcome_situation_game_start
-		pp_apply_adjacent_to_lake_modifier
 		pp_apply_rgo_static_modifiers
 		pp_reduce_specific_rgo
 		pp_precalculate_building_capacities
-		pp_remove_invalid_buildings
-		pp_game_start_effect
+		# pp_remove_invalid_buildings
+		# pp_game_start_effect
 	}
 }
 
