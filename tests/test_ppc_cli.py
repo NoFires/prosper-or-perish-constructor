@@ -403,10 +403,7 @@ def test_finalize_keeps_location_modifier_on_action_separate_and_preserves_newli
         b"pp_apply_location_modifiers = {\n\teffect = {"
     ) in apply_bytes
     assert b"pp_loc_washita_pp" in apply_bytes
-    assert game_start_bytes == original_game_start.replace(
-        "\t\tpp_apply_location_modifiers\r\n",
-        "\t\t# pp_apply_location_modifiers\r\n",
-    ).encode("utf-8")
+    assert game_start_bytes == original_game_start.encode("utf-8")
 
 
 def test_build_does_not_finalize_after_failed_orchestrator_build(

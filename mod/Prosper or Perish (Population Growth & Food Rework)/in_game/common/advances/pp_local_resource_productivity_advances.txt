@@ -15,6 +15,7 @@ REPLACE:advanced_mining = {
 	can_extract_saltpeter = yes
 	can_extract_alum = yes
 	unlock_building = alum_quarry
+	unlock_building = saltpeter_beds
 }
 
 REPLACE:efficient_mining = {

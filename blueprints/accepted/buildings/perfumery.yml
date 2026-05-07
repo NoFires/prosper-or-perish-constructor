@@ -1,0 +1,52 @@
+version: 2
+tag: perfumery
+building:
+  key: perfumery
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_perfumery_blended_incense
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    pop_type = burghers
+    max_levels = manufactory_max_level
+    category = consumer_goods_category
+    employment_size = manufactory_employment
+    town = yes
+    city = yes
+    megalopolis = yes
+
+    location_potential = {
+        NOT = { raw_material = goods:incense }
+    }
+
+    build_time = manufactory_build_time
+    unique_production_methods = {
+        pp_perfumery_blended_incense = {
+            liquor = 0.2
+            pepper = 0.25
+            produced = incense
+            output = 1
+            debug_max_profit = 0.6
+            category = guild_input
+        }
+    }
+
+    custom_tags = { midgame_manufactory }
+    construction_demand = mill_construction
+localization:
+  entries:
+    perfumery_slot_0: Blended Incense
+    pp_perfumery_blended_incense: Blended Incense
+
+evaluation:
+  building:
+    employment_size: 0.2
+  allow_rules:
+    profit_percent: Vanilla perfumery economics are preserved; this replacement only adds raw-incense anti-overlap.
+    input_throughput: Vanilla perfumery economics are preserved; this replacement only adds raw-incense anti-overlap.
+    output_throughput: Vanilla perfumery economics are preserved; this replacement only adds raw-incense anti-overlap.
+    amortization_months: Vanilla perfumery economics are preserved; this replacement only adds raw-incense anti-overlap.

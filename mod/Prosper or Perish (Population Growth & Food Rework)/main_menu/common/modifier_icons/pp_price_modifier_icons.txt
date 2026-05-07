@@ -73,6 +73,9 @@ pp_gold_diggings_price_cost_modifier = {
 pp_gold_stamp_mill_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
+pp_incense_grove_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
 pp_iron_mine_deep_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
@@ -80,6 +83,9 @@ pp_iron_mine_improved_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
 pp_iron_mine_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
+pp_ivory_hunting_camp_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
 pp_lead_mine_bole_smelting_price_cost_modifier = {
@@ -133,6 +139,9 @@ pp_quicksilver_retort_price_cost_modifier = {
 pp_saffron_croft_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
+pp_saltpeter_beds_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
 pp_sericulture_farm_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
@@ -155,5 +164,8 @@ pp_tin_streamworks_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
 pp_victualling_yard_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
+pp_vineyard_estate_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }

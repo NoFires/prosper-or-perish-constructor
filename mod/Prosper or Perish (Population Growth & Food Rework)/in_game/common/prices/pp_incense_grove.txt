@@ -1,0 +1,3 @@
+﻿# >>> eu5-building-pipeline:incense_grove:price
+pp_incense_grove_price = {gold = 50}
+# <<< eu5-building-pipeline:incense_grove:price

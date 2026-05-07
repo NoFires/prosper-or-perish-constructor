@@ -1,0 +1,53 @@
+version: 2
+tag: putrefaction_mill
+building:
+  key: putrefaction_mill
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_putrefaction_mill_demands
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    pop_type = laborers
+    max_levels = manufactory_max_level
+    category = basic_industry_category
+    employment_size = mills_employment
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = manufactory_build_time
+    obsolete = putrefaction_works
+
+    location_potential = {
+        NOT = { raw_material = goods:saltpeter }
+    }
+
+    unique_production_methods = {
+        pp_putrefaction_mill_demands = {
+            pottery = 1.1
+            livestock = 2.0
+            produced = saltpeter
+            output = 4.0
+            debug_max_profit = 1.0
+            category = mills_input
+        }
+    }
+
+    custom_tags = { lategame_manufactory }
+    construction_demand = mill_construction
+localization:
+  entries:
+    putrefaction_mill_slot_0: Putrefaction Mill Demands
+    pp_putrefaction_mill_demands: Putrefaction Mill Demands
+
+evaluation:
+  building:
+    employment_size: 0.5
+  allow_rules:
+    profit_percent: Vanilla putrefaction mill economics are preserved; this replacement only adds raw-saltpeter anti-overlap.
+    input_throughput: Vanilla putrefaction mill economics are preserved; this replacement only adds raw-saltpeter anti-overlap.
+    output_throughput: Vanilla putrefaction mill economics are preserved; this replacement only adds raw-saltpeter anti-overlap.
+    amortization_months: Vanilla putrefaction mill economics are preserved; this replacement only adds raw-saltpeter anti-overlap.

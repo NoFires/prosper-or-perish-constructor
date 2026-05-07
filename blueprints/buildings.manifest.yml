@@ -35,8 +35,10 @@ enabled:
 - buildings/grand_shipyard.yml
 - buildings/horse_breeders.yml
 - buildings/improved_charcoal_maker.yml
+- buildings/incense_grove.yml
 - buildings/incamisana.yml
 - buildings/irrigation_systems.yml
+- buildings/ivory_hunting_camp.yml
 - buildings/khmer_baray.yml
 - buildings/local_smelters.yml
 - buildings/lumber_mill.yml
@@ -70,11 +72,17 @@ enabled:
 - buildings/offshore_fishery.yml
 - buildings/pearl_fishery.yml
 - buildings/pepper_garden.yml
+- buildings/perfumery.yml
 - buildings/polders.yml
 - buildings/pound_lock_canal_infrastructure.yml
+- buildings/putrefaction_mill.yml
+- buildings/putrefaction_works.yml
 - buildings/regimental_camp.yml
 - buildings/saffron_croft.yml
 - buildings/salt_collector.yml
+- buildings/saltpeter_beds.yml
+- buildings/saltpeter_guild.yml
+- buildings/saltpeter_workshop.yml
 - buildings/sand_pit.yml
 - buildings/sawmill.yml
 - buildings/sheep_farms.yml
@@ -89,4 +97,7 @@ enabled:
 - buildings/tobacco_plantation.yml
 - buildings/training_fields.yml
 - buildings/victuals_market.yml
+- buildings/vineyard_estate.yml
 - buildings/windmill.yml
+- buildings/winery.yml
+- buildings/winery_manufactory.yml

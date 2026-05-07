@@ -429,3 +429,35 @@ pp_victualling_yard_price_cost_modifier={
 		category=country
 	}
 }
+
+pp_incense_grove_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_ivory_hunting_camp_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_saltpeter_beds_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_vineyard_estate_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}

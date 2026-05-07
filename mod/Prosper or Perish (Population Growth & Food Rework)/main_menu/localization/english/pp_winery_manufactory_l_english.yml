@@ -1,0 +1,8 @@
+﻿l_english:
+
+# >>> eu5-building-pipeline:winery_manufactory:localization
+  winery_manufactory_slot_0: "Large-Scale Fermentation"
+  pp_winery_manufactory_fruit_wine: "Fruit Wine Manufactory"
+  pp_winery_manufactory_rice_wine: "Rice Wine Manufactory"
+  pp_winery_manufactory_honey_wine: "Honey Wine Manufactory"
+# <<< eu5-building-pipeline:winery_manufactory:localization

@@ -3182,10 +3182,11 @@ pp_game_start_effect = {
 						location_rank = location_rank:town
 						population > 20
 						development > 20
-						NOT = { has_building = building_type:saltpeter_guild }
+						NOT = { has_building = building_type:saltpeter_beds }
+						can_build_building = building_type:saltpeter_beds
 					}
 					construct_building = {
-						building_type = building_type:saltpeter_guild
+						building_type = building_type:saltpeter_beds
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"
@@ -3197,10 +3198,11 @@ pp_game_start_effect = {
 						location_rank = location_rank:city
 						population > 20
 						development > 20
-						NOT = { has_building = building_type:saltpeter_guild }
+						NOT = { has_building = building_type:saltpeter_beds }
+						can_build_building = building_type:saltpeter_beds
 					}
 					construct_building = {
-						building_type = building_type:saltpeter_guild
+						building_type = building_type:saltpeter_beds
 						instant = yes
 						cost_multiplier = 0
 						cost_multiplier_reason = "game_start"

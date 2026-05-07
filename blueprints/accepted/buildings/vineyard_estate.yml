@@ -1,0 +1,92 @@
+version: 2
+tag: vineyard_estate
+building:
+  key: vineyard_estate
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_vineyard_estate_base_wine
+    - name: slot_1
+      methods:
+        - pp_vineyard_estate_press_houses
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_vineyard_estate_price
+    category = rgo_building_category
+    icon = vineyard_estate
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:wine
+        NOT = { has_building = building_type:winery }
+        NOT = { has_building = building_type:winery_manufactory }
+    }
+
+    construction_demand = farm_constructions
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_vineyard_estate_base_wine = {
+            produced = wine
+            output = 0.300
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_vineyard_estate_press_houses = {
+            fruit = 0.800 # grapes and must
+            lumber = 0.180 # presses and stakes
+            tools = 0.026 # pruning knives
+            produced = wine
+            output = 0.667
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_vineyard_estate_price
+    body: |2-
+      {gold = 50}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_vineyard_estate_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('vineyard_estate')|e].
+    MODIFIER_TYPE_NAME_pp_vineyard_estate_price_cost_modifier: Vineyard Estate Cost
+    vineyard_estate_slot_0: Vineyards
+    vineyard_estate_slot_1: Press Houses
+    vineyard_estate: Vineyard Estate
+    vineyard_estate_desc: A rural estate of grapevines, small presses, and cellar sheds where laborers harvest wine directly from suitable vineyard lands. Press houses organize stakes, pruning knives, and presses for fuller yields.
+    pp_vineyard_estate_base_wine: Vineyards
+    pp_vineyard_estate_press_houses: Press Houses
+    pp_vineyard_estate_price: Vineyard Estate Price
+icon:
+  source_png: ../assets/icons/vineyard_estate.png
+  output_dds: vineyard_estate.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a vineyard estate, transparent background. Center orderly grapevine rows on low trellises with dark grape clusters, a modest stone-and-timber estate press shed, a wooden basket of grapes, and a small wine press. Use readable painterly shapes, vine greens, purple grapes, warm stone and wood, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  allow_rules:
+    input_throughput: Raw vineyard output preserves the generated wine RGO baseline below the global laborer input target.
+    output_throughput: Raw vineyard output preserves the generated wine RGO baseline below the global laborer output target.
+  production_methods:
+    pp_vineyard_estate_base_wine:
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Raw vineyard estates repay faster than the generic amortization window at the standard small raw-site price.
+    pp_vineyard_estate_press_houses:
+      production_efficiency: 1.05

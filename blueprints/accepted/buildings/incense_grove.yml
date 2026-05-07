@@ -1,0 +1,96 @@
+version: 2
+tag: incense_grove
+building:
+  key: incense_grove
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_incense_grove_base_incense
+    - name: slot_1
+      methods:
+        - pp_incense_grove_wild_resins
+        - pp_incense_grove_tapping_camps
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_incense_grove_price
+    category = rgo_building_category
+    icon = incense_grove
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:incense
+        NOT = { has_building = building_type:perfumery }
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_incense_grove_base_incense = {
+            produced = incense
+            output = 0.300
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_incense_grove_wild_resins = {
+            category = building_maintenance
+        }
+        pp_incense_grove_tapping_camps = {
+            fiber_crops = 0.350 # collection cloth and baskets
+            lumber = 0.350 # drying racks and shelters
+            tools = 0.070 # tapping knives
+            produced = incense
+            output = 0.667
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_incense_grove_price
+    body: |2-
+      {gold = 50}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_incense_grove_price_cost_modifier: Affects the cost of building an [ShowBuildingTypeName('incense_grove')|e].
+    MODIFIER_TYPE_NAME_pp_incense_grove_price_cost_modifier: Incense Grove Cost
+    incense_grove_slot_0: Resin Trees
+    incense_grove_slot_1: Tapping Camps
+    incense_grove: Incense Grove
+    incense_grove_desc: A dry grove of frankincense and myrrh trees where laborers gather fragrant resins from cut bark. Basic crews collect wild tears, while tapping camps maintain knives, baskets, racks, and shelters for steadier resin harvests.
+    pp_incense_grove_base_incense: Resin Trees
+    pp_incense_grove_wild_resins: Wild Resin Gathering
+    pp_incense_grove_tapping_camps: Tapping Camps
+    pp_incense_grove_price: Incense Grove Price
+icon:
+  source_png: ../assets/icons/incense_grove.png
+  output_dds: incense_grove.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for an incense grove, transparent background. Center a small grove of frankincense or myrrh trees with pale resin tears on cut bark, a shallow basket of amber resin lumps, and a simple drying tray. Use readable painterly shapes, muted desert greens, warm bark browns, golden resin highlights, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  allow_rules:
+    input_throughput: Raw incense extraction preserves the generated incense RGO baseline below the global laborer input target.
+    output_throughput: Raw incense extraction preserves the generated incense RGO baseline below the global laborer output target.
+  production_methods:
+    pp_incense_grove_base_incense:
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Valuable raw incense deposits repay faster than the generic amortization window at the standard small raw-site price.
+    pp_incense_grove_tapping_camps:
+      production_efficiency: 1.05

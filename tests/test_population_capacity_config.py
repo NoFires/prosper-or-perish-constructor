@@ -221,7 +221,7 @@ def test_location_potential_help_localization_is_shared() -> None:
     assert re.search(r"^on_game_start\s*=\s*\{", apply_location_text, flags=re.MULTILINE)
     assert re.search(r"^pp_apply_location_modifiers\s*=\s*\{", apply_location_text, flags=re.MULTILINE)
     assert re.search(r"(?m)^\s*pp_apply_location_modifiers\s*$", apply_location_text)
-    assert not re.search(r"(?m)^\s*pp_apply_location_modifiers\s*$", game_start_text)
+    assert re.search(r"(?m)^\s*pp_apply_location_modifiers\s*$", game_start_text)
 
     assert re.search(r"^pp_location_potential\s*=\s*\{", concept_text, flags=re.MULTILINE)
     assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text

@@ -449,7 +449,6 @@ def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: 
 def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     mod_root = _project_mod_root(repo, project)
     _ensure_location_modifier_application_on_action(mod_root)
-    _disable_location_modifier_game_start_registration(mod_root)
     _apply_location_modifier_aliases(mod_root)
     _ensure_price_cost_modifier_assets(mod_root)
     _ensure_constructor_text_boms(mod_root)
@@ -563,20 +562,6 @@ def _ensure_location_modifier_application_on_action(mod_root: Path) -> None:
         updated = text.replace(old_header, new_header, 1)
     if updated == text:
         raise SystemExit(f"Cannot finalize generated location modifier on_action in {path}")
-    _write_text_if_changed(path, updated, encoding="utf-8-sig", newline="")
-
-
-def _disable_location_modifier_game_start_registration(mod_root: Path) -> None:
-    path = mod_root / "in_game" / "common" / "on_action" / "pp_game_start.txt"
-    if not path.is_file():
-        return
-
-    text = _read_text_preserving_newlines(path, encoding="utf-8-sig")
-    updated = re.sub(
-        r"(?m)^([ \t]*)pp_apply_location_modifiers[ \t]*(\r?)$",
-        r"\1# pp_apply_location_modifiers\2",
-        text,
-    )
     _write_text_if_changed(path, updated, encoding="utf-8-sig", newline="")
 
 

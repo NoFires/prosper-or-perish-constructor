@@ -5,6 +5,8 @@ import re
 
 import yaml
 
+from eu5gameparser.domain.eu5 import load_eu5_data
+
 
 ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted"
@@ -149,7 +151,31 @@ GAME_START_DIRECT_RGO_BUILDINGS = {
     "marble_quarry",
     "cinnabar_pit",
     "silver_mine",
+    "saltpeter_beds",
     "tin_streamworks",
+}
+RAW_MATERIAL_BASE_PRODUCERS = {
+    "horse_breeders": ("horses", "pp_horse_breeders_base_horses"),
+    "sand_pit": ("sand", "pp_sand_pit_base_sand"),
+    "stone_quarry": ("stone", "pp_stone_quarry_base_stone"),
+    "incense_grove": ("incense", "pp_incense_grove_base_incense"),
+    "fiber_crops_farm": ("fiber_crops", "pp_fiber_crops_farm_base_fiber_crops"),
+    "ivory_hunting_camp": ("ivory", "pp_ivory_hunting_camp_base_ivory"),
+    "salt_collector": ("salt", "pp_salt_collector_base_salt"),
+    "saltpeter_beds": ("saltpeter", "pp_saltpeter_beds_base_saltpeter"),
+    "vineyard_estate": ("wine", "pp_vineyard_estate_base_wine"),
+    "cotton_plantation": ("cotton", "pp_cotton_plantation_base_cotton"),
+    "sugar_plantation": ("sugar", "pp_sugar_plantation_base_sugar"),
+    "tobacco_plantation": ("tobacco", "pp_tobacco_plantation_base_tobacco"),
+}
+RAW_PROCESSOR_EXCLUSIONS = {
+    "perfumery": "incense",
+    "winery": "wine",
+    "winery_manufactory": "wine",
+    "saltpeter_guild": "saltpeter",
+    "saltpeter_workshop": "saltpeter",
+    "putrefaction_works": "saltpeter",
+    "putrefaction_mill": "saltpeter",
 }
 PM_PRECISION_RE = re.compile(
     r"^\s*(?P<key>[A-Za-z][A-Za-z0-9_]*)\s*=\s*(?P<value>-?\d+\.\d{4,})\b"
@@ -462,6 +488,45 @@ def test_base_production_methods_are_output_only() -> None:
         offenders.extend(_base_production_method_input_offenders(path))
 
     assert not offenders
+
+
+def test_target_raw_material_producers_have_no_input_base_methods() -> None:
+    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+    methods = {
+        row["name"]: row
+        for row in data.building_data.production_methods.select(
+            ["name", "building", "produced", "input_goods"]
+        ).to_dicts()
+    }
+
+    for building, (good, method) in RAW_MATERIAL_BASE_PRODUCERS.items():
+        assert method in methods
+        row = methods[method]
+        assert row["building"] == building
+        assert row["produced"] == good
+        assert row["input_goods"] == []
+
+
+def test_raw_processor_replacements_exclude_matching_raw_materials() -> None:
+    for building, good in RAW_PROCESSOR_EXCLUSIONS.items():
+        body = _load_blueprint(building)["building"]["body"]
+        assert "location_potential = {" in body
+        assert f"raw_material = goods:{good}" in body
+        assert re.search(rf"NOT\s*=\s*\{{\s*raw_material\s*=\s*goods:{good}\s*\}}", body)
+
+
+def test_game_start_routes_raw_saltpeter_to_niter_beds() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    saltpeter_windows = []
+    for match in re.finditer(r"raw_material\s*=\s*goods:saltpeter", text):
+        window = text[match.start() : match.start() + 600]
+        if "construct_building" in window:
+            saltpeter_windows.append(window)
+
+    assert saltpeter_windows
+    assert all("building_type = building_type:saltpeter_beds" in window for window in saltpeter_windows)
+    assert all("building_type = building_type:saltpeter_guild" not in window for window in saltpeter_windows)
+    assert "unlock_building = saltpeter_beds" in ADVANCES_PATH.read_text(encoding="utf-8-sig")
 
 
 def test_mining_village_chain_is_deactivated() -> None:

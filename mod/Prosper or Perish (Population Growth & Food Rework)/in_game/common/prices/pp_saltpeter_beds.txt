@@ -1,0 +1,3 @@
+﻿# >>> eu5-building-pipeline:saltpeter_beds:price
+pp_saltpeter_beds_price = {gold = 50}
+# <<< eu5-building-pipeline:saltpeter_beds:price

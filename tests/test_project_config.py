@@ -92,6 +92,9 @@ def test_replaced_buildings_do_not_reuse_vanilla_unique_method_names() -> None:
         reused = sorted(unique_methods & vanilla_methods)
         if reused:
             offenders.append(f"{blueprint.relative_to(ROOT)}: {', '.join(reused)}")
+        non_pp = sorted(method for method in unique_methods if not method.startswith("pp_"))
+        if non_pp:
+            offenders.append(f"{blueprint.relative_to(ROOT)} non-pp methods: {', '.join(non_pp)}")
 
     assert not offenders
 
@@ -304,12 +307,19 @@ def test_victuals_market_construction_and_salt_collector_debug_keys_are_localize
     assert isinstance(body, CList)
     methods = body.values("unique_production_methods")[0]
     assert isinstance(methods, CList)
-    maintenance = _entry_values(methods)["pp_salt_collector_maintenance"]
-    assert isinstance(maintenance, CList)
-    values = _entry_values(maintenance)
-    assert values["output"] == 0.3
-    assert values["clay"] == 2.0
-    assert values["debug_max_profit"] == 0.3
+    base = _entry_values(methods)["pp_salt_collector_base_salt"]
+    assert isinstance(base, CList)
+    base_values = _entry_values(base)
+    assert base_values["output"] == 0.095
+
+    worked_methods = body.values("unique_production_methods")[1]
+    assert isinstance(worked_methods, CList)
+    lined_pans = _entry_values(worked_methods)["pp_salt_collector_lined_pans"]
+    assert isinstance(lined_pans, CList)
+    values = _entry_values(lined_pans)
+    assert values["output"] == 0.21
+    assert values["clay"] == 1.2
+    assert values["pottery"] == 0.261
 
 
 def test_farming_village_uses_baseline_building_price() -> None:
