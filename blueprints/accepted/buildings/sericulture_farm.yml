@@ -39,7 +39,7 @@ building:
     unique_production_methods = {
         pp_sericulture_farm_base_silk = {
             produced = silk
-            output = 0.3
+            output = 0.120
             category = building_maintenance
         }
     }
@@ -48,10 +48,10 @@ building:
             category = building_maintenance
         }
         pp_sericulture_farm_cocoon_reeling = {
-            lumber = 0.12 # rearing trays, frames
-            tools = 0.04 # knives, reels
+            lumber = 0.358 # rearing trays, frames
+            tools = 0.119 # knives, reels
             produced = silk
-            output = 0.094
+            output = 0.266
             category = building_maintenance
         }
     }
@@ -83,12 +83,13 @@ icon:
 
 evaluation:
   allow_rules:
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_sericulture_farm_base_silk:
       production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive base output intentionally carries 30% of the full worked silk output after the high-base rebalance.
     pp_sericulture_farm_cocoon_reeling:
       production_efficiency: 1.05

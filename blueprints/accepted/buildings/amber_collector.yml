@@ -44,7 +44,7 @@ building:
     unique_production_methods = {
         pp_amber_collector_base_amber = {
             produced = amber
-            output = 0.3
+            output = 0.118
             category = building_maintenance
         }
     }
@@ -53,10 +53,10 @@ building:
             category = building_maintenance
         }
         pp_amber_collector_basket_gathering = {
-            fiber_crops = 0.08
-            tools = 0.04
+            fiber_crops = 0.252 # baskets, carrying mats
+            tools = 0.126 # sorting knives
             produced = amber
-            output = 0.088
+            output = 0.262
             category = building_maintenance
         }
     }
@@ -109,13 +109,14 @@ icon:
 
 evaluation:
   allow_rules:
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_amber_collector_base_amber:
       production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive base output intentionally carries 30% of the full worked amber output after the high-base rebalance.
     pp_amber_collector_basket_gathering:
       production_efficiency: 1.05
     pp_amber_collector_sand_horses:

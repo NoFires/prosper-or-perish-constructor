@@ -25,7 +25,7 @@ can_close = yes
 unique_production_methods = {
     pp_amber_collector_base_amber = {
         produced = amber
-        output = 0.3
+        output = 0.118
         category = building_maintenance
     }
 }
@@ -34,10 +34,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_amber_collector_basket_gathering = {
-        fiber_crops = 0.08
-        tools = 0.04
+        fiber_crops = 0.252 # baskets, carrying mats
+        tools = 0.126 # sorting knives
         produced = amber
-        output = 0.088
+        output = 0.262
         category = building_maintenance
     }
 }

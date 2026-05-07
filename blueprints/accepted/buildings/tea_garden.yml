@@ -39,7 +39,7 @@ building:
     unique_production_methods = {
         pp_tea_garden_base_tea = {
             produced = tea
-            output = 0.3
+            output = 0.123
             category = building_maintenance
         }
     }
@@ -48,10 +48,10 @@ building:
             category = building_maintenance
         }
         pp_tea_garden_bamboo_withering_trays = {
-            fiber_crops = 0.10
-            clay = 0.08
+            fiber_crops = 0.294 # bamboo trays
+            clay = 0.235 # firing hearths
             produced = tea
-            output = 0.1
+            output = 0.261
             category = building_maintenance
         }
     }
@@ -83,12 +83,12 @@ icon:
 
 evaluation:
   allow_rules:
-    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_tea_garden_base_tea:
       production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive base output intentionally carries 30% of the full worked tea output after the high-base rebalance.
     pp_tea_garden_bamboo_withering_trays:
       production_efficiency: 1.10

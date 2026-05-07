@@ -39,7 +39,7 @@ building:
     unique_production_methods = {
         pp_pepper_garden_base_pepper = {
             produced = pepper
-            output = 0.3
+            output = 0.103
             category = building_maintenance
         }
     }
@@ -48,10 +48,10 @@ building:
             category = building_maintenance
         }
         pp_pepper_garden_blanched_garbling_yards = {
-            pottery = 0.08
-            coal = 0.04
+            pottery = 0.468 # blanching pots
+            coal = 0.234 # boiling fuel
             produced = pepper
-            output = 0.04
+            output = 0.228
             category = building_maintenance
         }
     }
@@ -83,13 +83,13 @@ icon:
 
 evaluation:
   allow_rules:
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_pepper_garden_base_pepper:
       production_efficiency: 1.00
       allow_rules:
+        base_output_per_1k: Passive base output intentionally carries 30% of the full worked pepper output after the high-base rebalance.
         amortization_months: Existing accepted pepper garden payback is faster than the new amortization minimum; revisit during the pepper garden rebalance.
     pp_pepper_garden_blanched_garbling_yards:
       production_efficiency: 1.05

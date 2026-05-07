@@ -39,7 +39,7 @@ building:
     unique_production_methods = {
         pp_coffee_grove_base_coffee = {
             produced = coffee
-            output = 0.3
+            output = 0.121
             category = building_maintenance
         }
     }
@@ -48,10 +48,10 @@ building:
             category = building_maintenance
         }
         pp_coffee_grove_washing_stations = {
-            lumber = 0.12
-            pottery = 0.06
+            lumber = 0.349 # washing troughs
+            pottery = 0.174 # fermentation vats
             produced = coffee
-            output = 0.1
+            output = 0.270
             category = building_maintenance
         }
     }
@@ -83,12 +83,12 @@ icon:
 
 evaluation:
   allow_rules:
-    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_coffee_grove_base_coffee:
       production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive base output intentionally carries 30% of the full worked coffee output after the high-base rebalance.
     pp_coffee_grove_washing_stations:
       production_efficiency: 1.05

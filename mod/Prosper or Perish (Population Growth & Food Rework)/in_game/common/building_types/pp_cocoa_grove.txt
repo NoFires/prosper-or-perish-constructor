@@ -25,7 +25,7 @@ can_close = yes
 unique_production_methods = {
     pp_cocoa_grove_base_cocoa = {
         produced = cocoa
-        output = 0.3
+        output = 0.120
         category = building_maintenance
     }
 }
@@ -34,10 +34,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_cocoa_grove_fermentation_houses = {
-        lumber = 0.12
-        glass = 0.04
+        lumber = 0.358 # fermentation boxes
+        glass = 0.119 # drying covers
         produced = cocoa
-        output = 0.094
+        output = 0.266
         category = building_maintenance
     }
 }

@@ -25,7 +25,7 @@ can_close = yes
 unique_production_methods = {
     pp_coffee_grove_base_coffee = {
         produced = coffee
-        output = 0.3
+        output = 0.121
         category = building_maintenance
     }
 }
@@ -34,10 +34,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_coffee_grove_washing_stations = {
-        lumber = 0.12
-        pottery = 0.06
+        lumber = 0.349 # washing troughs
+        pottery = 0.174 # fermentation vats
         produced = coffee
-        output = 0.1
+        output = 0.270
         category = building_maintenance
     }
 }

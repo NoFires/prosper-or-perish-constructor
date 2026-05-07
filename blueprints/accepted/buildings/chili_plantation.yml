@@ -39,7 +39,7 @@ building:
     unique_production_methods = {
         pp_chili_plantation_base_chili = {
             produced = chili
-            output = 0.3
+            output = 0.112
             category = building_maintenance
         }
     }
@@ -48,10 +48,10 @@ building:
             category = building_maintenance
         }
         pp_chili_plantation_sun_drying_mats = {
-            fiber_crops = 0.08
-            tools = 0.04
+            fiber_crops = 0.292 # drying mats
+            tools = 0.146 # harvest knives
             produced = chili
-            output = 0.07
+            output = 0.249
             category = building_maintenance
         }
     }
@@ -83,12 +83,13 @@ icon:
 
 evaluation:
   allow_rules:
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_chili_plantation_base_chili:
       production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive base output intentionally carries 30% of the full worked chili output after the high-base rebalance.
     pp_chili_plantation_sun_drying_mats:
       production_efficiency: 1.05

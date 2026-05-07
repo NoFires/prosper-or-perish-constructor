@@ -39,7 +39,7 @@ building:
     unique_production_methods = {
         pp_elephant_kraal_base_elephants = {
             produced = elephants
-            output = 0.2
+            output = 0.107
             category = building_maintenance
         }
     }
@@ -48,10 +48,10 @@ building:
             category = building_maintenance
         }
         pp_elephant_kraal_kheddah_stockades = {
-            lumber = 0.18
-            fruit = 0.30
+            lumber = 0.308 # stockades, gates
+            fruit = 0.513 # fodder, bait
             produced = elephants
-            output = 0.143
+            output = 0.227
             category = building_maintenance
         }
     }
@@ -83,14 +83,13 @@ icon:
 
 evaluation:
   allow_rules:
-    base_output_per_1k: Existing accepted no-input extraction scale predates the global employment output baseline; revisit during the building-specific rebalance.
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_elephant_kraal_base_elephants:
       production_efficiency: 1.00
       allow_rules:
+        base_output_per_1k: Passive base output intentionally carries 30% of the full worked elephant output after the high-base rebalance.
         amortization_months: Existing accepted elephant kraal payback is faster than the new amortization minimum; revisit during the elephant kraal rebalance.
     pp_elephant_kraal_kheddah_stockades:
       production_efficiency: 1.10
