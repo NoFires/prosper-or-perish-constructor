@@ -213,8 +213,8 @@ def _build_parser() -> argparse.ArgumentParser:
     savegame_notebooks_build.add_argument(
         "--workers",
         type=int,
-        default=8,
-        help="Parallel save parser workers. Defaults to 8.",
+        default=4,
+        help="Parallel save parser workers. Defaults to 4.",
     )
     savegame_notebooks_build.add_argument(
         "--no-ingest",

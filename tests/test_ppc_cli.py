@@ -562,7 +562,7 @@ def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
             "--load-order",
             str(repo / "constructor.load_order.toml"),
             "--workers",
-            "8",
+            "5",
         ]
     ]
 
