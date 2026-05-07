@@ -335,6 +335,80 @@ def test_build_finalizes_location_potential_localization(
     assert europedia_localization_path.stat().st_mtime_ns == fixed_time
 
 
+def test_finalize_keeps_location_modifier_on_action_separate_and_preserves_newlines(
+    tmp_path: Path,
+) -> None:
+    repo = _repo(tmp_path)
+    repo.joinpath("constructor.toml").write_text(
+        '[project]\nmod_root = "mod/test-mod"\n',
+        encoding="utf-8",
+    )
+    mod_root = repo / "mod" / "test-mod"
+    static_modifiers = mod_root / "main_menu" / "common" / "static_modifiers"
+    on_action = mod_root / "in_game" / "common" / "on_action"
+    localization = mod_root / "main_menu" / "localization" / "english"
+    static_modifiers.mkdir(parents=True)
+    on_action.mkdir(parents=True)
+    localization.mkdir(parents=True)
+
+    location_modifiers = static_modifiers / "pp_location_modifiers.txt"
+    location_modifiers.write_text(
+        "pp_loc_washita = {\r\n"
+        "\tgame_data = { category = location }\r\n"
+        "\tlocal_grain_output_modifier = 0.15\r\n"
+        "}\r\n",
+        encoding="utf-8",
+        newline="",
+    )
+    apply_location_modifiers = on_action / "pp_apply_location_modifiers.txt"
+    apply_location_modifiers.write_text(
+        "# generated\n\n"
+        "on_game_start = {\n"
+        "\teffect = {\n"
+        "\t\tlocation:washita = {\n"
+        "\t\t\tadd_location_modifier = { modifier = pp_loc_washita months = -1 mode = replace }\n"
+        "\t\t}\n"
+        "\t}\n"
+        "}\n",
+        encoding="utf-8",
+        newline="",
+    )
+    game_start = on_action / "pp_game_start.txt"
+    original_game_start = (
+        "\ufeffon_game_start = {\r\n"
+        "\ton_actions = {\r\n"
+        "\t\t# pp_reset_rgo_max_workers\r\n"
+        "\t\tpp_apply_location_modifiers\r\n"
+        "\t\tpp_mod_welcome_situation_game_start\r\n"
+        "\t}\r\n"
+        "}\r\n"
+    )
+    game_start.write_text(original_game_start, encoding="utf-8", newline="")
+    (localization / "pp_location_modifiers_l_english.yml").write_text("l_english:\n", encoding="utf-8")
+    (localization / "pp_europedia_l_english.yml").write_text("l_english:\n", encoding="utf-8")
+
+    cli._finalize_constructor_mod(repo, repo / "constructor.toml")
+
+    location_bytes = location_modifiers.read_bytes()
+    apply_bytes = apply_location_modifiers.read_bytes()
+    game_start_bytes = game_start.read_bytes()
+
+    assert location_bytes.startswith(b"\xef\xbb\xbf")
+    assert b"\r\n" in location_bytes
+    assert location_bytes.count(b"\n") == location_bytes.count(b"\r\n")
+    assert apply_bytes.startswith(b"\xef\xbb\xbf")
+    assert b"\r\n" not in apply_bytes
+    assert (
+        b"on_game_start = {\n\ton_actions = {\n\t\tpp_apply_location_modifiers\n\t}\n}\n\n"
+        b"pp_apply_location_modifiers = {\n\teffect = {"
+    ) in apply_bytes
+    assert b"pp_loc_washita_pp" in apply_bytes
+    assert game_start_bytes == original_game_start.replace(
+        "\t\tpp_apply_location_modifiers\r\n",
+        "\t\t# pp_apply_location_modifiers\r\n",
+    ).encode("utf-8")
+
+
 def test_build_does_not_finalize_after_failed_orchestrator_build(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

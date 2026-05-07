@@ -27,6 +27,7 @@ LABELING_ROOT = ROOT.parent / "ProsperOrPerishLabelingPipeline"
 LABELING_BASELINE = LABELING_ROOT / "base_data" / "locations_with_raw_material.parquet"
 LOCATION_MODIFIERS = MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifiers.txt"
 APPLY_LOCATION_MODIFIERS = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_apply_location_modifiers.txt"
+GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
 CAPACITY_PRESSURE_EFFECTS = (
     MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_capacity_pressure_effects.txt"
 )
@@ -215,9 +216,12 @@ def test_location_potential_help_localization_is_shared() -> None:
     assert 'STATIC_MODIFIER_DESC_pp_loc_washita: "$pp_location_potential_modifier_desc$"' not in modifier_text
     assert 'STATIC_MODIFIER_DESC_pp_loc_washita_pp: "$pp_location_potential_modifier_desc$"' in modifier_text
     apply_location_text = APPLY_LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")
+    game_start_text = GAME_START.read_text(encoding="utf-8-sig")
     assert "modifier = pp_loc_washita_pp" in apply_location_text
+    assert re.search(r"^on_game_start\s*=\s*\{", apply_location_text, flags=re.MULTILINE)
     assert re.search(r"^pp_apply_location_modifiers\s*=\s*\{", apply_location_text, flags=re.MULTILINE)
-    assert not re.search(r"^on_game_start\s*=\s*\{", apply_location_text, flags=re.MULTILINE)
+    assert re.search(r"(?m)^\s*pp_apply_location_modifiers\s*$", apply_location_text)
+    assert not re.search(r"(?m)^\s*pp_apply_location_modifiers\s*$", game_start_text)
 
     assert re.search(r"^pp_location_potential\s*=\s*\{", concept_text, flags=re.MULTILINE)
     assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text

@@ -448,8 +448,8 @@ def _build(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: 
 
 def _finalize_constructor_mod(repo: Path, project: Path) -> None:
     mod_root = _project_mod_root(repo, project)
-    _wrap_location_modifier_application(mod_root)
-    _register_location_modifier_application(mod_root)
+    _ensure_location_modifier_application_on_action(mod_root)
+    _disable_location_modifier_game_start_registration(mod_root)
     _apply_location_modifier_aliases(mod_root)
     _ensure_price_cost_modifier_assets(mod_root)
     _ensure_constructor_text_boms(mod_root)
@@ -520,7 +520,7 @@ def _apply_location_modifier_aliases(mod_root: Path) -> None:
     for path in targets:
         if not path.is_file():
             continue
-        text = path.read_text(encoding="utf-8-sig")
+        text = _read_text_preserving_newlines(path, encoding="utf-8-sig")
         updated = text
         for source, alias in LOCATION_MODIFIER_ALIASES.items():
             updated = re.sub(
@@ -528,42 +528,56 @@ def _apply_location_modifier_aliases(mod_root: Path) -> None:
                 alias,
                 updated,
             )
-        _write_text_if_changed(path, updated, encoding="utf-8-sig")
+        _write_text_if_changed(path, updated, encoding="utf-8-sig", newline="")
 
 
-def _wrap_location_modifier_application(mod_root: Path) -> None:
+def _ensure_location_modifier_application_on_action(mod_root: Path) -> None:
     path = mod_root / "in_game" / "common" / "on_action" / "pp_apply_location_modifiers.txt"
     if not path.is_file():
         return
 
-    text = path.read_text(encoding="utf-8-sig")
-    if re.search(r"(?m)^pp_apply_location_modifiers\s*=\s*\{", text):
-        return
-    updated = text.replace(
-        "\non_game_start = {\n\teffect = {",
-        "\npp_apply_location_modifiers = {\n\teffect = {",
-        1,
+    text = _read_text_preserving_newlines(path, encoding="utf-8-sig")
+    newline = "\r\n" if "\r\n" in text else "\n"
+    registration_block = (
+        f"on_game_start = {{{newline}"
+        f"\ton_actions = {{{newline}"
+        f"\t\tpp_apply_location_modifiers{newline}"
+        f"\t}}{newline}"
+        f"}}{newline}"
+        f"{newline}"
     )
+    has_named_action = re.search(r"(?m)^pp_apply_location_modifiers\s*=\s*\{", text)
+    has_self_registration = re.search(r"(?m)^\s*pp_apply_location_modifiers\s*$", text)
+    if has_named_action and has_self_registration:
+        return
+
+    if has_named_action:
+        updated = text.replace(
+            "pp_apply_location_modifiers = {",
+            registration_block + "pp_apply_location_modifiers = {",
+            1,
+        )
+    else:
+        old_header = f"on_game_start = {{{newline}\teffect = {{"
+        new_header = registration_block + f"pp_apply_location_modifiers = {{{newline}\teffect = {{"
+        updated = text.replace(old_header, new_header, 1)
     if updated == text:
-        raise SystemExit(f"Cannot wrap generated location modifier on_action in {path}")
-    _write_text_if_changed(path, updated, encoding="utf-8-sig")
+        raise SystemExit(f"Cannot finalize generated location modifier on_action in {path}")
+    _write_text_if_changed(path, updated, encoding="utf-8-sig", newline="")
 
 
-def _register_location_modifier_application(mod_root: Path) -> None:
+def _disable_location_modifier_game_start_registration(mod_root: Path) -> None:
     path = mod_root / "in_game" / "common" / "on_action" / "pp_game_start.txt"
     if not path.is_file():
         return
 
-    text = path.read_text(encoding="utf-8-sig")
-    registration = "\t\tpp_apply_location_modifiers\n"
-    if registration in text:
-        return
-
-    marker = "\t\t# pp_reset_rgo_max_workers\n"
-    if marker not in text:
-        raise SystemExit(f"Cannot register pp_apply_location_modifiers; missing marker in {path}")
-    updated = text.replace(marker, marker + registration, 1)
-    _write_text_if_changed(path, updated, encoding="utf-8-sig")
+    text = _read_text_preserving_newlines(path, encoding="utf-8-sig")
+    updated = re.sub(
+        r"(?m)^([ \t]*)pp_apply_location_modifiers[ \t]*(\r?)$",
+        r"\1# pp_apply_location_modifiers\2",
+        text,
+    )
+    _write_text_if_changed(path, updated, encoding="utf-8-sig", newline="")
 
 
 def _ensure_price_cost_modifier_assets(mod_root: Path) -> None:
@@ -707,7 +721,12 @@ def _ensure_constructor_text_boms(mod_root: Path) -> None:
         path = mod_root / relative_path
         if not path.is_file():
             continue
-        _write_text_if_changed(path, path.read_text(encoding="utf-8-sig"), encoding="utf-8-sig")
+        _write_text_if_changed(
+            path,
+            _read_text_preserving_newlines(path, encoding="utf-8-sig"),
+            encoding="utf-8-sig",
+            newline="",
+        )
 
 
 def _location_modifier_keys(modifiers_path: Path) -> list[str]:
@@ -757,6 +776,11 @@ def _upsert_generated_localization_block(
         content = re.sub(header_pattern, lambda match: match.group(0) + block, content, count=1)
 
     _write_text_if_changed(path, content, encoding="utf-8-sig", newline="")
+
+
+def _read_text_preserving_newlines(path: Path, *, encoding: str = "utf-8") -> str:
+    with path.open("r", encoding=encoding, newline="") as handle:
+        return handle.read()
 
 
 def _write_text_if_changed(
