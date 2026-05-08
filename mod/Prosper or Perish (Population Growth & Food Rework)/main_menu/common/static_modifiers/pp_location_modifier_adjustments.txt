@@ -26,12 +26,12 @@ TRY_REPLACE:cheap_food_in_location = {
 	game_data = {
 		category = location
 	}
-	local_nobles_food_consumption = 0.30
-	local_clergy_food_consumption = 0.30
-	local_burghers_food_consumption = 0.30
-	local_laborers_food_consumption = 0.30
-	local_soldiers_food_consumption = 0.30
-	local_peasants_food_consumption = 0.20
+	local_nobles_food_consumption = 0.40
+	local_clergy_food_consumption = 0.40
+	local_burghers_food_consumption = 0.35
+	local_laborers_food_consumption = 0.35
+	local_soldiers_food_consumption = 0.35
+	local_peasants_food_consumption = 0.25
 	local_population_growth = 0.0080
 	local_monthly_prosperity = 0.0040
 	local_devastation_recovery = 0.0025
@@ -103,14 +103,14 @@ TRY_REPLACE:building_levels = {
 	}
 	local_trade_center_power = 0.0004
 	local_road_building_time = 0.01
-	local_build_new_buildings_cost = 0.05
-	local_population_capacity = 0.1
+	local_build_new_buildings_cost = 0.07
+	# local_population_capacity = 0.1
 }
 TRY_REPLACE:unsupported_building_levels = {
 	game_data = {
 		category = location 
 	}
-	local_build_new_buildings_cost = 0.02
+	local_build_new_buildings_cost = 0.05
 }
 TRY_REPLACE:total_population = {
 	game_data = {
@@ -132,7 +132,7 @@ TRY_REPLACE:location_exports = {
 	}
 	blockade_force_required = 0.01
 	local_monthly_development_modifier = 0.003
-	local_institution_growth_modifier = 0.040
+	local_institution_growth_modifier = 0.030
 }
 TRY_REPLACE:location_imports = {
 	game_data = {
@@ -140,7 +140,7 @@ TRY_REPLACE:location_imports = {
 	}
 	blockade_force_required = 0.01
 	local_monthly_development_modifier = 0.003
-	local_institution_growth_modifier = 0.040
+	local_institution_growth_modifier = 0.030
 }
 # Scales depending on how much over capacity
 TRY_REPLACE:rgo_level = {
@@ -227,7 +227,7 @@ TRY_REPLACE:development = {
 	
 	free_building_levels = 2
 	
-	local_max_rgo_size = 0.22
+	local_max_rgo_size = 0.15
 	
 	local_life_expectancy = 0.1
 	
@@ -265,7 +265,7 @@ TRY_REPLACE:development = {
 	local_fish_output_modifier = 0.0025
 	local_wild_game_output_modifier = 0.0025
 	local_fur_output_modifier = 0.0025
-	local_population_capacity = 0.25
+	local_population_capacity = 0.20
 	local_population_capacity_modifier = 0.02
 }
 TRY_REPLACE:minor_rebel_uprising = {

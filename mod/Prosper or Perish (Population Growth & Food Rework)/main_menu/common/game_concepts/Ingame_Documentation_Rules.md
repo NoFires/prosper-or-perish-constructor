@@ -9,18 +9,19 @@ When editing the Europedia GUI or concept definitions, preserve this order:
 
 1. All (done)
 2. F.A.Q.
-3. Overview (done)
-4. Urbanisation (done)
-5. Food Production (done)
-6. Food Consumption
-7. New Buildings (done)
-8. New Trade Goods (done)
-9. Farm Capacity (done)
-10. Farm Output (done)
-11. Variable Harvests (done)
-12. Population Growth
-13. Population Distribution
-14. Other Changes
+3. Update 0.8: Foundations
+4. Overview (done)
+5. Urbanisation (done)
+6. Food Production (done)
+7. Food Consumption
+8. New Buildings (done)
+9. New Trade Goods (done)
+10. Farm Capacity (done)
+11. Farm Output (done)
+12. Variable Harvests (done)
+13. Population Growth
+14. Population Distribution
+15. Other Changes
 
 More concepts may be added later.
 
@@ -32,17 +33,18 @@ Each Europedia card has exactly one game concept file. Filename = card name (sna
 |---|------|------|
 | 1 | All | (filter only) |
 | 2 | F.A.Q. | pp_faq.txt |
-| 3 | Overview | pp_overview.txt |
-| 4 | Urbanisation | pp_urbanisation.txt |
-| 5 | Food Production | pp_food_production.txt |
-| 6 | Food Consumption | pp_food_consumption.txt |
-| 7 | New Buildings | pp_new_buildings.txt |
-| 8 | New Trade Goods | pp_new_trade_goods.txt |
-| 9 | Farm Capacity | pp_farm_capacity.txt |
-| 10 | Farm Output | pp_farm_output.txt |
-| 11 | Variable Harvests | pp_variable_harvests.txt |
-| 12 | Population Growth | pp_population_growth.txt |
-| 13 | Population Distribution | pp_population_distribution.txt |
-| 14 | Other Changes | other_changes_pp_buildings_in_location.txt, other_changes_pp_prosperity.txt, other_changes_pp_devastation.txt, other_changes_pp_cheap_food.txt, other_changes_pp_expensive_food.txt, other_changes_pp_province_current_food_storage.txt, other_changes_pp_starvation.txt |
+| 3 | Update 0.8: Foundations | pp_update_0_8_foundations.txt |
+| 4 | Overview | pp_overview.txt |
+| 5 | Urbanisation | pp_urbanisation.txt |
+| 6 | Food Production | pp_food_production.txt |
+| 7 | Food Consumption | pp_food_consumption.txt |
+| 8 | New Buildings | pp_new_buildings.txt |
+| 9 | New Trade Goods | pp_new_trade_goods.txt |
+| 10 | Farm Capacity | pp_farm_capacity.txt |
+| 11 | Farm Output | pp_farm_output.txt |
+| 12 | Variable Harvests | pp_variable_harvests.txt |
+| 13 | Population Growth | pp_population_growth.txt |
+| 14 | Population Distribution | pp_population_distribution.txt |
+| 15 | Other Changes | other_changes_pp_buildings_in_location.txt, other_changes_pp_prosperity.txt, other_changes_pp_devastation.txt, other_changes_pp_cheap_food.txt, other_changes_pp_expensive_food.txt, other_changes_pp_province_current_food_storage.txt, other_changes_pp_starvation.txt |
 
 Other Changes sub-cards use the `other_changes_` prefix so they group together when browsing the folder.
