@@ -25,7 +25,12 @@ building:
     megalopolis = yes
 
     location_potential = {
-        raw_material = goods:horses
+        OR = {
+            raw_material = goods:horses
+            market = {
+                is_produced_in_market = goods:horses
+            }
+        }
     }
 
     allow = {

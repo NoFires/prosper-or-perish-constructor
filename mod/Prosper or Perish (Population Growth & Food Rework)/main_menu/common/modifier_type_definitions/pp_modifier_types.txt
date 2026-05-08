@@ -461,3 +461,19 @@ pp_vineyard_estate_price_cost_modifier={
 		category=country
 	}
 }
+
+pp_clay_washmill_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_sand_washery_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}

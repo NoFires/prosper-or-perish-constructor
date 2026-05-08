@@ -61,7 +61,7 @@ def test_constructor_config_loads() -> None:
     assert config.blueprint_evaluation.base_output_per_1k_min == 0.07
     assert config.blueprint_evaluation.base_output_per_1k_max == 0.15
     assert config.blueprint_evaluation.throughput_gold_per_1k["laborers"] == 1.5
-    assert config.blueprint_evaluation.age_throughput_growth == 0.15
+    assert config.blueprint_evaluation.age_throughput_growth == 0.10
     assert config.blueprint_evaluation.throughput_tolerance == 0.30
     assert config.blueprint_evaluation.amortization_months_min == 120.0
     assert config.blueprint_evaluation.amortization_months_max == 360.0

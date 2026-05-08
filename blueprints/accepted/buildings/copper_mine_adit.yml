@@ -64,7 +64,7 @@ building:
             tools = 1.75
             beeswax = 0.35
             produced = copper
-            output = 3.13
+            output = 3.11
             category = building_maintenance
         }
     }

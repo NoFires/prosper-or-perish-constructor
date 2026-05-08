@@ -74,7 +74,7 @@ building:
             beeswax = 0.45 # candles, pump seals
             coal = 0.30 # ore roasting fuel
             produced = iron
-            output = 4.26
+            output = 4.22
             category = building_maintenance
         }
         pp_iron_mine_deep_horse_whim_haulage = {

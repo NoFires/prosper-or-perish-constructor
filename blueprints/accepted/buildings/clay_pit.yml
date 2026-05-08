@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: clay_pit
+upgrade_chain:
+  family: clay_pit
+  tier: 0
+  previous: null
+  next: clay_washmill
+  unlock_advance: null
 building:
   key: clay_pit
   mode: REPLACE

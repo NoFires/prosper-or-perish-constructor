@@ -46,9 +46,9 @@ building:
     }
     unique_production_methods = {
         pp_vineyard_estate_press_houses = {
-            fruit = 0.800 # grapes and must
-            lumber = 0.180 # presses and stakes
-            tools = 0.026 # pruning knives
+            lumber = 0.500 # presses, stakes, and cask staves
+            pottery = 0.250 # fermentation jars and storage vessels
+            tools = 0.050 # pruning knives and press hardware
             produced = wine
             output = 0.667
             category = building_maintenance
@@ -69,7 +69,7 @@ localization:
     vineyard_estate_slot_0: Vineyards
     vineyard_estate_slot_1: Press Houses
     vineyard_estate: Vineyard Estate
-    vineyard_estate_desc: A rural estate of grapevines, small presses, and cellar sheds where laborers harvest wine directly from suitable vineyard lands. Press houses organize stakes, pruning knives, and presses for fuller yields.
+    vineyard_estate_desc: A rural estate of grapevines, small presses, and cellar sheds where laborers draw wine directly from suitable vineyard lands. Press houses organize stakes, pruning knives, vessels, and presses for fuller yields.
     pp_vineyard_estate_base_wine: Vineyards
     pp_vineyard_estate_press_houses: Press Houses
     pp_vineyard_estate_price: Vineyard Estate Price

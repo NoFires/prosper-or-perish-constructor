@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
@@ -138,6 +139,50 @@ def _build_parser() -> argparse.ArgumentParser:
         "analyze",
         "Export static parser tables and refresh the goods-flow docs example.",
         _analyze,
+    )
+    output_modifiers = _add_command(
+        subcommands,
+        "output-modifiers",
+        "Print cumulative global output modifiers by good and age.",
+        _output_modifiers,
+    )
+    output_modifiers.add_argument(
+        "--include-specific",
+        action="store_true",
+        help="Include output modifiers from advancements with potential-specific gates.",
+    )
+    output_modifiers.add_argument(
+        "--load-order",
+        type=Path,
+        default=CONSTRUCTOR_LOAD_ORDER,
+        help="Load-order TOML path relative to --repo. Defaults to constructor.load_order.toml.",
+    )
+    output_modifiers.add_argument(
+        "--profile",
+        default=CONSTRUCTOR_PROFILE,
+        help="Parser profile from the load-order TOML. Defaults to constructor.",
+    )
+    production_throughput = _add_command(
+        subcommands,
+        "production-throughput",
+        "Print best building production throughput by good and age.",
+        _production_throughput,
+    )
+    production_throughput.add_argument(
+        "--include-specific",
+        action="store_true",
+        help="Include production methods with potential-specific gates.",
+    )
+    production_throughput.add_argument(
+        "--load-order",
+        type=Path,
+        default=CONSTRUCTOR_LOAD_ORDER,
+        help="Load-order TOML path relative to --repo. Defaults to constructor.load_order.toml.",
+    )
+    production_throughput.add_argument(
+        "--profile",
+        default=CONSTRUCTOR_PROFILE,
+        help="Parser profile from the load-order TOML. Defaults to constructor.",
     )
     _add_command(
         subcommands,
@@ -792,6 +837,296 @@ def _analyze(args: argparse.Namespace, extra: Sequence[str], repo: Path, project
     if result != 0:
         return result
     return _publish_graph_examples(repo, [GOODS_FLOW_EXPLORER.name])
+
+
+def _output_modifiers(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("output-modifiers does not accept extra arguments.")
+
+    goods, modifiers, ages = _load_output_modifier_inputs(
+        profile=args.profile,
+        load_order_path=_repo_path(repo, args.load_order),
+    )
+    rows = _cumulative_output_modifier_rows(
+        goods,
+        modifiers,
+        ages,
+        include_specific=args.include_specific,
+    )
+    print(_format_output_modifier_table(rows, ages), flush=True)
+    return 0
+
+
+def _load_output_modifier_inputs(
+    *,
+    profile: str,
+    load_order_path: Path,
+) -> tuple[list[str], list[dict[str, Any]], list[str]]:
+    from eu5gameparser.domain.advancements import load_advancement_data
+    from eu5gameparser.domain.availability import AGE_ORDER
+    from eu5gameparser.domain.goods import load_goods_data
+
+    goods_data = load_goods_data(profile=profile, load_order_path=load_order_path)
+    advancement_data = load_advancement_data(profile=profile, load_order_path=load_order_path)
+    goods = sorted(str(row["name"]) for row in goods_data.goods.to_dicts())
+    modifiers = _output_modifier_entries(advancement_data.advancements.to_dicts(), list(AGE_ORDER))
+    return goods, modifiers, list(AGE_ORDER)
+
+
+def _output_modifier_entries(
+    advancement_rows: Sequence[dict[str, Any]],
+    ages: Sequence[str],
+) -> list[dict[str, Any]]:
+    age_set = set(ages)
+    entries: list[dict[str, Any]] = []
+    for row in advancement_rows:
+        age = row.get("age")
+        if age not in age_set:
+            continue
+        try:
+            modifiers = json.loads(row.get("modifiers") or "{}")
+        except json.JSONDecodeError:
+            continue
+        for key, value in modifiers.items():
+            if not key.startswith("global_") or not key.endswith("_output_modifier"):
+                continue
+            if not isinstance(value, int | float) or isinstance(value, bool):
+                continue
+            entries.append(
+                {
+                    "good": key.removeprefix("global_").removesuffix("_output_modifier"),
+                    "age": age,
+                    "value": float(value),
+                    "has_potential": bool(row.get("has_potential")),
+                }
+            )
+    return entries
+
+
+def _cumulative_output_modifier_rows(
+    goods: Sequence[str],
+    modifiers: Sequence[dict[str, Any]],
+    ages: Sequence[str],
+    *,
+    include_specific: bool,
+) -> list[dict[str, Any]]:
+    totals = {good: {age: 0.0 for age in ages} for good in goods}
+    known_goods = set(goods)
+    age_set = set(ages)
+    for modifier in modifiers:
+        good = str(modifier.get("good") or "")
+        age = str(modifier.get("age") or "")
+        if not good or age not in age_set:
+            continue
+        if modifier.get("has_potential") and not include_specific:
+            continue
+        if good not in totals:
+            totals[good] = {known_age: 0.0 for known_age in ages}
+            known_goods.add(good)
+        totals[good][age] += float(modifier.get("value") or 0.0)
+
+    rows: list[dict[str, Any]] = []
+    for good in sorted(known_goods):
+        cumulative = 0.0
+        row_values: dict[str, float] = {}
+        for age in ages:
+            cumulative += totals[good][age]
+            row_values[age] = cumulative
+        rows.append({"good": good, "values": row_values})
+
+    last_age = ages[-1]
+    return sorted(rows, key=lambda row: (-row["values"][last_age], row["good"]))
+
+
+def _format_output_modifier_table(rows: Sequence[dict[str, Any]], ages: Sequence[str]) -> str:
+    headers = ["good", *ages]
+    formatted_rows = [
+        [str(row["good"]), *[_format_modifier_total(row["values"][age]) for age in ages]]
+        for row in rows
+    ]
+    widths = [
+        max(len(header), *(len(row[index]) for row in formatted_rows))
+        for index, header in enumerate(headers)
+    ]
+    lines = [
+        "  ".join(header.ljust(widths[index]) for index, header in enumerate(headers)),
+        "  ".join("-" * width for width in widths),
+    ]
+    lines.extend(
+        "  ".join(value.ljust(widths[index]) for index, value in enumerate(row))
+        for row in formatted_rows
+    )
+    return "\n".join(lines)
+
+
+def _format_modifier_total(value: float) -> str:
+    if abs(value) < 0.0000000001:
+        value = 0.0
+    return f"{value:.2f}"
+
+
+def _production_throughput(
+    args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path
+) -> int:
+    if extra:
+        raise SystemExit("production-throughput does not accept extra arguments.")
+
+    goods, methods, ages = _load_production_throughput_inputs(
+        profile=args.profile,
+        load_order_path=_repo_path(repo, args.load_order),
+        include_specific=args.include_specific,
+    )
+    rows = _production_throughput_rows(
+        goods,
+        methods,
+        ages,
+        include_specific=args.include_specific,
+    )
+    print(_format_production_throughput_table(rows, ages), flush=True)
+    return 0
+
+
+def _load_production_throughput_inputs(
+    *,
+    profile: str,
+    load_order_path: Path,
+    include_specific: bool,
+) -> tuple[list[str], list[dict[str, Any]], list[str]]:
+    from eu5gameparser.domain.availability import AGE_ORDER, annotate_building_data_availability
+    from eu5gameparser.domain.eu5 import load_eu5_data
+
+    data = load_eu5_data(profile=profile, load_order_path=load_order_path)
+    annotated = annotate_building_data_availability(
+        data.building_data,
+        data.advancements,
+        include_specific_unlocks=include_specific,
+    )
+    goods = sorted(str(row["name"]) for row in data.goods.to_dicts())
+    return goods, annotated.production_methods.to_dicts(), list(AGE_ORDER)
+
+
+def _production_throughput_rows(
+    goods: Sequence[str],
+    methods: Sequence[dict[str, Any]],
+    ages: Sequence[str],
+    *,
+    include_specific: bool,
+) -> list[dict[str, Any]]:
+    age_index = {age: index for index, age in enumerate(ages)}
+    known_goods = {str(good) for good in goods if str(good)}
+    values = {good: {age: 0.0 for age in ages} for good in known_goods}
+
+    for age in ages:
+        building_slots: dict[tuple[str, str], dict[object, tuple[float, str]]] = {}
+        for method in methods:
+            good = str(method.get("produced") or "")
+            building = str(method.get("building") or "")
+            if not good or not building:
+                continue
+            if not _production_method_available_by_age(
+                method,
+                age,
+                age_index,
+                include_specific=include_specific,
+            ):
+                continue
+            throughput = _production_method_throughput(method)
+            if throughput is None:
+                continue
+
+            known_goods.add(good)
+            values.setdefault(good, {known_age: 0.0 for known_age in ages})
+            slot = _production_method_slot(method)
+            method_name = str(method.get("name") or "")
+            slots = building_slots.setdefault((good, building), {})
+            existing = slots.get(slot)
+            if (
+                existing is None
+                or throughput > existing[0]
+                or (throughput == existing[0] and method_name < existing[1])
+            ):
+                slots[slot] = (throughput, method_name)
+
+        best_by_good: dict[str, tuple[float, str]] = {}
+        for (good, building), slots in building_slots.items():
+            total = sum(throughput for throughput, _name in slots.values())
+            existing = best_by_good.get(good)
+            if (
+                existing is None
+                or total > existing[0]
+                or (total == existing[0] and building < existing[1])
+            ):
+                best_by_good[good] = (total, building)
+
+        for good, (total, _building) in best_by_good.items():
+            values[good][age] = total
+
+    rows = [{"good": good, "values": values[good]} for good in sorted(known_goods)]
+    last_age = ages[-1]
+    return sorted(rows, key=lambda row: (-row["values"][last_age], row["good"]))
+
+
+def _production_method_available_by_age(
+    method: dict[str, Any],
+    age: str,
+    age_index: dict[str, int],
+    *,
+    include_specific: bool,
+) -> bool:
+    kind = str(
+        method.get("effective_availability_kind")
+        or method.get("availability_kind")
+        or ""
+    )
+    if kind == "available_by_default":
+        return True
+    if kind == "specific_only" and not include_specific:
+        return False
+
+    unlock_age = method.get("effective_unlock_age")
+    if unlock_age is None:
+        unlock_age = method.get("unlock_age")
+    unlock_index = age_index.get(str(unlock_age))
+    current_index = age_index.get(age)
+    return unlock_index is not None and current_index is not None and unlock_index <= current_index
+
+
+def _production_method_throughput(method: dict[str, Any]) -> float | None:
+    if not method.get("input_goods") or not method.get("input_amounts"):
+        return None
+
+    input_cost = _positive_float(method.get("input_cost"))
+    output_value = _positive_float(method.get("output_value"))
+    if input_cost is None or output_value is None:
+        return None
+    return input_cost + output_value
+
+
+def _positive_float(value: object) -> float | None:
+    if isinstance(value, bool) or value is None:
+        return None
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(number) or number <= 0.0:
+        return None
+    return number
+
+
+def _production_method_slot(method: dict[str, Any]) -> object:
+    slot = method.get("production_method_group_index")
+    if slot is not None:
+        return slot
+    return method.get("production_method_group") or "__slotless__"
+
+
+def _format_production_throughput_table(
+    rows: Sequence[dict[str, Any]], ages: Sequence[str]
+) -> str:
+    return _format_output_modifier_table(rows, ages)
 
 
 def _savegame(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:

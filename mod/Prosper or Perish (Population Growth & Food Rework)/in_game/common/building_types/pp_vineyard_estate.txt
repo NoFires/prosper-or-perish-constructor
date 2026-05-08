@@ -33,9 +33,9 @@ unique_production_methods = {
 }
 unique_production_methods = {
     pp_vineyard_estate_press_houses = {
-        fruit = 0.800 # grapes and must
-        lumber = 0.180 # presses and stakes
-        tools = 0.026 # pruning knives
+        lumber = 0.500 # presses, stakes, and cask staves
+        pottery = 0.250 # fermentation jars and storage vessels
+        tools = 0.050 # pruning knives and press hardware
         produced = wine
         output = 0.667
         category = building_maintenance

@@ -10,7 +10,12 @@ city = yes
 megalopolis = yes
 
 location_potential = {
-    raw_material = goods:sand
+    OR = {
+        raw_material = goods:sand
+        NOT = {
+            raw_material = goods:sand
+        }
+    }
 }
 
 category = rgo_building_category

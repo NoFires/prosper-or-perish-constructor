@@ -42,6 +42,8 @@ uv run ppc setup
 uv run ppc inspect
 uv run ppc test
 uv run ppc analyze
+uv run ppc output-modifiers
+uv run ppc production-throughput
 uv run ppc savegame
 uv run ppc savegame-notebooks build
 uv run ppc savegame-purge
@@ -157,6 +159,30 @@ and writes the goods-flow graph to:
 ```text
 graphs/goods_flow_explorer.html
 ```
+
+Print the goods-flow explorer's output-modifier timeline as a terminal table:
+
+```bash
+uv run ppc output-modifiers
+```
+
+Each row is a good, each age column is the cumulative sum of
+`global_<good>_output_modifier` values up to that age, and rows are sorted by the final-age
+cumulative total from highest to lowest. Pass `--include-specific` to include advancement
+modifiers with potential-specific gates.
+
+Print each good's best available building throughput by age:
+
+```bash
+uv run ppc production-throughput
+```
+
+Each row is a good, each age column is the highest building-level sum of
+`input_cost + output_value` available by that age, using parser default market prices. For
+buildings with multiple production-method slots, the command first selects the highest-throughput
+method in each slot, then sums those slot winners for the building. Rows are sorted by final-age
+throughput from highest to lowest. Pass `--include-specific` to include production methods with
+potential-specific gates.
 
 ## Savegame Analysis
 

@@ -1,5 +1,11 @@
 version: 2
 tag: sand_pit
+upgrade_chain:
+  family: sand_pit
+  tier: 0
+  previous: null
+  next: sand_washery
+  unlock_advance: null
 building:
   key: sand_pit
   mode: REPLACE
@@ -24,7 +30,12 @@ building:
     megalopolis = yes
 
     location_potential = {
-        raw_material = goods:sand
+        OR = {
+            raw_material = goods:sand
+            NOT = {
+                raw_material = goods:sand
+            }
+        }
     }
 
     category = rgo_building_category

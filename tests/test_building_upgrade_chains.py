@@ -361,6 +361,48 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
     assert "potential =" not in steam_block
 
 
+def test_clay_and_sand_pit_upgrade_chains_are_explicit_and_unlockable() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+    expected_chains = {
+        "clay_pit": [
+            ("clay_pit", None),
+            ("clay_washmill", "pp_clay_washmill"),
+        ],
+        "sand_pit": [
+            ("sand_pit", None),
+            ("sand_washery", "pp_sand_washery"),
+        ],
+    }
+
+    for family, chain in expected_chains.items():
+        for tier, (key, unlock_advance) in enumerate(chain):
+            raw = _load_blueprint(key)
+
+            assert f"buildings/{key}.yml" in enabled
+            assert raw["tag"] == key
+            assert raw["building"]["key"] == key
+            assert raw.get("upgrade_chain") == {
+                "family": family,
+                "tier": tier,
+                "previous": chain[tier - 1][0] if tier > 0 else None,
+                "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
+                "unlock_advance": unlock_advance,
+            }
+
+            body = raw["building"]["body"]
+            if tier == 0:
+                assert "obsolete =" not in body
+            else:
+                previous = chain[tier - 1][0]
+                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                assert raw["icon"]["output_dds"] == f"{key}.dds"
+                advancements = raw.get("advancements")
+                assert isinstance(advancements, list)
+                advancement = next(item for item in advancements if item["key"] == unlock_advance)
+                assert re.search(rf"^\s*unlock_building\s*=\s*{re.escape(key)}\s*$", advancement["body"], flags=re.M)
+
+
 def test_rural_food_building_upgrade_chains_are_explicit() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])

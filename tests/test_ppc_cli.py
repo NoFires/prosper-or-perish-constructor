@@ -471,6 +471,238 @@ def test_analyze_runs_orchestrator_then_publishes_goods_flow(
     assert (repo / "docs" / "examples" / "goods_flow_explorer.html").read_text() == "goods\n"
 
 
+def test_output_modifiers_prints_cumulative_age_table_sorted_by_final_total(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _repo(tmp_path)
+
+    def fake_inputs(*, profile: str, load_order_path: Path):
+        assert profile == "constructor"
+        assert load_order_path == repo / "constructor.load_order.toml"
+        return (
+            ["coal", "fish", "wheat"],
+            [
+                {"good": "wheat", "age": "age_1_traditions", "value": 0.1},
+                {"good": "wheat", "age": "age_2_renaissance", "value": 0.05},
+                {"good": "coal", "age": "age_2_renaissance", "value": 0.1},
+                {"good": "fish", "age": "age_1_traditions", "value": 0.04},
+                {
+                    "good": "fish",
+                    "age": "age_2_renaissance",
+                    "value": 0.2,
+                    "has_potential": True,
+                },
+            ],
+            ["age_1_traditions", "age_2_renaissance"],
+        )
+
+    monkeypatch.setattr(cli, "_load_output_modifier_inputs", fake_inputs)
+
+    assert cli.main(["--repo", str(repo), "output-modifiers"]) == 0
+
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0].split() == ["good", "age_1_traditions", "age_2_renaissance"]
+    assert [line.split()[0] for line in lines[2:]] == ["wheat", "coal", "fish"]
+    assert lines[2].split() == ["wheat", "0.10", "0.15"]
+    assert lines[3].split() == ["coal", "0.00", "0.10"]
+    assert lines[4].split() == ["fish", "0.04", "0.04"]
+
+
+def test_output_modifiers_can_include_specific_gated_modifiers(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _repo(tmp_path)
+
+    monkeypatch.setattr(
+        cli,
+        "_load_output_modifier_inputs",
+        lambda *, profile, load_order_path: (
+            ["fish", "wheat"],
+            [
+                {"good": "wheat", "age": "age_1_traditions", "value": 0.1},
+                {
+                    "good": "fish",
+                    "age": "age_2_renaissance",
+                    "value": 0.2,
+                    "has_potential": True,
+                },
+            ],
+            ["age_1_traditions", "age_2_renaissance"],
+        ),
+    )
+
+    assert cli.main(["--repo", str(repo), "output-modifiers", "--include-specific"]) == 0
+
+    lines = capsys.readouterr().out.splitlines()
+    assert [line.split()[0] for line in lines[2:]] == ["fish", "wheat"]
+    assert lines[2].split() == ["fish", "0.00", "0.20"]
+    assert lines[3].split() == ["wheat", "0.10", "0.10"]
+
+
+def test_production_throughput_prints_best_available_building_slot_sums(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _repo(tmp_path)
+
+    def fake_inputs(*, profile: str, load_order_path: Path, include_specific: bool):
+        assert profile == "constructor"
+        assert load_order_path == repo / "constructor.load_order.toml"
+        assert include_specific is False
+        return (
+            ["berries", "tools", "victuals"],
+            [
+                {
+                    "name": "cookery_slot_0_low",
+                    "building": "cookery",
+                    "production_method_group_index": 0,
+                    "produced": "victuals",
+                    "input_goods": ["grain"],
+                    "input_amounts": [1.0],
+                    "input_cost": 2.0,
+                    "output_value": 3.0,
+                    "effective_availability_kind": "available_by_default",
+                },
+                {
+                    "name": "cookery_slot_0_high",
+                    "building": "cookery",
+                    "production_method_group_index": 0,
+                    "produced": "victuals",
+                    "input_goods": ["meat"],
+                    "input_amounts": [1.0],
+                    "input_cost": 4.0,
+                    "output_value": 4.0,
+                    "effective_availability_kind": "available_by_default",
+                },
+                {
+                    "name": "cookery_slot_1",
+                    "building": "cookery",
+                    "production_method_group_index": 1,
+                    "produced": "victuals",
+                    "input_goods": ["wine"],
+                    "input_amounts": [1.0],
+                    "input_cost": 1.25,
+                    "output_value": 1.25,
+                    "effective_availability_kind": "available_by_default",
+                },
+                {
+                    "name": "yard_slot_0",
+                    "building": "victualling_yard",
+                    "production_method_group_index": 0,
+                    "produced": "victuals",
+                    "input_goods": ["meat"],
+                    "input_amounts": [2.0],
+                    "input_cost": 6.0,
+                    "output_value": 6.0,
+                    "effective_availability_kind": "unlocked_by_advancement",
+                    "effective_unlock_age": "age_2_renaissance",
+                },
+                {
+                    "name": "yard_slot_1",
+                    "building": "victualling_yard",
+                    "production_method_group_index": 1,
+                    "produced": "victuals",
+                    "input_goods": ["salt"],
+                    "input_amounts": [1.0],
+                    "input_cost": 2.0,
+                    "output_value": 2.0,
+                    "effective_availability_kind": "unlocked_by_advancement",
+                    "effective_unlock_age": "age_2_renaissance",
+                },
+                {
+                    "name": "specific_victuals",
+                    "building": "specific_kitchen",
+                    "production_method_group_index": 0,
+                    "produced": "victuals",
+                    "input_goods": ["grain"],
+                    "input_amounts": [1.0],
+                    "input_cost": 100.0,
+                    "output_value": 100.0,
+                    "effective_availability_kind": "specific_only",
+                    "effective_unlock_age": "age_1_traditions",
+                },
+                {
+                    "name": "tools_output_only",
+                    "building": "workshop",
+                    "production_method_group_index": 0,
+                    "produced": "tools",
+                    "input_goods": [],
+                    "input_amounts": [],
+                    "input_cost": 0.0,
+                    "output_value": 99.0,
+                    "effective_availability_kind": "available_by_default",
+                },
+                {
+                    "name": "tools_no_input_cost",
+                    "building": "workshop",
+                    "production_method_group_index": 0,
+                    "produced": "tools",
+                    "input_goods": ["wood"],
+                    "input_amounts": [1.0],
+                    "input_cost": 0.0,
+                    "output_value": 99.0,
+                    "effective_availability_kind": "available_by_default",
+                },
+                {
+                    "name": "tools_valid",
+                    "building": "workshop",
+                    "production_method_group_index": 0,
+                    "produced": "tools",
+                    "input_goods": ["wood"],
+                    "input_amounts": [1.0],
+                    "input_cost": 2.345,
+                    "output_value": 3.456,
+                    "effective_availability_kind": "available_by_default",
+                },
+            ],
+            ["age_1_traditions", "age_2_renaissance"],
+        )
+
+    monkeypatch.setattr(cli, "_load_production_throughput_inputs", fake_inputs)
+
+    assert cli.main(["--repo", str(repo), "production-throughput"]) == 0
+
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0].split() == ["good", "age_1_traditions", "age_2_renaissance"]
+    assert [line.split()[0] for line in lines[2:]] == ["victuals", "tools", "berries"]
+    assert lines[2].split() == ["victuals", "10.50", "16.00"]
+    assert lines[3].split() == ["tools", "5.80", "5.80"]
+    assert lines[4].split() == ["berries", "0.00", "0.00"]
+
+
+def test_production_throughput_can_include_specific_gated_methods(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _repo(tmp_path)
+
+    def fake_inputs(*, profile: str, load_order_path: Path, include_specific: bool):
+        assert include_specific is True
+        return (
+            ["fish"],
+            [
+                {
+                    "name": "specific_fishery",
+                    "building": "fishery",
+                    "production_method_group_index": 0,
+                    "produced": "fish",
+                    "input_goods": ["salt"],
+                    "input_amounts": [1.0],
+                    "input_cost": 1.5,
+                    "output_value": 2.5,
+                    "effective_availability_kind": "specific_only",
+                    "effective_unlock_age": "age_2_renaissance",
+                },
+            ],
+            ["age_1_traditions", "age_2_renaissance"],
+        )
+
+    monkeypatch.setattr(cli, "_load_production_throughput_inputs", fake_inputs)
+
+    assert cli.main(["--repo", str(repo), "production-throughput", "--include-specific"]) == 0
+
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[2].split() == ["fish", "0.00", "4.00"]
+
+
 def test_dashboard_serves_current_capacity_map(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -559,7 +791,7 @@ def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
             "--load-order",
             str(repo / "constructor.load_order.toml"),
             "--workers",
-            "5",
+            "4",
         ]
     ]
 

@@ -10,7 +10,19 @@ city = yes
 megalopolis = yes
 
 location_potential = {
-    raw_material = goods:stone
+    OR = {
+        raw_material = goods:stone
+        AND = {
+            OR = {
+                topography = mountains
+                topography = plateau
+                topography = hills
+            }
+            NOT = {
+                raw_material = goods:stone
+            }
+        }
+    }
 }
 
 category = rgo_building_category

@@ -11,6 +11,7 @@ enabled:
 - buildings/charcoal_maker.yml
 - buildings/chili_plantation.yml
 - buildings/clay_pit.yml
+- buildings/clay_washmill.yml
 - buildings/clove_grove.yml
 - buildings/cocoa_grove.yml
 - buildings/coffee_grove.yml
@@ -84,6 +85,7 @@ enabled:
 - buildings/saltpeter_guild.yml
 - buildings/saltpeter_workshop.yml
 - buildings/sand_pit.yml
+- buildings/sand_washery.yml
 - buildings/sawmill.yml
 - buildings/sheep_farms.yml
 - buildings/enclosed_sheep_walks.yml

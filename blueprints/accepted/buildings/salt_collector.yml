@@ -25,7 +25,11 @@ building:
     megalopolis = yes
 
     location_potential = {
-        raw_material = goods:salt
+        OR = {
+            raw_material = goods:salt
+            vegetation = desert
+            is_coastal = yes
+        }
     }
 
     unique_production_methods = {
