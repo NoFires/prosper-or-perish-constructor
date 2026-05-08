@@ -39,7 +39,7 @@ unique_production_methods = {
         tools = 1.17
         beeswax = 0.415
         produced = mercury
-        output = 2.02
+        output = 2.438
         category = building_maintenance
     }
 }
@@ -51,14 +51,14 @@ unique_production_methods = {
         lumber = 0.12
         tools = 0.09
         produced = stone
-        output = 0.28
+        output = 0.54
         category = building_maintenance
     }
     pp_quicksilver_retort_dyes = {
         lumber = 0.10
         tools = 0.07
         produced = dyes
-        output = 0.10
+        output = 0.108
         category = building_maintenance
     }
 }

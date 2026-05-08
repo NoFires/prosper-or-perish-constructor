@@ -25,7 +25,7 @@ can_close = yes
 unique_production_methods = {
     pp_tea_garden_base_tea = {
         produced = tea
-        output = 0.3
+        output = 0.123
         category = building_maintenance
     }
 }
@@ -34,10 +34,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_tea_garden_bamboo_withering_trays = {
-        fiber_crops = 0.10
-        clay = 0.08
+        fiber_crops = 0.294 # bamboo trays
+        clay = 0.235 # firing hearths
         produced = tea
-        output = 0.25
+        output = 0.261
         category = building_maintenance
     }
 }

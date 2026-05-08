@@ -1,0 +1,149 @@
+version: 2
+tag: sand_washery
+upgrade_chain:
+  family: sand_pit
+  tier: 1
+  previous: sand_pit
+  next: null
+  unlock_advance: pp_sand_washery
+building:
+  key: sand_washery
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_sand_washery_base_sand
+    - name: slot_1
+      methods:
+        - pp_sand_washery_no_screening
+        - pp_sand_washery_riddle_screens
+    - name: slot_2
+      methods:
+        - pp_sand_washery_no_washing
+        - pp_sand_washery_glass_sand_washing
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_sand_washery_price
+    category = rgo_building_category
+    icon = sand_washery
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = sand_pit
+    build_time = workshop_build_time
+
+    location_potential = {
+        OR = {
+            raw_material = goods:sand
+            NOT = {
+                raw_material = goods:sand
+            }
+        }
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_sand_washery_base_sand = {
+            produced = sand
+            output = 0.42
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_sand_washery_no_screening = {
+            category = building_maintenance
+        }
+        pp_sand_washery_riddle_screens = {
+            lumber = 0.18
+            tools = 0.08
+            produced = sand
+            output = 1.15
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_sand_washery_no_washing = {
+            category = building_maintenance
+        }
+        pp_sand_washery_glass_sand_washing = {
+            lumber = 0.16
+            tools = 0.12
+            produced = sand
+            output = 1.25
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+        local_population_growth = -0.0001
+    }
+prices:
+  - key: pp_sand_washery_price
+    body: |2-
+      {gold = 100}
+advancements:
+  - key: pp_sand_washery
+    body: |2-
+      icon = efficient_mining
+      age = age_3_discovery
+      requires = rgo_logistics_discovery
+      unlock_building = sand_washery
+      ai_weight = { add = 125 }
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_sand_washery_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('sand_washery')|e].
+    MODIFIER_TYPE_NAME_pp_sand_washery_price_cost_modifier: Sand Washery Cost
+    sand_washery_slot_0: Sand Beds
+    sand_washery_slot_1: Screening
+    sand_washery_slot_2: Washing
+    sand_washery: Sand Washery
+    sand_washery_desc: A larger washing screen, water flumes, and settling tanks let workers grade sand for mortar, molds, and clearer glassmaking. Coarse gravel is screened out while cleaner sand is washed and dried for transport.
+    pp_sand_washery_base_sand: Surveyed Sand Beds
+    pp_sand_washery_no_screening: No Sand Screening
+    pp_sand_washery_riddle_screens: Barrel Screens
+    pp_sand_washery_no_washing: No Sand Washing
+    pp_sand_washery_glass_sand_washing: Glass-Sand Washing
+    pp_sand_washery_price: Sand Washery Price
+    pp_sand_washery: Sand Washeries
+    pp_sand_washery_desc: Barrel screens, washing troughs, and settling channels grade cleaner sand for construction, molds, and glassmaking.
+icon:
+  source_png: ../assets/icons/sand_washery.png
+  output_dds: sand_washery.dds
+  size: 512
+  prompt: >-
+    EU5-inspired hand-painted strategy-game icon for Sand Washery, transparent background.
+    Center a compact historical sand and gravel washing plant with an inclined perforated
+    barrel screen with iron bands, overhead water pipe, wooden flume, rectangular settling
+    tank, water pouring through, pale sand stockpiles, small barrow, and shovel. Large readable
+    2D icon cluster filling most of the canvas, pale sand cream, dark wet wood, iron bands,
+    muted blue water, no text, no letters, no frame, no modern engines, no conveyor belts,
+    not photorealistic, not cartoonish.
+
+evaluation:
+  allow_rules:
+    amortization_months: Low-value sand screening and washing intentionally repay more slowly than the global building-payback target.
+    input_throughput: Low-value sand screening and washing intentionally sit below the global laborer input throughput target.
+    output_throughput: Low-value sand screening and washing preserve modest raw-material throughput.
+  production_methods:
+    pp_sand_washery_base_sand:
+      production_efficiency: 1.00
+    pp_sand_washery_no_screening:
+      production_efficiency: 1.00
+    pp_sand_washery_riddle_screens:
+      production_efficiency: 1.05
+    pp_sand_washery_no_washing:
+      production_efficiency: 1.00
+    pp_sand_washery_glass_sand_washing:
+      production_efficiency: 1.05

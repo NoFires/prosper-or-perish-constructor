@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: pomological_orchard
 upgrade_chain:
   family: fruit_orchard
@@ -105,6 +105,9 @@ evaluation:
   production_methods:
     pp_pomological_orchard_base_fruit:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_pomological_orchard_no_primary:
       production_efficiency: 1.00
     pp_pomological_orchard_grafted_rows:

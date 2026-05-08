@@ -25,7 +25,7 @@ can_close = yes
 unique_production_methods = {
     pp_elephant_kraal_base_elephants = {
         produced = elephants
-        output = 0.2
+        output = 0.107
         category = building_maintenance
     }
 }
@@ -34,10 +34,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_elephant_kraal_kheddah_stockades = {
-        lumber = 0.18
-        fruit = 0.30
+        lumber = 0.308 # stockades, gates
+        fruit = 0.513 # fodder, bait
         produced = elephants
-        output = 0.25
+        output = 0.227
         category = building_maintenance
     }
 }

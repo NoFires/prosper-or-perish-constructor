@@ -8,6 +8,7 @@ REPLACE:fruit_orchard = {
     rural_settlement = yes
     town = yes
     city = yes
+    megalopolis = yes
     forbidden_for_estates = yes
     ai_forbid_shutdown = no
     location_potential = {
@@ -27,7 +28,7 @@ REPLACE:fruit_orchard = {
         }
         pp_fruit_orchard_maintenance = {
             produced = fruit
-            output = 0.25
+            output = 0.394
             lumber = 0.25
             debug_max_profit = 0
             category = building_maintenance

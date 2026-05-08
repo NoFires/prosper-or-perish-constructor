@@ -10,7 +10,6 @@ icon = lead_mine_cupola_smelting
 rural_settlement = yes
 town = yes
 city = yes
-obsolete = lead_mine_improved
 build_time = manufactory_build_time
 
 location_potential = {
@@ -39,7 +38,7 @@ unique_production_methods = {
         tools = 2.65
         beeswax = 0.30
         produced = lead
-        output = 4.75
+        output = 6.12
         category = building_maintenance
     }
 }
@@ -52,7 +51,7 @@ unique_production_methods = {
         tools = 0.12
         lead = 0.10
         produced = silver
-        output = 0.08
+        output = 0.16
         category = building_maintenance
     }
 }

@@ -38,7 +38,7 @@ unique_production_methods = {
         tools = 0.75
         leather = 0.18
         produced = marble
-        output = 0.85
+        output = 0.904
         category = building_maintenance
     }
 }
@@ -50,14 +50,14 @@ unique_production_methods = {
         lumber = 0.12
         tools = 0.06
         produced = stone
-        output = 0.25
+        output = 0.432
         category = building_maintenance
     }
     pp_marble_quarry_sand = {
         lumber = 0.08
         tools = 0.04
         produced = sand
-        output = 0.30
+        output = 0.576
         category = building_maintenance
     }
 }

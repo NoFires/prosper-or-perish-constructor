@@ -39,7 +39,7 @@ unique_production_methods = {
         tools = 1.65
         beeswax = 0.21
         produced = lead
-        output = 3.05
+        output = 3.807
         category = building_maintenance
     }
 }
@@ -52,7 +52,7 @@ unique_production_methods = {
         tools = 0.09
         lead = 0.06
         produced = silver
-        output = 0.06
+        output = 0.114
         category = building_maintenance
     }
 }

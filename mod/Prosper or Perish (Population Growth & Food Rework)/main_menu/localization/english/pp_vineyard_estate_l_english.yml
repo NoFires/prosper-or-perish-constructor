@@ -1,0 +1,13 @@
+﻿l_english:
+
+# >>> eu5-building-pipeline:vineyard_estate:localization
+  MODIFIER_TYPE_DESC_pp_vineyard_estate_price_cost_modifier: "Affects the cost of building a [ShowBuildingTypeName('vineyard_estate')|e]."
+  MODIFIER_TYPE_NAME_pp_vineyard_estate_price_cost_modifier: "Vineyard Estate Cost"
+  vineyard_estate_slot_0: "Vineyards"
+  vineyard_estate_slot_1: "Press Houses"
+  vineyard_estate: "Vineyard Estate"
+  vineyard_estate_desc: "A rural estate of grapevines, small presses, and cellar sheds where laborers draw wine directly from suitable vineyard lands. Press houses organize stakes, pruning knives, vessels, and presses for fuller yields."
+  pp_vineyard_estate_base_wine: "Vineyards"
+  pp_vineyard_estate_press_houses: "Press Houses"
+  pp_vineyard_estate_price: "Vineyard Estate Price"
+# <<< eu5-building-pipeline:vineyard_estate:localization

@@ -2,6 +2,7 @@ import json
 import os
 from pathlib import Path
 
+import polars as pl
 import pytest
 
 from prosper_or_perish_constructor import cli
@@ -10,6 +11,25 @@ from prosper_or_perish_constructor import cli
 def _repo(tmp_path: Path) -> Path:
     (tmp_path / "constructor.toml").write_text('name = "test"\n')
     return tmp_path
+
+
+def _write_savegame_manifest(repo: Path, save_path: Path | None = None) -> None:
+    manifest = repo / "graphs" / "dataset" / "manifest.parquet"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    pl.DataFrame(
+        [
+            {
+                "snapshot_id": "s1",
+                "playthrough_id": "aaa",
+                "path": str(save_path or "/tmp/s1.eu5"),
+                "year": 1337,
+                "month": 1,
+                "day": 1,
+                "mtime_ns": 1,
+                "size": 1,
+            }
+        ]
+    ).write_parquet(manifest)
 
 
 def test_test_command_disables_pytest_capture_by_default(
@@ -263,6 +283,9 @@ def test_build_finalizes_location_potential_localization(
         "\tgame_data = { category = location }\n"
         "\tlocal_fish_output_modifier = 0.1\n"
         "}\n"
+        "pp_loc_washita = {\n"
+        "\tlocal_grain_output_modifier = 0.15\n"
+        "}\n"
         "pp_loc_sant_feliu = {\n"
         "\tlocal_medicaments_output_modifier = 0.2\n"
         "}\n",
@@ -291,9 +314,14 @@ def test_build_finalizes_location_potential_localization(
     assert calls == [
         ["eu5-orchestrator", "build", "--project", str(repo / "constructor.toml"), "--overwrite"]
     ]
+    static_text = (static_modifiers / "pp_location_modifiers.txt").read_text(encoding="utf-8-sig")
+    assert "pp_loc_washita_pp = {" in static_text
+    assert "pp_loc_washita = {" not in static_text
     assert 'pp_location_potential_modifier_name: "[pp_location_potential|e]"' in modifier_text
     assert 'STATIC_MODIFIER_NAME_pp_loc_slagelse: "$pp_location_potential_modifier_name$"' in modifier_text
     assert 'STATIC_MODIFIER_DESC_pp_loc_slagelse: "$pp_location_potential_modifier_desc$"' in modifier_text
+    assert 'STATIC_MODIFIER_DESC_pp_loc_washita_pp: "$pp_location_potential_modifier_desc$"' in modifier_text
+    assert 'STATIC_MODIFIER_DESC_pp_loc_washita: "$pp_location_potential_modifier_desc$"' not in modifier_text
     assert "pp_location_modifiers_title:" not in modifier_text
     assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text
     assert "\\n\\nThe values combine" in europedia_text
@@ -305,6 +333,77 @@ def test_build_finalizes_location_potential_localization(
 
     assert modifier_localization_path.stat().st_mtime_ns == fixed_time
     assert europedia_localization_path.stat().st_mtime_ns == fixed_time
+
+
+def test_finalize_keeps_location_modifier_on_action_separate_and_preserves_newlines(
+    tmp_path: Path,
+) -> None:
+    repo = _repo(tmp_path)
+    repo.joinpath("constructor.toml").write_text(
+        '[project]\nmod_root = "mod/test-mod"\n',
+        encoding="utf-8",
+    )
+    mod_root = repo / "mod" / "test-mod"
+    static_modifiers = mod_root / "main_menu" / "common" / "static_modifiers"
+    on_action = mod_root / "in_game" / "common" / "on_action"
+    localization = mod_root / "main_menu" / "localization" / "english"
+    static_modifiers.mkdir(parents=True)
+    on_action.mkdir(parents=True)
+    localization.mkdir(parents=True)
+
+    location_modifiers = static_modifiers / "pp_location_modifiers.txt"
+    location_modifiers.write_text(
+        "pp_loc_washita = {\r\n"
+        "\tgame_data = { category = location }\r\n"
+        "\tlocal_grain_output_modifier = 0.15\r\n"
+        "}\r\n",
+        encoding="utf-8",
+        newline="",
+    )
+    apply_location_modifiers = on_action / "pp_apply_location_modifiers.txt"
+    apply_location_modifiers.write_text(
+        "# generated\n\n"
+        "on_game_start = {\n"
+        "\teffect = {\n"
+        "\t\tlocation:washita = {\n"
+        "\t\t\tadd_location_modifier = { modifier = pp_loc_washita months = -1 mode = replace }\n"
+        "\t\t}\n"
+        "\t}\n"
+        "}\n",
+        encoding="utf-8",
+        newline="",
+    )
+    game_start = on_action / "pp_game_start.txt"
+    original_game_start = (
+        "\ufeffon_game_start = {\r\n"
+        "\ton_actions = {\r\n"
+        "\t\t# pp_reset_rgo_max_workers\r\n"
+        "\t\tpp_apply_location_modifiers\r\n"
+        "\t\tpp_mod_welcome_situation_game_start\r\n"
+        "\t}\r\n"
+        "}\r\n"
+    )
+    game_start.write_text(original_game_start, encoding="utf-8", newline="")
+    (localization / "pp_location_modifiers_l_english.yml").write_text("l_english:\n", encoding="utf-8")
+    (localization / "pp_europedia_l_english.yml").write_text("l_english:\n", encoding="utf-8")
+
+    cli._finalize_constructor_mod(repo, repo / "constructor.toml")
+
+    location_bytes = location_modifiers.read_bytes()
+    apply_bytes = apply_location_modifiers.read_bytes()
+    game_start_bytes = game_start.read_bytes()
+
+    assert location_bytes.startswith(b"\xef\xbb\xbf")
+    assert b"\r\n" in location_bytes
+    assert location_bytes.count(b"\n") == location_bytes.count(b"\r\n")
+    assert apply_bytes.startswith(b"\xef\xbb\xbf")
+    assert b"\r\n" not in apply_bytes
+    assert (
+        b"on_game_start = {\n\ton_actions = {\n\t\tpp_apply_location_modifiers\n\t}\n}\n\n"
+        b"pp_apply_location_modifiers = {\n\teffect = {"
+    ) in apply_bytes
+    assert b"pp_loc_washita_pp" in apply_bytes
+    assert game_start_bytes == original_game_start.encode("utf-8")
 
 
 def test_build_does_not_finalize_after_failed_orchestrator_build(
@@ -372,6 +471,238 @@ def test_analyze_runs_orchestrator_then_publishes_goods_flow(
     assert (repo / "docs" / "examples" / "goods_flow_explorer.html").read_text() == "goods\n"
 
 
+def test_output_modifiers_prints_cumulative_age_table_sorted_by_final_total(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _repo(tmp_path)
+
+    def fake_inputs(*, profile: str, load_order_path: Path):
+        assert profile == "constructor"
+        assert load_order_path == repo / "constructor.load_order.toml"
+        return (
+            ["coal", "fish", "wheat"],
+            [
+                {"good": "wheat", "age": "age_1_traditions", "value": 0.1},
+                {"good": "wheat", "age": "age_2_renaissance", "value": 0.05},
+                {"good": "coal", "age": "age_2_renaissance", "value": 0.1},
+                {"good": "fish", "age": "age_1_traditions", "value": 0.04},
+                {
+                    "good": "fish",
+                    "age": "age_2_renaissance",
+                    "value": 0.2,
+                    "has_potential": True,
+                },
+            ],
+            ["age_1_traditions", "age_2_renaissance"],
+        )
+
+    monkeypatch.setattr(cli, "_load_output_modifier_inputs", fake_inputs)
+
+    assert cli.main(["--repo", str(repo), "output-modifiers"]) == 0
+
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0].split() == ["good", "age_1_traditions", "age_2_renaissance"]
+    assert [line.split()[0] for line in lines[2:]] == ["wheat", "coal", "fish"]
+    assert lines[2].split() == ["wheat", "0.10", "0.15"]
+    assert lines[3].split() == ["coal", "0.00", "0.10"]
+    assert lines[4].split() == ["fish", "0.04", "0.04"]
+
+
+def test_output_modifiers_can_include_specific_gated_modifiers(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _repo(tmp_path)
+
+    monkeypatch.setattr(
+        cli,
+        "_load_output_modifier_inputs",
+        lambda *, profile, load_order_path: (
+            ["fish", "wheat"],
+            [
+                {"good": "wheat", "age": "age_1_traditions", "value": 0.1},
+                {
+                    "good": "fish",
+                    "age": "age_2_renaissance",
+                    "value": 0.2,
+                    "has_potential": True,
+                },
+            ],
+            ["age_1_traditions", "age_2_renaissance"],
+        ),
+    )
+
+    assert cli.main(["--repo", str(repo), "output-modifiers", "--include-specific"]) == 0
+
+    lines = capsys.readouterr().out.splitlines()
+    assert [line.split()[0] for line in lines[2:]] == ["fish", "wheat"]
+    assert lines[2].split() == ["fish", "0.00", "0.20"]
+    assert lines[3].split() == ["wheat", "0.10", "0.10"]
+
+
+def test_production_throughput_prints_best_available_building_slot_sums(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _repo(tmp_path)
+
+    def fake_inputs(*, profile: str, load_order_path: Path, include_specific: bool):
+        assert profile == "constructor"
+        assert load_order_path == repo / "constructor.load_order.toml"
+        assert include_specific is False
+        return (
+            ["berries", "tools", "victuals"],
+            [
+                {
+                    "name": "cookery_slot_0_low",
+                    "building": "cookery",
+                    "production_method_group_index": 0,
+                    "produced": "victuals",
+                    "input_goods": ["grain"],
+                    "input_amounts": [1.0],
+                    "input_cost": 2.0,
+                    "output_value": 3.0,
+                    "effective_availability_kind": "available_by_default",
+                },
+                {
+                    "name": "cookery_slot_0_high",
+                    "building": "cookery",
+                    "production_method_group_index": 0,
+                    "produced": "victuals",
+                    "input_goods": ["meat"],
+                    "input_amounts": [1.0],
+                    "input_cost": 4.0,
+                    "output_value": 4.0,
+                    "effective_availability_kind": "available_by_default",
+                },
+                {
+                    "name": "cookery_slot_1",
+                    "building": "cookery",
+                    "production_method_group_index": 1,
+                    "produced": "victuals",
+                    "input_goods": ["wine"],
+                    "input_amounts": [1.0],
+                    "input_cost": 1.25,
+                    "output_value": 1.25,
+                    "effective_availability_kind": "available_by_default",
+                },
+                {
+                    "name": "yard_slot_0",
+                    "building": "victualling_yard",
+                    "production_method_group_index": 0,
+                    "produced": "victuals",
+                    "input_goods": ["meat"],
+                    "input_amounts": [2.0],
+                    "input_cost": 6.0,
+                    "output_value": 6.0,
+                    "effective_availability_kind": "unlocked_by_advancement",
+                    "effective_unlock_age": "age_2_renaissance",
+                },
+                {
+                    "name": "yard_slot_1",
+                    "building": "victualling_yard",
+                    "production_method_group_index": 1,
+                    "produced": "victuals",
+                    "input_goods": ["salt"],
+                    "input_amounts": [1.0],
+                    "input_cost": 2.0,
+                    "output_value": 2.0,
+                    "effective_availability_kind": "unlocked_by_advancement",
+                    "effective_unlock_age": "age_2_renaissance",
+                },
+                {
+                    "name": "specific_victuals",
+                    "building": "specific_kitchen",
+                    "production_method_group_index": 0,
+                    "produced": "victuals",
+                    "input_goods": ["grain"],
+                    "input_amounts": [1.0],
+                    "input_cost": 100.0,
+                    "output_value": 100.0,
+                    "effective_availability_kind": "specific_only",
+                    "effective_unlock_age": "age_1_traditions",
+                },
+                {
+                    "name": "tools_output_only",
+                    "building": "workshop",
+                    "production_method_group_index": 0,
+                    "produced": "tools",
+                    "input_goods": [],
+                    "input_amounts": [],
+                    "input_cost": 0.0,
+                    "output_value": 99.0,
+                    "effective_availability_kind": "available_by_default",
+                },
+                {
+                    "name": "tools_no_input_cost",
+                    "building": "workshop",
+                    "production_method_group_index": 0,
+                    "produced": "tools",
+                    "input_goods": ["wood"],
+                    "input_amounts": [1.0],
+                    "input_cost": 0.0,
+                    "output_value": 99.0,
+                    "effective_availability_kind": "available_by_default",
+                },
+                {
+                    "name": "tools_valid",
+                    "building": "workshop",
+                    "production_method_group_index": 0,
+                    "produced": "tools",
+                    "input_goods": ["wood"],
+                    "input_amounts": [1.0],
+                    "input_cost": 2.345,
+                    "output_value": 3.456,
+                    "effective_availability_kind": "available_by_default",
+                },
+            ],
+            ["age_1_traditions", "age_2_renaissance"],
+        )
+
+    monkeypatch.setattr(cli, "_load_production_throughput_inputs", fake_inputs)
+
+    assert cli.main(["--repo", str(repo), "production-throughput"]) == 0
+
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0].split() == ["good", "age_1_traditions", "age_2_renaissance"]
+    assert [line.split()[0] for line in lines[2:]] == ["victuals", "tools", "berries"]
+    assert lines[2].split() == ["victuals", "10.50", "16.00"]
+    assert lines[3].split() == ["tools", "5.80", "5.80"]
+    assert lines[4].split() == ["berries", "0.00", "0.00"]
+
+
+def test_production_throughput_can_include_specific_gated_methods(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo = _repo(tmp_path)
+
+    def fake_inputs(*, profile: str, load_order_path: Path, include_specific: bool):
+        assert include_specific is True
+        return (
+            ["fish"],
+            [
+                {
+                    "name": "specific_fishery",
+                    "building": "fishery",
+                    "production_method_group_index": 0,
+                    "produced": "fish",
+                    "input_goods": ["salt"],
+                    "input_amounts": [1.0],
+                    "input_cost": 1.5,
+                    "output_value": 2.5,
+                    "effective_availability_kind": "specific_only",
+                    "effective_unlock_age": "age_2_renaissance",
+                },
+            ],
+            ["age_1_traditions", "age_2_renaissance"],
+        )
+
+    monkeypatch.setattr(cli, "_load_production_throughput_inputs", fake_inputs)
+
+    assert cli.main(["--repo", str(repo), "production-throughput", "--include-specific"]) == 0
+
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[2].split() == ["fish", "0.00", "4.00"]
+
+
 def test_dashboard_serves_current_capacity_map(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -411,7 +742,7 @@ def test_dashboard_reports_missing_index(tmp_path: Path) -> None:
         cli.main(["--repo", str(repo), "dashboard"])
 
 
-def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
+def test_savegame_notebooks_build_ingests_raw_dataset_without_rewrite(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     repo = _repo(tmp_path)
@@ -428,6 +759,7 @@ def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
     def fake_run_collecting_output(command, cwd):
         calls.append([str(part) for part in command])
         assert cwd == repo
+        _write_savegame_manifest(repo, save_dir / "autosave.eu5")
         return 0, "processed: 0\nskipped: 1\n"
 
     monkeypatch.setattr(cli, "_run", fake_run)
@@ -441,6 +773,7 @@ def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
     )
     output = capsys.readouterr().out
     assert "raw ingest skipped: no new saves processed (1 already digested)" in output
+    assert "notebook rewrite: skipped (not required)" in output
 
     assert calls == [
         [
@@ -458,33 +791,16 @@ def test_savegame_notebooks_build_ingests_then_builds_notebook_data(
             "--load-order",
             str(repo / "constructor.load_order.toml"),
             "--workers",
-            "8",
-        ],
-        [
-            "uv",
-            "run",
-            "eu5parse",
-            "savegame-notebooks",
-            "build",
-            "--dataset",
-            str(repo / "graphs" / "dataset"),
-            "--output",
-            str(repo / "graphs" / "savegame_notebooks" / "data"),
-            "--profile",
-            "constructor",
-            "--load-order",
-            str(repo / "constructor.load_order.toml"),
-            "--active-save-dir",
-            str(save_dir),
-            "--skip-if-current",
-        ],
+            "4",
+        ]
     ]
 
 
-def test_savegame_notebooks_build_no_ingest_restructures_existing_dataset(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def test_savegame_notebooks_build_no_ingest_reports_existing_raw_dataset(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     repo = _repo(tmp_path)
+    _write_savegame_manifest(repo)
     calls: list[list[str]] = []
 
     def fake_run(command, cwd):
@@ -495,25 +811,11 @@ def test_savegame_notebooks_build_no_ingest_restructures_existing_dataset(
     monkeypatch.setattr(cli, "_run", fake_run)
 
     assert cli.main(["--repo", str(repo), "savegame-notebooks", "build", "--no-ingest"]) == 0
+    output = capsys.readouterr().out
+    assert f"raw dataset: {repo / 'graphs' / 'dataset'}" in output
+    assert "notebook rewrite: skipped (not required)" in output
 
-    assert calls == [
-        [
-            "uv",
-            "run",
-            "eu5parse",
-            "savegame-notebooks",
-            "build",
-            "--dataset",
-            str(repo / "graphs" / "dataset"),
-            "--output",
-            str(repo / "graphs" / "savegame_notebooks" / "data"),
-            "--profile",
-            "constructor",
-            "--load-order",
-            str(repo / "constructor.load_order.toml"),
-            "--skip-if-current",
-        ],
-    ]
+    assert calls == []
 
 
 def test_savegame_notebooks_build_auto_detects_save_dir(

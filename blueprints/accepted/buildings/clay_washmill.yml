@@ -1,0 +1,149 @@
+version: 2
+tag: clay_washmill
+upgrade_chain:
+  family: clay_pit
+  tier: 1
+  previous: clay_pit
+  next: null
+  unlock_advance: pp_clay_washmill
+building:
+  key: clay_washmill
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_clay_washmill_base_clay
+    - name: slot_1
+      methods:
+        - pp_clay_washmill_no_preparation
+        - pp_clay_washmill_horse_pugging
+    - name: slot_2
+      methods:
+        - pp_clay_washmill_no_refining
+        - pp_clay_washmill_levigation_ponds
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_clay_washmill_price
+    category = rgo_building_category
+    icon = clay_washmill
+    rural_settlement = yes
+    town = yes
+    city = yes
+    obsolete = clay_pit
+    build_time = workshop_build_time
+
+    location_potential = {
+        OR = {
+            is_coastal = yes
+            has_river = yes
+            is_adjacent_to_lake = yes
+            raw_material = goods:clay
+        }
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_clay_washmill_base_clay = {
+            produced = clay
+            output = 0.42
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_clay_washmill_no_preparation = {
+            category = building_maintenance
+        }
+        pp_clay_washmill_horse_pugging = {
+            lumber = 0.44
+            tools = 0.14
+            livestock = 0.18
+            produced = clay
+            output = 2.76
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_clay_washmill_no_refining = {
+            category = building_maintenance
+        }
+        pp_clay_washmill_levigation_ponds = {
+            lumber = 0.12
+            tools = 0.08
+            produced = clay
+            output = 0.90
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+        local_population_growth = -0.0001
+    }
+prices:
+  - key: pp_clay_washmill_price
+    body: |2-
+      {gold = 100}
+advancements:
+  - key: pp_clay_washmill
+    body: |2-
+      icon = renaissance_advance
+      age = age_2_renaissance
+      requires = renaissance_advance
+      unlock_building = clay_washmill
+      ai_weight = { add = 125 }
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_clay_washmill_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('clay_washmill')|e].
+    MODIFIER_TYPE_NAME_pp_clay_washmill_price_cost_modifier: Clay Washmill Cost
+    clay_washmill_slot_0: Clay Beds
+    clay_washmill_slot_1: Clay Preparation
+    clay_washmill_slot_2: Clay Refining
+    clay_washmill: Clay Washmill
+    clay_washmill_desc: A horse-driven pugmill turns clay inside a brick-lined wash pit, mixing dug clay with water before it settles into a more regular body for brick, tile, and pottery work. Levigation ponds skim finer clay from the slurry while coarse grit settles out.
+    pp_clay_washmill_base_clay: Surveyed Clay Beds
+    pp_clay_washmill_no_preparation: No Clay Preparation
+    pp_clay_washmill_horse_pugging: Horse Pugmill
+    pp_clay_washmill_no_refining: No Clay Refining
+    pp_clay_washmill_levigation_ponds: Levigation Ponds
+    pp_clay_washmill_price: Clay Washmill Price
+    pp_clay_washmill: Clay Washmills
+    pp_clay_washmill_desc: Brick-lined wash pits, settling ponds, and horse-driven pugmills prepare more consistent clay for ceramic trades.
+icon:
+  source_png: ../assets/icons/clay_washmill.png
+  output_dds: clay_washmill.dds
+  size: 512
+  prompt: >-
+    EU5-inspired hand-painted strategy-game icon for Clay Washmill, transparent background.
+    Center a compact historical horse-powered pugmill with a circular brick-lined wash pit,
+    upright wooden pugmill barrel, central vertical shaft, long horse-yoke beam, small horse
+    silhouette, wet clay slurry, red clay heap, barrow, and shovel. Large readable 2D icon
+    cluster filling most of the canvas, warm clay reds and ochres, tan brick, dark weathered
+    wood, muted blue water, no text, no letters, no frame, no modern machinery, not
+    photorealistic, not cartoonish.
+
+evaluation:
+  allow_rules:
+    amortization_months: Low-value clay preparation intentionally repays more slowly than the global building-payback target.
+    input_throughput: Low-value clay preparation intentionally sits below the global laborer input throughput target.
+    output_throughput: Low-value clay preparation preserves modest raw-material throughput.
+  production_methods:
+    pp_clay_washmill_base_clay:
+      production_efficiency: 1.00
+    pp_clay_washmill_no_preparation:
+      production_efficiency: 1.00
+    pp_clay_washmill_horse_pugging:
+      production_efficiency: 1.05
+    pp_clay_washmill_no_refining:
+      production_efficiency: 1.00
+    pp_clay_washmill_levigation_ponds:
+      production_efficiency: 1.05

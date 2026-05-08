@@ -37,7 +37,7 @@ unique_production_methods = {
         naval_supplies = 0.10
         victuals = 0.18
         produced = pearls
-        output = 0.25
+        output = 0.234
         category = building_maintenance
     }
 }

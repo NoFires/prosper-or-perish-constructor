@@ -1,0 +1,53 @@
+version: 2
+tag: saltpeter_workshop
+building:
+  key: saltpeter_workshop
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_saltpeter_workshop_demands
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    pop_type = burghers
+    max_levels = workshop_max_level
+    category = basic_industry_category
+    employment_size = workshop_employment
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = workshop_build_time
+
+    location_potential = {
+        NOT = { raw_material = goods:saltpeter }
+    }
+
+    unique_production_methods = {
+        pp_saltpeter_workshop_demands = {
+            pottery = 0.15
+            livestock = 0.9
+            produced = saltpeter
+            output = 1.1
+            debug_max_profit = 0.6
+            category = workshop_input
+        }
+    }
+
+    obsolete = saltpeter_guild
+    custom_tags = { workshop }
+    construction_demand = workshop_construction
+localization:
+  entries:
+    saltpeter_workshop_slot_0: Saltpeter Workshop Demands
+    pp_saltpeter_workshop_demands: Saltpeter Workshop Demands
+
+evaluation:
+  building:
+    employment_size: 0.1
+  allow_rules:
+    profit_percent: Vanilla saltpeter workshop economics are preserved; this replacement only adds raw-saltpeter anti-overlap.
+    input_throughput: Vanilla saltpeter workshop economics are preserved; this replacement only adds raw-saltpeter anti-overlap.
+    output_throughput: Vanilla saltpeter workshop economics are preserved; this replacement only adds raw-saltpeter anti-overlap.
+    amortization_months: Vanilla saltpeter workshop economics are preserved; this replacement only adds raw-saltpeter anti-overlap.

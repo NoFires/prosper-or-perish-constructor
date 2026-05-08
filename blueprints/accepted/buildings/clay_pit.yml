@@ -1,5 +1,11 @@
 ﻿version: 2
 tag: clay_pit
+upgrade_chain:
+  family: clay_pit
+  tier: 0
+  previous: null
+  next: clay_washmill
+  unlock_advance: null
 building:
   key: clay_pit
   mode: REPLACE
@@ -40,7 +46,7 @@ building:
     		}
     		pp_clay_pit_maintenance = {
     			produced = clay
-    			output = 1
+    			output = 1.44
     			lumber = 0.28
     			livestock = 0.12
     			category = building_maintenance
@@ -65,4 +71,4 @@ evaluation:
       allow_rules:
         base_output_per_1k: Existing accepted clay deposit output is intentionally above the generic no-input baseline; revisit during the clay pit rebalance.
     pp_clay_pit_maintenance:
-      production_efficiency: 1.10
+      production_efficiency: 1.00

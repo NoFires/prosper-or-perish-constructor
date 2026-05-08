@@ -37,7 +37,7 @@ unique_production_methods = {
         lumber = 0.967
         tools = 0.80
         produced = gems
-        output = 1.05
+        output = 1.155
         category = building_maintenance
     }
 }
@@ -49,14 +49,14 @@ unique_production_methods = {
         lumber = 0.14
         tools = 0.10
         produced = goods_gold
-        output = 0.035
+        output = 0.077
         category = building_maintenance
     }
     pp_gem_gravel_pit_sand = {
         lumber = 0.08
         tools = 0.04
         produced = sand
-        output = 0.30
+        output = 0.576
         category = building_maintenance
     }
 }

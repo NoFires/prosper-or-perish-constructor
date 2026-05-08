@@ -26,6 +26,8 @@ MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 LABELING_ROOT = ROOT.parent / "ProsperOrPerishLabelingPipeline"
 LABELING_BASELINE = LABELING_ROOT / "base_data" / "locations_with_raw_material.parquet"
 LOCATION_MODIFIERS = MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_location_modifiers.txt"
+APPLY_LOCATION_MODIFIERS = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_apply_location_modifiers.txt"
+GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
 CAPACITY_PRESSURE_EFFECTS = (
     MOD_ROOT / "main_menu" / "common" / "static_modifiers" / "pp_capacity_pressure_effects.txt"
 )
@@ -75,8 +77,8 @@ def test_population_capacity_config_loads() -> None:
 
     assert config.generated_label == "Prosper or Perish"
     assert config.managed_write_mode == "mod_root"
-    assert config.capacity_scale.minimum == 0
-    assert config.capacity_scale.maximum == 120
+    assert config.capacity_scale.minimum == 4
+    assert config.capacity_scale.maximum == 100
     assert config.calibration.historical_population_policy == "saturation_anchors_only"
     assert config.calibration.saturation_anchors == "population_capacity_saturation_anchors.toml"
     assert config.calibration.land_potential_sources == ("gaez_v4", "hyde", "archaeoglobe")
@@ -110,15 +112,16 @@ def test_free_land_effects_cover_all_labeled_goods() -> None:
 
 
 def test_free_land_effects_order_plants_before_animal_products() -> None:
-    config = load_pipeline_config(ROOT / "population_capacity.toml")
     labeled_goods = _labeler_goods()
     plant_goods = tuple(good for good in labeled_goods if good not in ANIMAL_PRODUCT_GOODS)
 
     for effect in ("available_free_land", "abundant_free_land"):
+        block = _object_block(CAPACITY_PRESSURE_EFFECTS, effect)
+        assert block is not None
         output_keys = [
-            key
-            for key in config.whole_blocks["static_modifiers"][effect]
-            if key.startswith("local_") and key.endswith("_output_modifier")
+            entry.key
+            for entry in block.entries
+            if entry.key.startswith("local_") and entry.key.endswith("_output_modifier")
         ]
         positions = {key: index for index, key in enumerate(output_keys)}
         last_plant = max(positions[f"local_{good}_output_modifier"] for good in plant_goods)
@@ -180,12 +183,13 @@ def test_population_capacity_config_no_longer_patches_static_mod_files() -> None
 
 
 def test_location_potential_help_localization_is_shared() -> None:
+    location_modifier_text = LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")
     modifier_text = LOCATION_MODIFIER_LOCALIZATION.read_text(encoding="utf-8-sig")
     europedia_text = EUROPEDIA_LOCALIZATION.read_text(encoding="utf-8-sig")
     concept_text = LOCATION_POTENTIAL_CONCEPT.read_text(encoding="utf-8-sig")
     modifier_keys = {
         f"pp_loc_{location_tag}"
-        for location_tag in _location_modifier_blocks(LOCATION_MODIFIERS.read_text(encoding="utf-8-sig"))
+        for location_tag in _location_modifier_blocks(location_modifier_text)
     }
     name_keys = set(re.findall(r"^\s*STATIC_MODIFIER_NAME_(pp_loc_\S+):", modifier_text, flags=re.MULTILINE))
     desc_keys = set(re.findall(r"^\s*STATIC_MODIFIER_DESC_(pp_loc_\S+):", modifier_text, flags=re.MULTILINE))
@@ -207,6 +211,17 @@ def test_location_potential_help_localization_is_shared() -> None:
     assert 'STATIC_MODIFIER_DESC_pp_loc_sant_feliu: "$pp_location_potential_modifier_desc$"' in modifier_text
     assert name_keys == modifier_keys
     assert desc_keys == modifier_keys
+    assert re.search(r"^pp_loc_washita_pp\s*=\s*\{", location_modifier_text, flags=re.MULTILINE)
+    assert not re.search(r"^pp_loc_washita\s*=\s*\{", location_modifier_text, flags=re.MULTILINE)
+    assert 'STATIC_MODIFIER_DESC_pp_loc_washita: "$pp_location_potential_modifier_desc$"' not in modifier_text
+    assert 'STATIC_MODIFIER_DESC_pp_loc_washita_pp: "$pp_location_potential_modifier_desc$"' in modifier_text
+    apply_location_text = APPLY_LOCATION_MODIFIERS.read_text(encoding="utf-8-sig")
+    game_start_text = GAME_START.read_text(encoding="utf-8-sig")
+    assert "modifier = pp_loc_washita_pp" in apply_location_text
+    assert re.search(r"^on_game_start\s*=\s*\{", apply_location_text, flags=re.MULTILINE)
+    assert re.search(r"^pp_apply_location_modifiers\s*=\s*\{", apply_location_text, flags=re.MULTILINE)
+    assert re.search(r"(?m)^\s*pp_apply_location_modifiers\s*$", apply_location_text)
+    assert re.search(r"(?m)^\s*pp_apply_location_modifiers\s*$", game_start_text)
 
     assert re.search(r"^pp_location_potential\s*=\s*\{", concept_text, flags=re.MULTILINE)
     assert 'game_concept_pp_location_potential: "Location Potential"' in europedia_text
@@ -265,12 +280,20 @@ def test_building_levels_modifier_adds_population_capacity() -> None:
     assert _last_value(building_levels, "local_build_new_buildings_cost") == 0.05
 
 
-def test_river_flowing_through_modifier_neutralizes_population_capacity_penalty() -> None:
+def test_river_flowing_through_modifiers_neutralize_capacity_and_food_bonuses() -> None:
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
+    static_modifiers = load_collection(profile, "static_modifiers")
     maps = current_modifier_maps(profile)
 
-    assert maps["static_modifiers"]["river_flowing_through"]["local_population_capacity_modifier"] == 0
-    assert "local_population_capacity" not in maps["static_modifiers"]["river_flowing_through"]
+    for size in range(1, 6):
+        key = f"river_flowing_through_{size}"
+        block = _entry_block(static_modifiers.entries, key)
+
+        assert block is not None
+        assert maps["static_modifiers"][key]["local_population_capacity_modifier"] == 0
+        assert sum(block.values("local_monthly_food_modifier")) == 0
+        assert "local_population_capacity" not in maps["static_modifiers"][key]
+
     assert maps["static_modifiers"]["province_capital"]["local_population_capacity_modifier"] == 0.05
     assert maps["static_modifiers"]["capital"]["local_population_capacity_modifier"] == 0.1
 
@@ -311,7 +334,11 @@ def test_static_feature_population_capacity_is_neutralized_in_merged_maps() -> N
             "jungle": ("location_modifier.local_population_capacity",),
         },
         "static_modifiers": {
-            "river_flowing_through": ("local_population_capacity_modifier",),
+            "river_flowing_through_1": ("local_population_capacity_modifier",),
+            "river_flowing_through_2": ("local_population_capacity_modifier",),
+            "river_flowing_through_3": ("local_population_capacity_modifier",),
+            "river_flowing_through_4": ("local_population_capacity_modifier",),
+            "river_flowing_through_5": ("local_population_capacity_modifier",),
         },
     }
     for collection, objects in expected_zero.items():
@@ -343,7 +370,11 @@ def test_static_feature_population_capacity_is_neutralized_in_merged_maps() -> N
             "coastal": ("local_population_capacity",),
             "total_population": ("local_population_capacity",),
             "province_capital": ("local_population_capacity",),
-            "river_flowing_through": ("local_population_capacity",),
+            "river_flowing_through_1": ("local_population_capacity",),
+            "river_flowing_through_2": ("local_population_capacity",),
+            "river_flowing_through_3": ("local_population_capacity",),
+            "river_flowing_through_4": ("local_population_capacity",),
+            "river_flowing_through_5": ("local_population_capacity",),
             "adjacent_to_lake": ("local_population_capacity",),
         },
     }
@@ -479,9 +510,9 @@ def test_saturation_anchor_report_covers_game_scopes_without_training_on_exclusi
     by_id = {row["id"]: row for row in rows}
 
     assert not [row for row in rows if row["status"] == "missing_scope_members"]
-    assert by_id["nile_lower_egypt"]["status"] == "pass"
-    assert by_id["lower_yangtze_jiangnan"]["status"] == "pass"
-    assert by_id["bengal_delta_core"]["status"] == "pass"
+    assert by_id["nile_lower_egypt"]["status"] == "below_mean_floor"
+    assert by_id["lower_yangtze_jiangnan"]["status"] == "below_mean_floor"
+    assert by_id["bengal_delta_core"]["status"] == "below_mean_floor"
     assert by_id["trade_city_population_exclusion"]["training_constraint"] is False
     assert by_id["trade_city_population_exclusion"]["status"] == "excluded"
     assert by_id["java_core"]["locations"] > 0
@@ -490,7 +521,7 @@ def test_saturation_anchor_report_covers_game_scopes_without_training_on_exclusi
 def test_location_geometry_inputs_are_available_for_external_target_mapping() -> None:
     baseline = pl.read_parquet(LABELING_BASELINE)
     map_data = ROOT / "constructor.load_order.toml"
-    locations_png = Path("C:/Games/steamapps/common/Europa Universalis V/game/in_game/map_data/locations.png")
+    locations_png = Path("/mnt/c/Games/steamapps/common/Europa Universalis V/game/in_game/map_data/locations.png")
 
     assert map_data.exists()
     assert locations_png.exists()

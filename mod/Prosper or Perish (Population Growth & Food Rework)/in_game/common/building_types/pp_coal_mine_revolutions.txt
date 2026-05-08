@@ -39,7 +39,7 @@ unique_production_methods = {
         tools = 2.10
         beeswax = 0.42
         produced = coal
-        output = 4.55
+        output = 5.814
         category = building_maintenance
     }
 }
@@ -51,7 +51,7 @@ unique_production_methods = {
         lumber = 0.18
         tools = 0.12
         produced = clay
-        output = 0.35
+        output = 1.512
         category = building_maintenance
     }
 }

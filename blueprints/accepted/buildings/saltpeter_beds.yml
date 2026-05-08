@@ -1,0 +1,99 @@
+version: 2
+tag: saltpeter_beds
+building:
+  key: saltpeter_beds
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_saltpeter_beds_base_saltpeter
+    - name: slot_1
+      methods:
+        - pp_saltpeter_beds_natural_crusts
+        - pp_saltpeter_beds_leaching_vats
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 3
+    price = pp_saltpeter_beds_price
+    category = rgo_building_category
+    icon = saltpeter_beds
+    rural_settlement = yes
+    town = yes
+    city = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:saltpeter
+        NOT = { has_building = building_type:saltpeter_guild }
+        NOT = { has_building = building_type:saltpeter_workshop }
+        NOT = { has_building = building_type:putrefaction_works }
+        NOT = { has_building = building_type:putrefaction_mill }
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_saltpeter_beds_base_saltpeter = {
+            produced = saltpeter
+            output = 0.300
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_saltpeter_beds_natural_crusts = {
+            category = building_maintenance
+        }
+        pp_saltpeter_beds_leaching_vats = {
+            livestock = 0.500 # manure beds
+            pottery = 0.250 # leaching vats
+            fiber_crops = 0.074 # straw bedding
+            produced = saltpeter
+            output = 0.667
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_saltpeter_beds_price
+    body: |2-
+      {gold = 50}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_saltpeter_beds_price_cost_modifier: Affects the cost of building [ShowBuildingTypeName('saltpeter_beds')|e].
+    MODIFIER_TYPE_NAME_pp_saltpeter_beds_price_cost_modifier: Niter Beds Cost
+    saltpeter_beds_slot_0: Niter Beds
+    saltpeter_beds_slot_1: Leaching
+    saltpeter_beds: Niter Beds
+    saltpeter_beds_desc: Earthen niter beds and nitrate-rich soils where laborers gather saltpeter for powder makers. Natural crusts can be scraped by hand, while leaching vats work manure beds and straw bedding into a steadier saltpeter supply.
+    pp_saltpeter_beds_base_saltpeter: Niter Beds
+    pp_saltpeter_beds_natural_crusts: Natural Crusts
+    pp_saltpeter_beds_leaching_vats: Leaching Vats
+    pp_saltpeter_beds_price: Niter Beds Price
+icon:
+  source_png: ../assets/icons/saltpeter_beds.png
+  output_dds: saltpeter_beds.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for Niter Beds, transparent background. Center shallow earthen saltpeter leaching beds with pale crystalline crust, wicker baskets of nitrate-rich soil, clay leaching vats, and a small wooden rake. Use readable painterly shapes, chalky whites, dusty tans, muted clay browns, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  allow_rules:
+    input_throughput: Raw saltpeter extraction preserves the generated saltpeter RGO baseline below the global laborer input target.
+    output_throughput: Raw saltpeter extraction preserves the generated saltpeter RGO baseline below the global laborer output target.
+  production_methods:
+    pp_saltpeter_beds_base_saltpeter:
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Raw niter deposits repay faster than the generic amortization window at the standard small raw-site price.
+    pp_saltpeter_beds_leaching_vats:
+      production_efficiency: 1.05

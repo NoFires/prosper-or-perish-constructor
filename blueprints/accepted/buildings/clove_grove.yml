@@ -39,7 +39,7 @@ building:
     unique_production_methods = {
         pp_clove_grove_base_cloves = {
             produced = cloves
-            output = 0.3
+            output = 0.111
             category = building_maintenance
         }
     }
@@ -48,10 +48,10 @@ building:
             category = building_maintenance
         }
         pp_clove_grove_curing_houses = {
-            lumber = 0.12
-            coal = 0.04
+            lumber = 0.468 # curing racks
+            coal = 0.156 # drying heat
             produced = cloves
-            output = 0.25
+            output = 0.236
             category = building_maintenance
         }
     }
@@ -83,13 +83,13 @@ icon:
 
 evaluation:
   allow_rules:
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
   production_methods:
     pp_clove_grove_base_cloves:
       production_efficiency: 1.00
       allow_rules:
+        base_output_per_1k: Passive base output intentionally carries 30% of the full worked clove output after the high-base rebalance.
         amortization_months: Existing accepted spice grove payback is faster than the new amortization minimum; revisit during the clove grove rebalance.
     pp_clove_grove_curing_houses:
       production_efficiency: 1.10

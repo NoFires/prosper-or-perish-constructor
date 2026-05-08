@@ -5,6 +5,8 @@ import re
 
 import yaml
 
+from eu5gameparser.domain.eu5 import load_eu5_data
+
 
 ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted"
@@ -45,6 +47,14 @@ GAME_START_PATH = (
     / "on_action"
     / "pp_game_start.txt"
 )
+BUILDING_TYPES_ROOT = (
+    ROOT
+    / "mod"
+    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "in_game"
+    / "common"
+    / "building_types"
+)
 LOCALIZATION_ROOT = (
     ROOT
     / "mod"
@@ -52,6 +62,15 @@ LOCALIZATION_ROOT = (
     / "main_menu"
     / "localization"
     / "english"
+)
+LOCATION_MODIFIER_ADJUSTMENTS_PATH = (
+    ROOT
+    / "mod"
+    / "Prosper or Perish (Population Growth & Food Rework)"
+    / "main_menu"
+    / "common"
+    / "static_modifiers"
+    / "pp_location_modifier_adjustments.txt"
 )
 
 EXPECTED_CHAINS = {
@@ -121,10 +140,59 @@ DEACTIVATED_MINING_VILLAGE_BLUEPRINTS = {
     "buildings/mining_village_coke_blast_furnace.yml",
     "buildings/mining_village_hot_blast_furnace.yml",
 }
+GAME_START_DIRECT_RGO_BUILDINGS = {
+    "alum_quarry",
+    "coal_mine",
+    "copper_mine",
+    "gem_gravel_pit",
+    "gold_diggings",
+    "iron_mine",
+    "lead_mine",
+    "marble_quarry",
+    "cinnabar_pit",
+    "silver_mine",
+    "saltpeter_beds",
+    "tin_streamworks",
+}
+RAW_MATERIAL_BASE_PRODUCERS = {
+    "horse_breeders": ("horses", "pp_horse_breeders_base_horses"),
+    "sand_pit": ("sand", "pp_sand_pit_base_sand"),
+    "stone_quarry": ("stone", "pp_stone_quarry_base_stone"),
+    "incense_grove": ("incense", "pp_incense_grove_base_incense"),
+    "fiber_crops_farm": ("fiber_crops", "pp_fiber_crops_farm_base_fiber_crops"),
+    "ivory_hunting_camp": ("ivory", "pp_ivory_hunting_camp_base_ivory"),
+    "salt_collector": ("salt", "pp_salt_collector_base_salt"),
+    "saltpeter_beds": ("saltpeter", "pp_saltpeter_beds_base_saltpeter"),
+    "vineyard_estate": ("wine", "pp_vineyard_estate_base_wine"),
+    "cotton_plantation": ("cotton", "pp_cotton_plantation_base_cotton"),
+    "sugar_plantation": ("sugar", "pp_sugar_plantation_base_sugar"),
+    "tobacco_plantation": ("tobacco", "pp_tobacco_plantation_base_tobacco"),
+}
+RAW_PROCESSOR_EXCLUSIONS = {
+    "perfumery": "incense",
+    "winery": "wine",
+    "winery_manufactory": "wine",
+    "saltpeter_guild": "saltpeter",
+    "saltpeter_workshop": "saltpeter",
+    "putrefaction_works": "saltpeter",
+    "putrefaction_mill": "saltpeter",
+}
+PM_PRECISION_RE = re.compile(
+    r"^\s*(?P<key>[A-Za-z][A-Za-z0-9_]*)\s*=\s*(?P<value>-?\d+\.\d{4,})\b"
+)
+PM_PRECISION_SKIP_KEYS = {"debug_max_profit"}
 
 DEACTIVATED_BOG_IRON_BLUEPRINTS = {
     "buildings/bog_iron_smelter_slitting_mills.yml",
     "buildings/bog_iron_smelter_hot_blast_furnace.yml",
+}
+FORWARD_REFERENCE_OBSOLETE_EXEMPTIONS = {
+    ("enclosed_sheep_walks", "sheep_farms"),
+    ("iron_mine_deep", "iron_mine_improved"),
+    ("lead_mine_cupola_smelting", "lead_mine_improved"),
+    ("managed_forest_village", "forest_village"),
+    ("model_farm", "farming_village"),
+    ("tin_stamping_mill", "tin_streamworks"),
 }
 
 
@@ -143,6 +211,58 @@ def _advance_block(advance: str, text: str) -> str:
     )
     assert match is not None, f"{advance} block missing"
     return match.group("body")
+
+
+def _production_method_precision_offenders(path: Path) -> list[str]:
+    text = path.read_text(encoding="utf-8-sig")
+    depth = 0
+    production_method_depths: list[int] = []
+    offenders: list[str] = []
+
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        if re.search(r"\bunique_production_methods\s*=\s*\{", line):
+            production_method_depths.append(depth + line.count("{") - line.count("}"))
+        if production_method_depths:
+            match = PM_PRECISION_RE.match(line)
+            if match and match.group("key") not in PM_PRECISION_SKIP_KEYS:
+                relative = path.relative_to(ROOT)
+                offenders.append(f"{relative}:{line_number}: {line.strip()}")
+        depth += line.count("{") - line.count("}")
+        while production_method_depths and depth < production_method_depths[-1]:
+            production_method_depths.pop()
+
+    return offenders
+
+
+def _base_production_method_input_offenders(path: Path) -> list[str]:
+    text = path.read_text(encoding="utf-8-sig")
+    lines = text.splitlines()
+    offenders: list[str] = []
+
+    for index, line in enumerate(lines):
+        match = re.match(
+            r"\s*(?P<method>pp_[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*_base_[A-Za-z0-9_]+)\s*=\s*\{\s*$",
+            line,
+        )
+        if match is None:
+            continue
+        method = match.group("method")
+        if method.endswith("_base_maintenance"):
+            continue
+        block_lines: list[str] = []
+        depth = line.count("{") - line.count("}")
+        for block_line in lines[index + 1 :]:
+            depth += block_line.count("{") - block_line.count("}")
+            if depth < 1:
+                break
+            block_lines.append(block_line)
+        for block_line in block_lines:
+            key_match = re.match(r"\s*(?P<key>[A-Za-z][A-Za-z0-9_]*)\s*=", block_line)
+            if key_match and key_match.group("key") not in {"produced", "output", "category"}:
+                relative = path.relative_to(ROOT)
+                offenders.append(f"{relative}:{index + 1}: {method} has input {key_match.group('key')}")
+
+    return offenders
 
 
 def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
@@ -177,7 +297,14 @@ def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
                 assert "obsolete =" not in body
             else:
                 previous = chain[tier - 1][0]
-                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                if (key, previous) in FORWARD_REFERENCE_OBSOLETE_EXEMPTIONS:
+                    assert not re.search(
+                        rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$",
+                        body,
+                        flags=re.M,
+                    )
+                else:
+                    assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
                 assert "icon" in raw, f"{key} must provide its own icon"
                 assert raw["icon"]["output_dds"] == f"{key}.dds"
 
@@ -234,6 +361,48 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
     assert "potential =" not in steam_block
 
 
+def test_clay_and_sand_pit_upgrade_chains_are_explicit_and_unlockable() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+    expected_chains = {
+        "clay_pit": [
+            ("clay_pit", None),
+            ("clay_washmill", "pp_clay_washmill"),
+        ],
+        "sand_pit": [
+            ("sand_pit", None),
+            ("sand_washery", "pp_sand_washery"),
+        ],
+    }
+
+    for family, chain in expected_chains.items():
+        for tier, (key, unlock_advance) in enumerate(chain):
+            raw = _load_blueprint(key)
+
+            assert f"buildings/{key}.yml" in enabled
+            assert raw["tag"] == key
+            assert raw["building"]["key"] == key
+            assert raw.get("upgrade_chain") == {
+                "family": family,
+                "tier": tier,
+                "previous": chain[tier - 1][0] if tier > 0 else None,
+                "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
+                "unlock_advance": unlock_advance,
+            }
+
+            body = raw["building"]["body"]
+            if tier == 0:
+                assert "obsolete =" not in body
+            else:
+                previous = chain[tier - 1][0]
+                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                assert raw["icon"]["output_dds"] == f"{key}.dds"
+                advancements = raw.get("advancements")
+                assert isinstance(advancements, list)
+                advancement = next(item for item in advancements if item["key"] == unlock_advance)
+                assert re.search(rf"^\s*unlock_building\s*=\s*{re.escape(key)}\s*$", advancement["body"], flags=re.M)
+
+
 def test_rural_food_building_upgrade_chains_are_explicit() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
@@ -276,11 +445,27 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
                 assert "obsolete =" not in body
             else:
                 previous = chain[tier - 1][0]
-                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                if (key, previous) in FORWARD_REFERENCE_OBSOLETE_EXEMPTIONS:
+                    assert not re.search(
+                        rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$",
+                        body,
+                        flags=re.M,
+                    )
+                else:
+                    assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+
+
+def test_manpower_building_blueprints_do_not_copy_invalid_owner_culture_gate() -> None:
+    for key in ("armory", "training_fields", "barracks", "regimental_camp", "conscription_center"):
+        body = _load_blueprint(key)["building"]["body"]
+
+        assert "has_primary_or_accepted_culture" not in body
+        assert "prev.dominant_culture" not in body
+        assert "prev.location.dominant_culture" not in body
 
 
 def test_game_start_never_places_offshore_fishery_directly_and_culls_invalid_locations() -> None:
-    text = GAME_START_PATH.read_text(encoding="utf-8")
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
 
     assert "construct_building = {\n\t\t\t\t\t\tbuilding_type = building_type:offshore_fishery" not in text
     assert re.search(
@@ -289,6 +474,101 @@ def test_game_start_never_places_offshore_fishery_directly_and_culls_invalid_loc
         text,
         flags=re.S,
     )
+
+
+def test_game_start_restores_lake_adjacency_modifier() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    modifier_text = LOCATION_MODIFIER_ADJUSTMENTS_PATH.read_text(encoding="utf-8-sig")
+    localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
+        encoding="utf-8-sig"
+    )
+
+    assert re.search(r"on_game_start\s*=\s*\{.*?pp_apply_adjacent_to_lake_modifier", text, flags=re.S)
+    assert "pp_apply_adjacent_to_lake_modifier = {" in text
+    assert "limit = { is_adjacent_to_lake = yes }" in text
+    assert "modifier = is_adjacent_to_lake" in text
+    assert "has_location_modifier = is_adjacent_to_lake" in text
+    assert "remove_location_modifier = is_adjacent_to_lake" in text
+    assert "modifier = adjacent_to_lake" not in text
+    assert "has_location_modifier = adjacent_to_lake" not in text
+    assert "remove_location_modifier = adjacent_to_lake" not in text
+    assert re.search(r"^is_adjacent_to_lake\s*=\s*\{.*?category\s*=\s*location", modifier_text, flags=re.S | re.M)
+    assert "STATIC_MODIFIER_NAME_is_adjacent_to_lake" in localization_text
+
+
+def test_game_start_direct_rgo_construction_checks_buildability() -> None:
+    lines = GAME_START_PATH.read_text(encoding="utf-8-sig").splitlines()
+    offenders: list[str] = []
+
+    for index, line in enumerate(lines):
+        match = re.match(r"\s*building_type\s*=\s*building_type:([A-Za-z0-9_]+)\s*$", line)
+        if not match or match.group(1) not in GAME_START_DIRECT_RGO_BUILDINGS:
+            continue
+        if index == 0 or not re.match(r"\s*construct_building\s*=\s*\{\s*$", lines[index - 1]):
+            continue
+        building = match.group(1)
+        guard = f"can_build_building = building_type:{building}"
+        if guard not in "\n".join(lines[max(0, index - 24) : index]):
+            offenders.append(f"{building} near line {index + 1}")
+
+    assert not offenders
+
+
+def test_building_production_method_quantities_use_at_most_three_decimals() -> None:
+    offenders: list[str] = []
+    paths = sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml")) + sorted(BUILDING_TYPES_ROOT.glob("*.txt"))
+    for path in paths:
+        offenders.extend(_production_method_precision_offenders(path))
+
+    assert not offenders
+
+
+def test_base_production_methods_are_output_only() -> None:
+    offenders: list[str] = []
+    paths = sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml")) + sorted(BUILDING_TYPES_ROOT.glob("*.txt"))
+    for path in paths:
+        offenders.extend(_base_production_method_input_offenders(path))
+
+    assert not offenders
+
+
+def test_target_raw_material_producers_have_no_input_base_methods() -> None:
+    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+    methods = {
+        row["name"]: row
+        for row in data.building_data.production_methods.select(
+            ["name", "building", "produced", "input_goods"]
+        ).to_dicts()
+    }
+
+    for building, (good, method) in RAW_MATERIAL_BASE_PRODUCERS.items():
+        assert method in methods
+        row = methods[method]
+        assert row["building"] == building
+        assert row["produced"] == good
+        assert row["input_goods"] == []
+
+
+def test_raw_processor_replacements_exclude_matching_raw_materials() -> None:
+    for building, good in RAW_PROCESSOR_EXCLUSIONS.items():
+        body = _load_blueprint(building)["building"]["body"]
+        assert "location_potential = {" in body
+        assert f"raw_material = goods:{good}" in body
+        assert re.search(rf"NOT\s*=\s*\{{\s*raw_material\s*=\s*goods:{good}\s*\}}", body)
+
+
+def test_game_start_routes_raw_saltpeter_to_niter_beds() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    saltpeter_windows = []
+    for match in re.finditer(r"raw_material\s*=\s*goods:saltpeter", text):
+        window = text[match.start() : match.start() + 600]
+        if "construct_building" in window:
+            saltpeter_windows.append(window)
+
+    assert saltpeter_windows
+    assert all("building_type = building_type:saltpeter_beds" in window for window in saltpeter_windows)
+    assert all("building_type = building_type:saltpeter_guild" not in window for window in saltpeter_windows)
+    assert "unlock_building = saltpeter_beds" in ADVANCES_PATH.read_text(encoding="utf-8-sig")
 
 
 def test_mining_village_chain_is_deactivated() -> None:

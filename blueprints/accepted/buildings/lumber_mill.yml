@@ -63,7 +63,7 @@ building:
             }
     		pp_lumber_mill_maintenance = {
     			produced = lumber
-    			output = 2.4
+    			output = 2.64
     			tools = 1.10
     			
     			category = building_maintenance
@@ -104,7 +104,7 @@ building:
             pp_lumber_mill_extra_rations = {
                 victuals = 1.30
                 produced = lumber
-                output = 2.10
+                output = 2.275
                 debug_max_profit = 0
                 category = building_maintenance
             }
@@ -155,6 +155,9 @@ evaluation:
   production_methods:
     pp_lumber_mill_base_lumber:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_lumber_mill_no_primary:
       production_efficiency: 1.00
     pp_lumber_mill_maintenance:

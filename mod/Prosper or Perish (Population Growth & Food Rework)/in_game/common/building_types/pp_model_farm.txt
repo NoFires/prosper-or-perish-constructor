@@ -10,7 +10,6 @@ icon = model_farm
 rural_settlement = yes
 town = yes
 city = yes
-obsolete = farming_village
 forbidden_for_estates = yes
 ai_forbid_shutdown = no
 can_close = yes
@@ -70,7 +69,7 @@ unique_production_methods = {
     }
     pp_model_farm_livestock = {
         produced = livestock
-        output = 9.10
+        output = 9.639
         tools = 1.80
         horses = 1.71
         furniture = 0.495

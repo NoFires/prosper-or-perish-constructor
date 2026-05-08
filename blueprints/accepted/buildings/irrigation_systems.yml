@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: irrigation_systems
 building:
   key: irrigation_systems
@@ -18,6 +18,7 @@ building:
       rural_settlement = yes
       town = yes
       city = yes
+      megalopolis = yes
       location_potential = {
         OR = {
           has_river = yes
@@ -82,3 +83,9 @@ localization:
   entries:
     irrigation_systems_slot_0: Maintenance
     pp_irrigation_maintenance: Irrigation Maintenance
+
+evaluation:
+  production_methods:
+    pp_irrigation_maintenance:
+      allow_rules:
+        profit_percent: Pre-existing support method remains outside the profit band and was not part of the pp error-log economics warnings.

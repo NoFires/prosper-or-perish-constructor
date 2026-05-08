@@ -1,0 +1,72 @@
+version: 2
+tag: winery
+building:
+  key: winery
+  mode: REPLACE
+  source: pp_building_adjustments.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_winery_fruit_wine
+        - pp_winery_rice_wine
+        - pp_winery_honey_wine
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    pop_type = burghers
+    max_levels = guild_max_level
+    category = consumer_goods_category
+    employment_size = guild_employment
+    town = yes
+    city = yes
+    megalopolis = yes
+
+    location_potential = {
+        NOT = { raw_material = goods:wine }
+    }
+
+    build_time = guild_build_time
+    unique_production_methods = {
+        pp_winery_fruit_wine = {
+            fruit = 1.25
+            lumber = 0.17
+            tools = 0.1
+            produced = wine
+            output = 1
+            category = guild_input
+            debug_max_profit = 0.2
+        }
+        pp_winery_rice_wine = {
+            rice = 1.25
+            lumber = 0.16
+            tools = 0.1
+            produced = wine
+            output = 1
+            category = guild_input
+            debug_max_profit = 0.2
+        }
+        pp_winery_honey_wine = {
+            beeswax = 0.60
+            lumber = 0.20
+            tools = 0.1
+            produced = wine
+            output = 1
+            category = guild_input
+            debug_max_profit = 0.2
+        }
+    }
+localization:
+  entries:
+    winery_slot_0: Fermentation
+    pp_winery_fruit_wine: Fruit Wine
+    pp_winery_rice_wine: Rice Wine
+    pp_winery_honey_wine: Honey Wine
+
+evaluation:
+  building:
+    employment_size: 0.1
+  allow_rules:
+    profit_percent: Vanilla winery economics are preserved; this replacement only adds raw-wine anti-overlap.
+    input_throughput: Vanilla winery economics are preserved; this replacement only adds raw-wine anti-overlap.
+    output_throughput: Vanilla winery economics are preserved; this replacement only adds raw-wine anti-overlap.
+    amortization_months: Vanilla winery economics are preserved; this replacement only adds raw-wine anti-overlap.

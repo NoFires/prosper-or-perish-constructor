@@ -25,7 +25,7 @@ can_close = yes
 unique_production_methods = {
     pp_sericulture_farm_base_silk = {
         produced = silk
-        output = 0.3
+        output = 0.120
         category = building_maintenance
     }
 }
@@ -34,10 +34,10 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_sericulture_farm_cocoon_reeling = {
-        lumber = 0.12 # rearing trays, frames
-        tools = 0.04 # knives, reels
+        lumber = 0.358 # rearing trays, frames
+        tools = 0.119 # knives, reels
         produced = silk
-        output = 0.2
+        output = 0.266
         category = building_maintenance
     }
 }

@@ -2,9 +2,86 @@ version: 2
 tag: tobacco_plantation
 building:
   key: tobacco_plantation
-  mode: TRY_INJECT
+  mode: REPLACE
   source: pp_building_adjustments.txt
-  production_method_slots: []
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_tobacco_plantation_base_tobacco
+    - name: slot_1
+      methods:
+        - pp_tobacco_plantation_field_cutting
+        - pp_tobacco_plantation_curing_barns
   possible_production_methods: []
   body: |2-
-    	price = pp_plantation_building_price
+    is_foreign = no
+    pop_type = slaves
+    max_levels = plantation_cap
+    employment_size = plantation_employment
+    category = colonial_category
+
+    location_potential = {
+        raw_material = goods:tobacco
+        OR = {
+            is_overseas_for_owner = yes
+            owner ?= { is_colonial_subject = yes }
+        }
+    }
+
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    price = pp_plantation_building_price
+    always_add_demands = yes
+    build_time = plantation_build_time
+
+    unique_production_methods = {
+        pp_tobacco_plantation_base_tobacco = {
+            produced = tobacco
+            output = 0.300
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_tobacco_plantation_field_cutting = {
+            category = building_maintenance
+        }
+        pp_tobacco_plantation_curing_barns = {
+            slaves_goods = 0.320 # plantation gangs
+            lumber = 0.350 # curing barns
+            pottery = 0.100 # sweating and storage jars
+            tools = 0.045 # knives and presses
+            produced = tobacco
+            output = 0.667
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_tobacco_output_modifier = 0.1
+        local_slave_pop_satisfaction = -0.005
+    }
+    construction_demand = plantation_construction
+localization:
+  entries:
+    tobacco_plantation_slot_0: Tobacco Fields
+    tobacco_plantation_slot_1: Curing
+    pp_tobacco_plantation_base_tobacco: Tobacco Fields
+    pp_tobacco_plantation_field_cutting: Field Cutting
+    pp_tobacco_plantation_curing_barns: Curing Barns
+
+evaluation:
+  building:
+    employment_size: 1.0
+  allow_rules:
+    input_throughput: Plantation worked input scale preserves the generated raw tobacco RGO baseline.
+    output_throughput: Plantation worked output scale preserves the generated raw tobacco RGO baseline.
+    amortization_months: Plantation price is shared with vanilla plantation economics and intentionally outside generic raw payback cadence.
+  production_methods:
+    pp_tobacco_plantation_base_tobacco:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Plantation employment is smaller than the generic laborer raw-site baseline, so the 30% base share is high per 1k.
+    pp_tobacco_plantation_curing_barns:
+      production_efficiency: 1.05

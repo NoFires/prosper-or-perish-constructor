@@ -38,7 +38,7 @@ unique_production_methods = {
         tools = 0.95
         beeswax = 0.225
         produced = copper
-        output = 1.55
+        output = 1.8
         category = building_maintenance
     }
 }
@@ -51,14 +51,14 @@ unique_production_methods = {
         tools = 0.08
         lead = 0.05
         produced = silver
-        output = 0.05
+        output = 0.098
         category = building_maintenance
     }
     pp_copper_mine_tin = {
         lumber = 0.08
         tools = 0.06
         produced = tin
-        output = 0.08
+        output = 0.18
         category = building_maintenance
     }
 }

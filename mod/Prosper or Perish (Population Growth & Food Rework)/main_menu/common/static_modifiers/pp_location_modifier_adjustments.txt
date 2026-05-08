@@ -1,4 +1,4 @@
-# Starvation is now much more both in terms of people dying and in terms of people getting out of the province
+﻿# Starvation is now much more both in terms of people dying and in terms of people getting out of the province
 # Food storage in province is now the driver of population growth
 TRY_REPLACE:province_starving = {
 	game_data = {
@@ -90,6 +90,12 @@ TRY_REPLACE:coastal = {
 	local_monthly_food = 0 # 1
 	local_supply_limit_modifier = 0.05
 	local_monthly_development_modifier = 0.20
+}
+# Location marker applied on game start for locations bordering lakes.
+is_adjacent_to_lake = {
+	game_data = {
+		category = location
+	}
 }
 TRY_REPLACE:building_levels = {
 	game_data = {
@@ -283,9 +289,25 @@ TRY_REPLACE:unemployed_peasants = {
 TRY_INJECT:market_center = {
 	maximum_stockpile_capacity = 250
 }
-TRY_INJECT:river_flowing_through = {
+TRY_INJECT:river_flowing_through_1 = {
 	local_monthly_food_modifier = -0.05 # vanilla 0.05
 	local_population_capacity_modifier = -0.1
+}
+TRY_INJECT:river_flowing_through_2 = {
+	local_monthly_food_modifier = -0.10 # vanilla 0.10
+	local_population_capacity_modifier = -0.2
+}
+TRY_INJECT:river_flowing_through_3 = {
+	local_monthly_food_modifier = -0.15 # vanilla 0.15
+	local_population_capacity_modifier = -0.3
+}
+TRY_INJECT:river_flowing_through_4 = {
+	local_monthly_food_modifier = -0.20 # vanilla 0.20
+	local_population_capacity_modifier = -0.4
+}
+TRY_INJECT:river_flowing_through_5 = {
+	local_monthly_food_modifier = -0.25 # vanilla 0.25
+	local_population_capacity_modifier = -0.5
 }
 
 TRY_INJECT:local_abuses_modifier = {

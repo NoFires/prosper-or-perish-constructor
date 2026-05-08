@@ -2,18 +2,93 @@ version: 2
 tag: sugar_plantation
 building:
   key: sugar_plantation
-  mode: TRY_INJECT
+  mode: REPLACE
   source: pp_building_adjustments.txt
-  production_method_slots: []
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_sugar_plantation_base_sugar
+    - name: slot_1
+      methods:
+        - pp_sugar_plantation_cane_fields
+        - pp_sugar_plantation_boiling_house
   possible_production_methods: []
   body: |2-
-    	price = pp_plantation_building_price
+    is_foreign = no
+    pop_type = slaves
+    max_levels = plantation_cap
+    employment_size = plantation_employment
+    category = colonial_category
+
+    location_potential = {
+        raw_material = goods:sugar
+        OR = {
+            is_overseas_for_owner = yes
+            owner ?= { is_colonial_subject = yes }
+        }
+    }
+
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    price = pp_plantation_building_price
+    always_add_demands = yes
+    build_time = plantation_build_time
+
+    unique_production_methods = {
+        pp_sugar_plantation_base_sugar = {
+            produced = sugar
+            output = 0.300
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_sugar_plantation_cane_fields = {
+            category = building_maintenance
+        }
+        pp_sugar_plantation_boiling_house = {
+            slaves_goods = 0.320 # plantation gangs
+            lumber = 0.250 # cane press frames
+            coal = 0.150 # boiling-house fuel
+            tools = 0.029 # rollers and knives
+            produced = sugar
+            output = 0.667
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_sugar_output_modifier = 0.1
+        local_slave_pop_satisfaction = -0.005
+    }
+    construction_demand = plantation_construction
 prices:
   - key: pp_plantation_building_price
     body: |2-
       {
-      	gold = 200
+        gold = 200
       }
 localization:
   entries:
     pp_plantation_building_price: Plantation Building Price
+    sugar_plantation_slot_0: Cane Fields
+    sugar_plantation_slot_1: Pressing & Boiling
+    pp_sugar_plantation_base_sugar: Cane Fields
+    pp_sugar_plantation_cane_fields: Unpressed Cane Fields
+    pp_sugar_plantation_boiling_house: Boiling House
+
+evaluation:
+  building:
+    employment_size: 1.0
+  allow_rules:
+    input_throughput: Plantation worked input scale preserves the generated raw sugar RGO baseline.
+    output_throughput: Plantation worked output scale preserves the generated raw sugar RGO baseline.
+    amortization_months: Plantation price is shared with vanilla plantation economics and intentionally outside generic raw payback cadence.
+  production_methods:
+    pp_sugar_plantation_base_sugar:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Plantation employment is smaller than the generic laborer raw-site baseline, so the 30% base share is high per 1k.
+    pp_sugar_plantation_boiling_house:
+      production_efficiency: 1.05

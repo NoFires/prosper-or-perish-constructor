@@ -37,7 +37,7 @@ unique_production_methods = {
         lumber = 0.591
         tools = 0.765
         produced = alum
-        output = 1.15
+        output = 1.273
         category = building_maintenance
     }
 }
@@ -49,14 +49,14 @@ unique_production_methods = {
         lumber = 0.12
         tools = 0.08
         produced = stone
-        output = 0.25
+        output = 0.504
         category = building_maintenance
     }
     pp_alum_quarry_clay = {
         lumber = 0.10
         tools = 0.06
         produced = clay
-        output = 0.24
+        output = 0.792
         category = building_maintenance
     }
 }

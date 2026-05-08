@@ -12,6 +12,20 @@ from mod_injector.config import load_mod_injector_config
 
 
 ROOT = Path(__file__).resolve().parents[1]
+MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
+ESTATE_PRIVILEGE_ADJUSTMENTS = (
+    MOD_ROOT / "in_game" / "common" / "estate_privileges" / "pp_estate_privilege_adjustments.txt"
+)
+GOVERNMENT_REFORM_ADJUSTMENTS = (
+    MOD_ROOT / "in_game" / "common" / "government_reforms" / "pp_government_reform_adjustments.txt"
+)
+ESTATE_ADJUSTMENTS = MOD_ROOT / "in_game" / "common" / "estates" / "pp_estate_adjustments.txt"
+GOODS_DEMAND = MOD_ROOT / "in_game" / "common" / "goods_demand" / "pp_new_goods_demands.txt"
+LAW_ADJUSTMENTS = MOD_ROOT / "in_game" / "common" / "laws" / "pp_law_adjustments.txt"
+PRICE_ROOT = MOD_ROOT / "in_game" / "common" / "prices"
+MODIFIER_TYPE_DEFINITIONS = MOD_ROOT / "main_menu" / "common" / "modifier_type_definitions"
+MODIFIER_ICONS = MOD_ROOT / "main_menu" / "common" / "modifier_icons"
+LOCALIZATION_ROOT = MOD_ROOT / "main_menu" / "localization" / "english"
 
 
 def test_constructor_config_loads() -> None:
@@ -47,7 +61,7 @@ def test_constructor_config_loads() -> None:
     assert config.blueprint_evaluation.base_output_per_1k_min == 0.07
     assert config.blueprint_evaluation.base_output_per_1k_max == 0.15
     assert config.blueprint_evaluation.throughput_gold_per_1k["laborers"] == 1.5
-    assert config.blueprint_evaluation.age_throughput_growth == 0.15
+    assert config.blueprint_evaluation.age_throughput_growth == 0.10
     assert config.blueprint_evaluation.throughput_tolerance == 0.30
     assert config.blueprint_evaluation.amortization_months_min == 120.0
     assert config.blueprint_evaluation.amortization_months_max == 360.0
@@ -78,6 +92,116 @@ def test_replaced_buildings_do_not_reuse_vanilla_unique_method_names() -> None:
         reused = sorted(unique_methods & vanilla_methods)
         if reused:
             offenders.append(f"{blueprint.relative_to(ROOT)}: {', '.join(reused)}")
+        non_pp = sorted(method for method in unique_methods if not method.startswith("pp_"))
+        if non_pp:
+            offenders.append(f"{blueprint.relative_to(ROOT)} non-pp methods: {', '.join(non_pp)}")
+
+    assert not offenders
+
+
+def test_land_owning_farmers_is_a_full_privilege_replacement() -> None:
+    parsed = parse_file(ESTATE_PRIVILEGE_ADJUSTMENTS)
+    entries = {entry.key: entry.value for entry in parsed.entries}
+
+    assert "TRY_REPLACE:land_owning_farmers" in entries
+    assert "TRY_INJECT:land_owning_farmers" not in entries
+    privilege = entries["TRY_REPLACE:land_owning_farmers"]
+    assert isinstance(privilege, CList)
+
+    privilege_values = _entry_values(privilege)
+    assert privilege_values["estate"] == "peasants_estate"
+    assert privilege_values["content_priority"] == 200
+    assert "potential" in privilege_values
+    assert "can_revoke" in privilege_values
+
+    country_modifier = privilege_values["country_modifier"]
+    assert isinstance(country_modifier, CList)
+    modifier_values = _entry_values(country_modifier)
+    assert "global_monthly_food_modifier" not in modifier_values
+    assert modifier_values["levy_combat_efficiency_modifier"] == 0.05
+    assert modifier_values["global_population_capacity_modifier"] == 0.05
+    assert modifier_values["global_wheat_output_modifier"] == 0.05
+    assert modifier_values["global_fish_output_modifier"] == 0.05
+    assert modifier_values["global_millet_output_modifier"] == 0.05
+    assert modifier_values["global_peasants_estate_power"] == 0.5
+
+
+def test_powerful_magnates_food_modifier_is_zeroed_by_replacement() -> None:
+    parsed = parse_file(GOVERNMENT_REFORM_ADJUSTMENTS)
+    entries = {entry.key: entry.value for entry in parsed.entries}
+
+    assert "REPLACE:hun_power_to_magnates" in entries
+    assert "TRY_INJECT:hun_power_to_magnates" not in entries
+    reform = entries["REPLACE:hun_power_to_magnates"]
+    assert isinstance(reform, CList)
+
+    reform_values = _entry_values(reform)
+    assert reform_values["age"] == "age_2_renaissance"
+    assert reform_values["unique"] is True
+    assert reform_values["content_priority"] == 600
+    assert "potential" in reform_values
+    assert reform_values["years"] == 2
+
+    country_modifier = reform_values["country_modifier"]
+    assert isinstance(country_modifier, CList)
+    modifier_values = _entry_values(country_modifier)
+    assert modifier_values["global_nobles_estate_power"] == 1.0
+    assert modifier_values["global_estate_target_satisfaction"] == "medium_permanent_target_satisfaction"
+    assert modifier_values["global_monthly_food_modifier"] == 0
+
+
+def test_dhimmi_satisfaction_uses_small_regional_staple_output_package() -> None:
+    parsed = parse_file(ESTATE_ADJUSTMENTS)
+    entries = {entry.key: entry.value for entry in parsed.entries}
+
+    assert "TRY_INJECT:dhimmi_estate" in entries
+    estate = entries["TRY_INJECT:dhimmi_estate"]
+    assert isinstance(estate, CList)
+
+    satisfaction = _entry_values(estate)["satisfaction"]
+    assert isinstance(satisfaction, CList)
+    modifier_values = _entry_values(satisfaction)
+
+    assert "global_monthly_food_modifier" not in modifier_values
+    assert modifier_values == {
+        "global_wheat_output_modifier": 0.05,
+        "global_rice_output_modifier": 0.05,
+        "global_millet_output_modifier": 0.05,
+        "global_legumes_output_modifier": 0.05,
+        "global_fruit_output_modifier": 0.05,
+        "global_olives_output_modifier": 0.05,
+    }
+
+
+def test_inject_targets_exist_in_constructor_load_order() -> None:
+    load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
+    vanilla_root = load_order.vanilla_root
+    offenders: list[str] = []
+
+    for relative_common, vanilla_common in (
+        (Path("in_game") / "common", vanilla_root / "game" / "in_game" / "common"),
+        (Path("main_menu") / "common", vanilla_root / "game" / "main_menu" / "common"),
+    ):
+        mod_common = MOD_ROOT / relative_common
+        for collection_dir in sorted(path for path in mod_common.iterdir() if path.is_dir()):
+            collection = collection_dir.relative_to(mod_common)
+            existing = _database_keys(vanilla_common / collection)
+            if collection == Path("static_modifiers"):
+                existing |= _database_keys(vanilla_root / "game" / "main_menu" / "common" / collection)
+
+            for path in sorted(collection_dir.rglob("*.txt")):
+                for entry in parse_file(path).entries:
+                    if not isinstance(entry.value, CList):
+                        continue
+                    mode, key = _entry_mode(entry.key)
+                    if mode in {"INJECT", "TRY_INJECT"} and key not in existing:
+                        offenders.append(
+                            f"{path.relative_to(ROOT)}:{entry.location.line} {mode}:{key}"
+                        )
+                    if mode in {"CREATE", "REPLACE", "REPLACE_OR_CREATE", "INJECT_OR_CREATE"}:
+                        existing.add(key)
+                    elif mode in {"TRY_REPLACE", "INJECT", "TRY_INJECT"} and key in existing:
+                        existing.add(key)
 
     assert not offenders
 
@@ -98,6 +222,104 @@ def test_cookery_building_line_has_resolved_prices() -> None:
     assert buildings["cookery"]["price_gold"] == 150.0
     assert buildings["victualling_yard"]["price"] == "pp_victualling_yard_price"
     assert buildings["victualling_yard"]["price_gold"] == 225.0
+
+
+def test_victuals_pop_demand_uses_scalar_database_value() -> None:
+    entries = {entry.key: entry.value for entry in parse_file(GOODS_DEMAND).entries}
+    pop_demand = entries["INJECT:pop_demand"]
+    assert isinstance(pop_demand, CList)
+
+    values = _entry_values(pop_demand)
+    assert values["victuals"] == 1
+
+
+def test_pp_law_adjustments_use_existing_modifier_types() -> None:
+    text = LAW_ADJUSTMENTS.read_text(encoding="utf-8-sig")
+
+    assert "army_infantry_maintenance_cost_modifier" not in text
+    assert "trade_efficiency =" not in text
+    assert "army_light_infantry_maintenance_cost_modifier = -0.1" in text
+    assert "army_heavy_infantry_maintenance_cost_modifier = -0.1" in text
+    assert "trade_land_efficiency = small_trade_efficiency_bonus" in text
+    assert "trade_sea_efficiency = small_trade_efficiency_bonus" in text
+
+
+def test_pp_building_prices_have_modifier_type_assets_and_localization() -> None:
+    price_keys = {
+        key
+        for key in _database_keys(PRICE_ROOT)
+        if key.startswith("pp_") and key.endswith("_price")
+    }
+    expected = {f"{price_key}_cost_modifier" for price_key in price_keys}
+
+    modifier_types = _database_keys(MODIFIER_TYPE_DEFINITIONS)
+    modifier_icons = _database_keys(MODIFIER_ICONS)
+    localization_text = "\n".join(
+        path.read_text(encoding="utf-8-sig") for path in sorted(LOCALIZATION_ROOT.glob("*.yml"))
+    )
+
+    assert expected
+    assert not (expected - modifier_types)
+    assert not (expected - modifier_icons)
+    assert not [
+        key
+        for key in sorted(expected)
+        if f"MODIFIER_TYPE_DESC_{key}:" not in localization_text
+        or f"MODIFIER_TYPE_NAME_{key}:" not in localization_text
+    ]
+
+
+def test_victuals_pop_demand_modifier_type_is_registered() -> None:
+    modifier_types = _database_keys(MODIFIER_TYPE_DEFINITIONS)
+    modifier_icons = _database_keys(MODIFIER_ICONS)
+    localization_text = "\n".join(
+        path.read_text(encoding="utf-8-sig") for path in sorted(LOCALIZATION_ROOT.glob("*.yml"))
+    )
+
+    assert "global_victuals_pop_demand" in modifier_types
+    assert "global_victuals_pop_demand" in modifier_icons
+    assert "MODIFIER_TYPE_NAME_global_victuals_pop_demand:" in localization_text
+    assert "MODIFIER_TYPE_DESC_global_victuals_pop_demand:" in localization_text
+
+
+def test_current_megalopolis_buildings_allow_megalopolis() -> None:
+    for blueprint_name in ("dock", "fruit_orchard", "irrigation_systems"):
+        template = load_template(ROOT / "blueprints" / "accepted" / "buildings" / f"{blueprint_name}.yml")
+        rendered = parse_text(
+            f"{template.key} = {{\n{template.building_body}\n}}\n",
+            path=Path(f"{blueprint_name}.yml"),
+        )
+        values = _entry_values(rendered.entries[0].value)
+        assert values["megalopolis"] is True
+
+
+def test_victuals_market_construction_and_salt_collector_debug_keys_are_localized() -> None:
+    victuals_market = load_template(ROOT / "blueprints" / "accepted" / "buildings" / "victuals_market.yml")
+    salt_collector = load_template(ROOT / "blueprints" / "accepted" / "buildings" / "salt_collector.yml")
+
+    assert victuals_market.localization["victuals_market_construction"] == "Victuals Market Construction"
+
+    rendered = parse_text(
+        f"{salt_collector.key} = {{\n{salt_collector.building_body}\n}}\n",
+        path=Path("salt_collector.yml"),
+    )
+    body = rendered.entries[0].value
+    assert isinstance(body, CList)
+    methods = body.values("unique_production_methods")[0]
+    assert isinstance(methods, CList)
+    base = _entry_values(methods)["pp_salt_collector_base_salt"]
+    assert isinstance(base, CList)
+    base_values = _entry_values(base)
+    assert base_values["output"] == 0.095
+
+    worked_methods = body.values("unique_production_methods")[1]
+    assert isinstance(worked_methods, CList)
+    lined_pans = _entry_values(worked_methods)["pp_salt_collector_lined_pans"]
+    assert isinstance(lined_pans, CList)
+    values = _entry_values(lined_pans)
+    assert values["output"] == 0.21
+    assert values["clay"] == 1.2
+    assert values["pottery"] == 0.261
 
 
 def test_farming_village_uses_baseline_building_price() -> None:
@@ -167,6 +389,28 @@ def _vanilla_unique_methods_by_building() -> dict[str, set[str]]:
                 if methods:
                     result[entry.key] = methods
     return result
+
+
+def _entry_values(block: CList) -> dict[str, object]:
+    return {entry.key: entry.value for entry in block.entries}
+
+
+def _database_keys(root: Path) -> set[str]:
+    if not root.exists():
+        return set()
+    keys: set[str] = set()
+    for path in sorted(root.rglob("*.txt")):
+        for entry in parse_file(path).entries:
+            if isinstance(entry.value, CList):
+                keys.add(_entry_mode(entry.key)[1])
+    return keys
+
+
+def _entry_mode(raw_key: str) -> tuple[str, str]:
+    if ":" not in raw_key:
+        return "CREATE", raw_key
+    mode, key = raw_key.split(":", 1)
+    return mode.strip().upper(), key
 
 
 def _unique_production_method_names(block: CList) -> set[str]:

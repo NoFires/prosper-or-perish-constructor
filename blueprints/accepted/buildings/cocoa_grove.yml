@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: cocoa_grove
 building:
   key: cocoa_grove
@@ -39,7 +39,7 @@ building:
     unique_production_methods = {
         pp_cocoa_grove_base_cocoa = {
             produced = cocoa
-            output = 0.3
+            output = 0.120
             category = building_maintenance
         }
     }
@@ -48,10 +48,10 @@ building:
             category = building_maintenance
         }
         pp_cocoa_grove_fermentation_houses = {
-            lumber = 0.12
-            glass = 0.04
+            lumber = 0.358 # fermentation boxes
+            glass = 0.119 # drying covers
             produced = cocoa
-            output = 0.25
+            output = 0.266
             category = building_maintenance
         }
     }
@@ -83,12 +83,13 @@ icon:
 
 evaluation:
   allow_rules:
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
     input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
     amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_cocoa_grove_base_cocoa:
       production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive base output intentionally carries 30% of the full worked cocoa output after the high-base rebalance.
     pp_cocoa_grove_fermentation_houses:
       production_efficiency: 1.05

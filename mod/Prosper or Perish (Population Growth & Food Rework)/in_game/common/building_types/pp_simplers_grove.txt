@@ -37,7 +37,7 @@ unique_production_methods = {
         fiber_crops = 0.10 # baskets, ties, drying mats
         lumber = 0.06 # racks, sheds, sorting boards
         produced = medicaments
-        output = 0.25
+        output = 0.348
         category = building_maintenance
     }
 }

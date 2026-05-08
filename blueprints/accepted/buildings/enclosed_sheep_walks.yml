@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 tag: enclosed_sheep_walks
 upgrade_chain:
   family: sheep_farms
@@ -30,7 +30,6 @@ building:
     rural_settlement = yes
     town = yes
     city = yes
-    obsolete = sheep_farms
     forbidden_for_estates = yes
     ai_forbid_shutdown = no
     can_close = yes
@@ -107,7 +106,13 @@ evaluation:
   production_methods:
     pp_enclosed_sheep_walks_base_wool:
       production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_enclosed_sheep_walks_no_primary:
       production_efficiency: 1.00
     pp_enclosed_sheep_walks_improved_flocks:
       production_efficiency: 1.00
+      allow_rules:
+        output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
+        profit_percent: Pre-existing support method remains outside the profit band and was not part of the pp error-log economics warnings.

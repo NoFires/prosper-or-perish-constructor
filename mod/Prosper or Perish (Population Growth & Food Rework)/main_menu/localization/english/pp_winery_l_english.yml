@@ -1,0 +1,8 @@
+﻿l_english:
+
+# >>> eu5-building-pipeline:winery:localization
+  winery_slot_0: "Fermentation"
+  pp_winery_fruit_wine: "Fruit Wine"
+  pp_winery_rice_wine: "Rice Wine"
+  pp_winery_honey_wine: "Honey Wine"
+# <<< eu5-building-pipeline:winery:localization

@@ -39,7 +39,7 @@ unique_production_methods = {
         tools = 1.383 # picks, pumps, stamps
         beeswax = 0.307 # mine candles, seals
         produced = iron
-        output = 2.25
+        output = 2.689
         category = building_maintenance
     }
     pp_iron_mine_improved_slitting_dressed_ore = {
@@ -47,7 +47,7 @@ unique_production_methods = {
         tools = 1.52 # slitting rolls, dressing tools
         beeswax = 0.34 # candles, pump seals
         produced = iron
-        output = 2.45
+        output = 2.936
         category = building_maintenance
     }
     pp_iron_mine_improved_horse_whim_haulage = {
@@ -55,7 +55,7 @@ unique_production_methods = {
         leather = 0.34 # harness, buckets
         beeswax = 0.20 # mine candles, seals
         produced = iron
-        output = 1.35
+        output = 1.432
         category = building_maintenance
     }
     pp_iron_mine_improved_ore_dressing_floors = {
@@ -63,7 +63,7 @@ unique_production_methods = {
         cloth = 0.38 # sorting cloths
         beeswax = 0.20 # candles, seals
         produced = iron
-        output = 1.17
+        output = 1.256
         category = building_maintenance
     }
 }
@@ -75,7 +75,7 @@ unique_production_methods = {
         lumber = 0.15 # washing troughs, racks
         tools = 0.10 # sieves, shovels
         produced = dyes
-        output = 0.15
+        output = 0.158
         category = building_maintenance
     }
 }

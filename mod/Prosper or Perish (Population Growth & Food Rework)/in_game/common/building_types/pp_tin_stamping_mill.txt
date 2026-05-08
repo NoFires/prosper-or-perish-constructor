@@ -10,7 +10,6 @@ icon = tin_stamping_mill
 rural_settlement = yes
 town = yes
 city = yes
-obsolete = tin_streamworks
 build_time = workshop_build_time
 
 location_potential = {
@@ -38,7 +37,7 @@ unique_production_methods = {
         lumber = 1.700
         tools = 1.25
         produced = tin
-        output = 3.15
+        output = 3.78
         category = building_maintenance
     }
 }
@@ -50,14 +49,14 @@ unique_production_methods = {
         lumber = 0.213
         tools = 0.12
         produced = copper
-        output = 0.24
+        output = 0.272
         category = building_maintenance
     }
     pp_tin_stamping_mill_lead = {
         lumber = 0.213
         tools = 0.12
         produced = lead
-        output = 0.24
+        output = 0.408
         category = building_maintenance
     }
 }

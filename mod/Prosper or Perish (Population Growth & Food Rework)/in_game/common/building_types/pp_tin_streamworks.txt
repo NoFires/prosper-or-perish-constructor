@@ -37,7 +37,7 @@ unique_production_methods = {
         lumber = 0.983
         tools = 0.56
         produced = tin
-        output = 1.78
+        output = 1.893
         category = building_maintenance
     }
 }
@@ -49,14 +49,14 @@ unique_production_methods = {
         lumber = 0.173
         tools = 0.10
         produced = copper
-        output = 0.18
+        output = 0.224
         category = building_maintenance
     }
     pp_tin_streamworks_lead = {
         lumber = 0.173
         tools = 0.08
         produced = lead
-        output = 0.18
+        output = 0.3
         category = building_maintenance
     }
 }
