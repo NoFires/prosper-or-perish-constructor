@@ -27,13 +27,69 @@ BUILDING_CAPACITY_VALUES = (
     MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_capacity_values.txt"
 )
 GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
+BUILDING_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt"
 FOOD_MAP_MODES = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_food_map_modes.txt"
 PRICE_ROOT = MOD_ROOT / "in_game" / "common" / "prices"
 MODIFIER_TYPE_DEFINITIONS = MOD_ROOT / "main_menu" / "common" / "modifier_type_definitions"
 MODIFIER_ICONS = MOD_ROOT / "main_menu" / "common" / "modifier_icons"
 LOCALIZATION_ROOT = MOD_ROOT / "main_menu" / "localization" / "english"
-FARMING_VILLAGE_BLUEPRINT = ROOT / "blueprints" / "accepted" / "buildings" / "farming_village.yml"
-MODEL_FARM_BLUEPRINT = ROOT / "blueprints" / "accepted" / "buildings" / "model_farm.yml"
+BUILDING_BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
+FARMING_VILLAGE_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "farming_village.yml"
+MODEL_FARM_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "model_farm.yml"
+LAND_FARM_BUILDINGS = (
+    "farming_village",
+    "model_farm",
+    "fruit_orchard",
+    "pomological_orchard",
+    "sheep_farms",
+    "enclosed_sheep_walks",
+    "horse_breeders",
+    "elephant_kraal",
+    "fiber_crops_farm",
+    "cotton_plantation",
+    "sugar_plantation",
+    "tobacco_plantation",
+    "dye_plantation",
+    "chili_plantation",
+    "clove_grove",
+    "cocoa_grove",
+    "coffee_grove",
+    "incense_grove",
+    "pepper_garden",
+    "saffron_croft",
+    "sericulture_farm",
+    "simplers_grove",
+    "tea_garden",
+    "vineyard_estate",
+)
+LAND_FARM_BLUEPRINTS = tuple(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in LAND_FARM_BUILDINGS)
+EXCLUDED_FARM_CAP_BUILDINGS = (
+    "winery",
+    "winery_manufactory",
+    "perfumery",
+    "cookery",
+    "victualling_yard",
+    "saltpeter_guild",
+    "saltpeter_workshop",
+    "putrefaction_mill",
+    "putrefaction_works",
+    "fishing_village",
+    "ocean_fishery",
+    "offshore_fishery",
+    "pearl_fishery",
+    "forest_village",
+    "managed_forest_village",
+    "lumber_mill",
+    "lumber_mill_improved",
+    "charcoal_maker",
+    "improved_charcoal_maker",
+    "ivory_hunting_camp",
+    "salt_collector",
+    "saltpeter_beds",
+    "sand_pit",
+    "sand_washery",
+    "stone_quarry",
+)
 
 
 def test_constructor_config_loads() -> None:
@@ -81,31 +137,34 @@ def test_accepted_blueprints_validate() -> None:
         validate_blueprint_file(blueprint)
 
 
-def test_farming_village_capacity_uses_live_rgo_population_and_space_inputs() -> None:
+def test_farm_max_level_uses_live_rgo_population_inputs_only() -> None:
     parsed = parse_file(BUILDING_CAPS)
     entries = {entry.key: entry.value for entry in parsed.entries}
-    assert "farming_capacity" in entries
+    assert "farm_max_level" in entries
+    assert "farm_capacity_remaining" in entries
+    assert "farm_capacity_available" in entries
+    assert "farming_capacity" not in entries
     assert "farming_village_max_level" not in entries
 
     block = _text_block_between(
         BUILDING_CAPS.read_text(encoding="utf-8-sig"),
-        "farming_capacity = {",
-        "\nforest_village_max_level = {",
+        "farm_max_level = {",
+        "\nfarm_capacity_remaining = {",
     )
 
     required_snippets = (
         'desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"\n\t\tvalue = max_rgo_workers\n\t\tmultiply = 0.75',
         'desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"\n\t\tvalue = modifier:local_population_capacity\n\t\tmultiply = 0.08',
         'desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"\n\t\tvalue = modifier:farming_village_max_level_modifier',
-        'desc = "BUILDING_LEVEL_AVAILABLE_SPACE"\n\t\tvalue = total_building_levels\n\t\tmultiply = -0.1',
-        'desc = "BUILDING_LEVEL_FARMING_VILLAGE_SPACE"\n\t\tvalue = "location_building_level(building_type:farming_village)"\n\t\tmultiply = -0.25',
-        'desc = "BUILDING_LEVEL_MODEL_FARM_SPACE"\n\t\tvalue = "location_building_level(building_type:model_farm)"\n\t\tmultiply = -0.35',
         "min = 0",
     )
     missing = [snippet for snippet in required_snippets if snippet not in block]
     assert not missing
 
     forbidden_snippets = (
+        "total_building_levels",
+        "modifier:farm_space_used",
+        "location_building_level(",
         "pp_farming_village_fixed_env_bonus",
         "pp_farming_village_capacity_value",
         "BUILDING_LEVEL_FROM_ENVIRONMENT_FARMING",
@@ -114,6 +173,32 @@ def test_farming_village_capacity_uses_live_rgo_population_and_space_inputs() ->
     )
     offenders = [snippet for snippet in forbidden_snippets if snippet in block]
     assert not offenders
+
+
+def test_farm_capacity_remaining_tracks_urbanization_and_farm_space() -> None:
+    text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
+
+    remaining_block = _text_block_between(
+        text,
+        "farm_capacity_remaining = {",
+        "\nfarm_capacity_available = {",
+    )
+    available_block = _text_block_between(
+        text,
+        "farm_capacity_available = {",
+        "\nforest_village_max_level = {",
+    )
+
+    required_remaining = (
+        "add = farm_max_level",
+        'desc = "BUILDING_LEVEL_AVAILABLE_SPACE"\n\t\tvalue = total_building_levels\n\t\tmultiply = -0.1',
+        'desc = "BUILDING_LEVEL_FARM_SPACE_USED"\n\t\tvalue = modifier:farm_space_used\n\t\tmultiply = -1',
+    )
+    missing = [snippet for snippet in required_remaining if snippet not in remaining_block]
+    assert not missing
+    assert "location_building_level(" not in remaining_block
+    assert "add = farm_capacity_remaining" in available_block
+    assert "min = 0" in available_block
 
 
 def test_farming_capacity_old_fixed_environment_path_is_removed() -> None:
@@ -145,52 +230,86 @@ def test_farming_capacity_old_fixed_environment_path_is_removed() -> None:
     assert offenders == []
 
 
-def test_farming_building_blueprints_use_live_capacity_gate() -> None:
+def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
+    missing_paths = [path for path in LAND_FARM_BLUEPRINTS if not path.exists()]
+    assert missing_paths == []
+
+    for blueprint in LAND_FARM_BLUEPRINTS:
+        text = blueprint.read_text(encoding="utf-8-sig")
+        text_without_existing_modifier_name = text.replace("farming_village_max_level_modifier", "")
+
+        assert "max_levels = farm_max_level" in text
+        assert "farm_space_used = 0.9" in text
+        assert "farm_capacity_available > 0" in text
+        assert "max_levels = farming_capacity" not in text
+        assert "max_levels = farming_village_max_level" not in text_without_existing_modifier_name
+        assert "location_potential = {" in text
+        assert "pp_farming_village_fixed_env_bonus" not in text
+
     for blueprint in (FARMING_VILLAGE_BLUEPRINT, MODEL_FARM_BLUEPRINT):
         text = blueprint.read_text(encoding="utf-8-sig")
 
-        assert "max_levels = farming_capacity" in text
-        assert "max_levels = farming_village_max_level" not in text
-        assert "location_potential = {" in text
         assert "OR = {" in text
         assert "max_rgo_workers > 0" in text
         assert "modifier:local_population_capacity > 0" in text
-        assert "pp_farming_village_fixed_env_bonus" not in text
 
 
-def test_farming_capacity_is_the_only_farming_family_cap_value() -> None:
-    cap_references = (
-        MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_caps.txt",
-        MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt",
-        MOD_ROOT / "in_game" / "common" / "building_types" / "pp_farming_village.txt",
-        MOD_ROOT / "in_game" / "common" / "building_types" / "pp_model_farm.txt",
-        MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_food_map_modes.txt",
-        MOD_ROOT / "main_menu" / "localization" / "english" / "pp_building_adjustments_l_english.yml",
-        FARMING_VILLAGE_BLUEPRINT,
-        MODEL_FARM_BLUEPRINT,
-    )
+def test_excluded_buildings_do_not_use_land_farm_capacity_pool() -> None:
+    explicit_missing = [
+        key for key in EXCLUDED_FARM_CAP_BUILDINGS if not (BUILDING_BLUEPRINT_ROOT / f"{key}.yml").exists()
+    ]
+    assert explicit_missing == []
 
-    for path in cap_references:
-        text = path.read_text(encoding="utf-8-sig")
-        text = text.replace("farming_village_max_level_modifier", "")
-        assert "farming_capacity" in text
-        assert "farming_village_max_level" not in text
+    excluded_blueprints = _farm_cap_excluded_blueprints()
+    assert excluded_blueprints
+
+    offenders: list[str] = []
+    for blueprint in excluded_blueprints:
+        text = blueprint.read_text(encoding="utf-8-sig")
+        if "max_levels = farm_max_level" in text:
+            offenders.append(f"{blueprint.relative_to(ROOT)}: farm_max_level")
+        if "farm_space_used = 0.9" in text:
+            offenders.append(f"{blueprint.relative_to(ROOT)}: farm_space_used")
+        if "farm_capacity_available > 0" in text:
+            offenders.append(f"{blueprint.relative_to(ROOT)}: farm_capacity_available")
+
+    assert offenders == []
 
 
-def test_farming_family_culling_uses_shared_capacity() -> None:
-    text = (MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt").read_text(
+def test_farming_capacity_map_uses_available_capacity_and_tooltip_shows_maximum() -> None:
+    map_text = FOOD_MAP_MODES.read_text(encoding="utf-8-sig")
+    localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
         encoding="utf-8-sig"
     )
 
-    farming_block = _text_block_between(text, "# Farming Village", "\n\t\t\t# Model Farm")
-    model_farm_block = _text_block_between(text, "# Model Farm", "\n\t\t\t# Forest Village")
+    assert "value = farm_capacity_available" in map_text
+    assert "value = farm_max_level" not in map_text
+    assert "ScriptValue('farm_capacity_available')" in localization_text
+    assert "ScriptValue('farm_max_level')" in localization_text
+    assert "Farming Villages and Model Farms" not in localization_text
 
-    assert "building_type = building_type:farming_village" in farming_block
-    assert "value > farming_capacity" in farming_block
-    assert "building = building_type:farming_village" in farming_block
-    assert "building_type = building_type:model_farm" in model_farm_block
-    assert "value > farming_capacity" in model_farm_block
-    assert "building = building_type:model_farm" in model_farm_block
+
+def test_land_farm_culling_uses_shared_capacity_remaining() -> None:
+    text = BUILDING_CULLING.read_text(encoding="utf-8-sig")
+
+    for building in LAND_FARM_BUILDINGS:
+        building_ref = f"building_type = building_type:{building}"
+        idx = text.index(building_ref)
+        block_start = text.rfind("\n\t\t\tif = {", 0, idx)
+        change_ref = f"building = building_type:{building}"
+        block_end = text.index(change_ref, idx) + len(change_ref)
+        block = text[block_start:block_end]
+        assert "farm_capacity_remaining < 0" in block
+        assert "value > 0" in block
+        assert building_ref in block
+        assert change_ref in block
+
+
+    assert "value > farm_max_level" not in text
+    assert "value > fruit_orchard_max_level" not in text
+    assert "value > sheep_farms_max_level" not in text
+    assert "value > fishing_village_max_level" in text
+    assert "value > forest_village_max_level" in text
 
 
 def test_replaced_buildings_do_not_reuse_vanilla_unique_method_names() -> None:
@@ -537,6 +656,33 @@ def _text_block_between(text: str, start: str, end: str) -> str:
     _, tail = text.split(start, 1)
     block, _ = tail.split(end, 1)
     return start + block
+
+
+def _farm_cap_excluded_blueprints() -> tuple[Path, ...]:
+    excluded = set(EXCLUDED_FARM_CAP_BUILDINGS)
+    extractive_markers = (
+        "_mine",
+        "_quarry",
+        "_pit",
+        "_washmill",
+        "_collector",
+        "_smelter",
+        "_diggings",
+        "_sluice",
+        "_beds",
+        "_washery",
+    )
+
+    for path in BUILDING_BLUEPRINT_ROOT.glob("*.yml"):
+        key = path.stem
+        if key in LAND_FARM_BUILDINGS:
+            continue
+        if any(marker in key for marker in extractive_markers):
+            excluded.add(key)
+        if "smelter" in key:
+            excluded.add(key)
+
+    return tuple(sorted(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in excluded))
 
 
 def _unique_production_method_names(block: CList) -> set[str]:

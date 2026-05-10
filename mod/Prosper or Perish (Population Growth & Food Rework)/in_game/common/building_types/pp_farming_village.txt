@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:farming_village:building
 REPLACE:farming_village = {
     is_foreign = no
-    max_levels = farming_capacity
+    max_levels = farm_max_level
     pop_type = peasants
 
     category = village_category
@@ -18,6 +18,10 @@ REPLACE:farming_village = {
             max_rgo_workers > 0
             modifier:local_population_capacity > 0
         }
+    }
+
+    allow = {
+        farm_capacity_available > 0
     }
 
     build_time = village_build_time
@@ -172,6 +176,7 @@ REPLACE:farming_village = {
     }
     construction_demand = village_construction
     modifier = {
+        farm_space_used = 0.9
         local_monthly_food = 0.0
         local_peasants_estate_power = 0.2
         local_peasant_enfranchisment = 0.01

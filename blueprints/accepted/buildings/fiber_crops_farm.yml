@@ -15,7 +15,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = rural_building_cap
+    max_levels = farm_max_level
     pop_type = laborers
     employment_size = 3
     rural_settlement = yes
@@ -33,8 +33,16 @@ building:
         NOT = { climate = arctic }
     }
 
+    allow = {
+        farm_capacity_available > 0
+    }
+
     category = rgo_building_category
     build_time = rural_build_time
+
+    modifier = {
+        farm_space_used = 0.9
+    }
 
     unique_production_methods = {
         pp_fiber_crops_farm_base_fiber_crops = {
