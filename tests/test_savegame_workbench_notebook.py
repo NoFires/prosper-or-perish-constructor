@@ -26,6 +26,8 @@ def test_savegame_workbench_notebook_executes_tiny_dataset(
         if cell.get("cell_type") == "code"
     ]
     assert all("def " not in source for source in code_sources)
+    assert any("%matplotlib inline" in source for source in code_sources)
+    assert any('LOAD_ORDER_PATH = "constructor.load_order.toml"' in source for source in code_sources)
     direct_slot_cells = [
         source
         for source in code_sources
@@ -34,12 +36,18 @@ def test_savegame_workbench_notebook_executes_tiny_dataset(
     assert len(direct_slot_cells) == 3
     assert all("plt.show()" in source for source in direct_slot_cells)
     assert all("display(fig)" not in source for source in direct_slot_cells)
+    assert all("plt.close(fig)" not in source for source in direct_slot_cells)
     assert all("plot_building_slot" not in source for source in code_sources)
     namespace = {"__name__": "__notebook_smoke__"}
     for index, cell in enumerate(notebook["cells"]):
         if cell.get("cell_type") != "code":
             continue
-        exec(compile("".join(cell.get("source", [])), f"cell-{index}", "exec"), namespace)
+        source = "\n".join(
+            line
+            for line in "".join(cell.get("source", [])).splitlines()
+            if not line.lstrip().startswith("%")
+        )
+        exec(compile(source, f"cell-{index}", "exec"), namespace)
 
     for name in (
         "population_latest",
