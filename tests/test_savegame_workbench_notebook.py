@@ -26,7 +26,15 @@ def test_savegame_workbench_notebook_executes_tiny_dataset(
         if cell.get("cell_type") == "code"
     ]
     assert all("def " not in source for source in code_sources)
-    assert all("matplotlib.pyplot" not in source for source in code_sources)
+    direct_slot_cells = [
+        source
+        for source in code_sources
+        if "slot_frame = pm_slot_ts.filter" in source
+    ]
+    assert len(direct_slot_cells) == 3
+    assert all("plt.show()" in source for source in direct_slot_cells)
+    assert all("display(fig)" not in source for source in direct_slot_cells)
+    assert all("plot_building_slot" not in source for source in code_sources)
     namespace = {"__name__": "__notebook_smoke__"}
     for index, cell in enumerate(notebook["cells"]):
         if cell.get("cell_type") != "code":
