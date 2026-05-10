@@ -2,7 +2,7 @@
 REPLACE:sheep_farms = {
     is_foreign = no
     pop_type = peasants
-    max_levels = sheep_farms_max_level
+    max_levels = farm_max_level
     employment_size = 5
     category = rgo_building_category
     rural_settlement = yes
@@ -13,6 +13,10 @@ REPLACE:sheep_farms = {
     location_potential = {
         has_variable = pp_sheep_farms_fixed_env_bonus
         var:pp_sheep_farms_fixed_env_bonus > 0
+    }
+
+    allow = {
+        farm_capacity_available > 0
     }
     unique_production_methods = {
         pp_sheep_farm_base_wool = {
@@ -34,6 +38,7 @@ REPLACE:sheep_farms = {
         }
     }
     modifier = {
+        farm_space_used = 0.9
         local_monthly_food = 0.0
         # local_food_capacity = 50
     }

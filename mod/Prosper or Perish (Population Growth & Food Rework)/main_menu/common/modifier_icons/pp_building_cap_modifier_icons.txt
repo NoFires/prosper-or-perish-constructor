@@ -15,3 +15,6 @@ fishing_village_max_level_modifier = {
 forest_village_max_level_modifier = {
 	positive = "gfx/interface/icons/modifier_types/forest_village_max_level_modifier.dds"
 }
+farm_space_used = {
+	positive = "gfx/interface/icons/modifier_types/farming_village_max_level_modifier.dds"
+}

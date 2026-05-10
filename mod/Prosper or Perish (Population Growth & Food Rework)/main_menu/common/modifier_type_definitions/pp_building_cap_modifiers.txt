@@ -32,3 +32,10 @@ forest_village_max_level_modifier = {
 		category = location
 	}
 }
+
+farm_space_used = {
+	decimals = 1
+	game_data = {
+		category = location
+	}
+}

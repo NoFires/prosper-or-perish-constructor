@@ -100,7 +100,7 @@ sheep_farms_max_level = {
 	}
 	min = 0
 }
-farming_capacity = {
+farm_max_level = {
 	add = {
 		desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"
 		value = max_rgo_workers
@@ -115,21 +115,25 @@ farming_capacity = {
 		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"
 		value = modifier:farming_village_max_level_modifier
 	}
+	min = 0
+}
+
+farm_capacity_remaining = {
+	add = farm_max_level
 	add = {
 		desc = "BUILDING_LEVEL_AVAILABLE_SPACE"
 		value = total_building_levels
 		multiply = -0.1
 	}
 	add = {
-		desc = "BUILDING_LEVEL_FARMING_VILLAGE_SPACE"
-		value = "location_building_level(building_type:farming_village)"
-		multiply = -0.25
+		desc = "BUILDING_LEVEL_FARM_SPACE_USED"
+		value = modifier:farm_space_used
+		multiply = -1
 	}
-	add = {
-		desc = "BUILDING_LEVEL_MODEL_FARM_SPACE"
-		value = "location_building_level(building_type:model_farm)"
-		multiply = -0.35
-	}
+}
+
+farm_capacity_available = {
+	add = farm_capacity_remaining
 	min = 0
 }
 forest_village_max_level = {
