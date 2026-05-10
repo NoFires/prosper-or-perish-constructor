@@ -27,16 +27,16 @@ def test_savegame_workbench_notebook_executes_tiny_dataset(
     ]
     assert all("def " not in source for source in code_sources)
     assert any("%matplotlib inline" in source for source in code_sources)
-    assert any('LOAD_ORDER_PATH = "constructor.load_order.toml"' in source for source in code_sources)
+    assert any("LOAD_ORDER_PATH = None" in source for source in code_sources)
     direct_slot_cells = [
         source
         for source in code_sources
-        if "slot_frame = pm_slot_ts.filter" in source
+        if "null_slot_rows =" in source and "production_method_group_index" in source
     ]
     assert len(direct_slot_cells) == 3
-    assert all("plt.show()" in source for source in direct_slot_cells)
-    assert all("display(fig)" not in source for source in direct_slot_cells)
-    assert all("plt.close(fig)" not in source for source in direct_slot_cells)
+    assert all("raise ValueError" in source for source in direct_slot_cells)
+    assert all("display(fig)" in source for source in direct_slot_cells)
+    assert all("plt.close(fig)" in source for source in direct_slot_cells)
     assert all("plot_building_slot" not in source for source in code_sources)
     namespace = {"__name__": "__notebook_smoke__"}
     for index, cell in enumerate(notebook["cells"]):
