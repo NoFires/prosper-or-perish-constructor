@@ -3,7 +3,13 @@
 # They are better at storing food though.
 TRY_INJECT:megalopolis = {
 	rank_modifier = {
-		local_monthly_food_modifier = 0.67 # vanilla -0.67
+		local_population_capacity = -400
+		local_population_capacity_modifier = -0.5
+		local_monthly_food_modifier = 0.67
+		farm_max_level_modifier = -20
+		
+		local_pop_promotion_speed_modifier = 0.50
+		
 	}
 }
 TRY_REPLACE:city = {
@@ -35,9 +41,7 @@ TRY_REPLACE:city = {
 		local_migration_attraction = 0 # 5
 		local_migration_speed = 0.00 # 0
 		local_build_buildings_cost = 0.0
-		fruit_orchard_max_level_modifier = -6 # 
-		sheep_farms_max_level_modifier = -6 #
-		farming_village_max_level_modifier = -6 #
+		farm_max_level_modifier = -6 #
 		fishing_village_max_level_modifier = 0 #
 		forest_village_max_level_modifier = -6 #
 		local_population_capacity = 0
@@ -88,9 +92,7 @@ TRY_REPLACE:town = {
 		local_migration_attraction = 0.0
 		local_migration_speed = 0.00
 		local_build_buildings_cost = 0.0
-		fruit_orchard_max_level_modifier = -2
-		sheep_farms_max_level_modifier = -2
-		farming_village_max_level_modifier = -2
+		farm_max_level_modifier = -2
 		fishing_village_max_level_modifier = 0
 		forest_village_max_level_modifier = -2
 		local_population_capacity = 0
@@ -127,9 +129,7 @@ TRY_REPLACE:rural_settlement = {
 		local_food_capacity_modifier = 0 # 0.5
 		local_build_buildings_cost = 0.0
 		local_population_growth = -0.0035 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
-		fruit_orchard_max_level_modifier = 0
-		sheep_farms_max_level_modifier = 0
-		farming_village_max_level_modifier = 0
+		farm_max_level_modifier = 0
 		fishing_village_max_level_modifier = 0
 		forest_village_max_level_modifier = 0
 	}

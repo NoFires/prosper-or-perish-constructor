@@ -19,8 +19,7 @@ build_time = workshop_build_time
 construction_demand = workshop_construction
 
 location_potential = {
-    has_variable = pp_fruit_orchard_fixed_env_bonus
-    var:pp_fruit_orchard_fixed_env_bonus > 0
+    raw_material = goods:fruit
 }
 
 allow = {

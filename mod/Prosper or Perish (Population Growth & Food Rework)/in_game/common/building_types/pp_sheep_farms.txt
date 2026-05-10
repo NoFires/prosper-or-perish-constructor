@@ -11,8 +11,7 @@ REPLACE:sheep_farms = {
     forbidden_for_estates = yes
     ai_forbid_shutdown = no
     location_potential = {
-        has_variable = pp_sheep_farms_fixed_env_bonus
-        var:pp_sheep_farms_fixed_env_bonus > 0
+        raw_material = goods:wool
     }
 
     allow = {

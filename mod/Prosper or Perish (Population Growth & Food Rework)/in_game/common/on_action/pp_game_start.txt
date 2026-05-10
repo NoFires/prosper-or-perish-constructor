@@ -585,24 +585,14 @@ pp_apply_rgo_static_modifiers = {
 pp_precalculate_building_capacities = {
 	effect = {
 		every_location_in_the_world = {
-			set_variable = { name = pp_fruit_orchard_fixed_env_bonus value = 0 }
 			set_variable = { name = pp_fishing_village_fixed_env_bonus value = 0 }
-			set_variable = { name = pp_sheep_farms_fixed_env_bonus value = 0 }
 			set_variable = { name = pp_forest_village_fixed_env_bonus value = 0 }
 		}
 		every_location_in_the_world = {
 			limit = { is_land = yes }
 			set_variable = {
-				name = pp_fruit_orchard_fixed_env_bonus
-				value = pp_fruit_orchard_capacity_value
-			}
-			set_variable = {
 				name = pp_fishing_village_fixed_env_bonus
 				value = pp_fishing_village_capacity_value
-			}
-			set_variable = {
-				name = pp_sheep_farms_fixed_env_bonus
-				value = pp_sheep_farms_capacity_value
 			}
 			set_variable = {
 				name = pp_forest_village_fixed_env_bonus
@@ -610,26 +600,13 @@ pp_precalculate_building_capacities = {
 			}
 		}
 		# Initialize Global Min/Max
-		set_global_variable = { name = pp_fruit_orchard_global_min value = 100 }
-		set_global_variable = { name = pp_fruit_orchard_global_max value = 0 }
 		set_global_variable = { name = pp_fishing_village_global_min value = 100 }
 		set_global_variable = { name = pp_fishing_village_global_max value = 0 }
-		set_global_variable = { name = pp_sheep_farms_global_min value = 100 }
-		set_global_variable = { name = pp_sheep_farms_global_max value = 0 }
 		set_global_variable = { name = pp_forest_village_global_min value = 100 }
 		set_global_variable = { name = pp_forest_village_global_max value = 0 }
 
 		every_location_in_the_world = {
 			limit = { is_land = yes }
-			# Fruit Orchard
-			if = {
-				limit = { var:pp_fruit_orchard_fixed_env_bonus > global_var:pp_fruit_orchard_global_max }
-				set_global_variable = { name = pp_fruit_orchard_global_max value = var:pp_fruit_orchard_fixed_env_bonus }
-			}
-			if = {
-				limit = { var:pp_fruit_orchard_fixed_env_bonus < global_var:pp_fruit_orchard_global_min }
-				set_global_variable = { name = pp_fruit_orchard_global_min value = var:pp_fruit_orchard_fixed_env_bonus }
-			}
 			# Fishing Village
 			if = {
 				limit = { var:pp_fishing_village_fixed_env_bonus > global_var:pp_fishing_village_global_max }
@@ -638,15 +615,6 @@ pp_precalculate_building_capacities = {
 			if = {
 				limit = { var:pp_fishing_village_fixed_env_bonus < global_var:pp_fishing_village_global_min }
 				set_global_variable = { name = pp_fishing_village_global_min value = var:pp_fishing_village_fixed_env_bonus }
-			}
-			# Sheep Farms
-			if = {
-				limit = { var:pp_sheep_farms_fixed_env_bonus > global_var:pp_sheep_farms_global_max }
-				set_global_variable = { name = pp_sheep_farms_global_max value = var:pp_sheep_farms_fixed_env_bonus }
-			}
-			if = {
-				limit = { var:pp_sheep_farms_fixed_env_bonus < global_var:pp_sheep_farms_global_min }
-				set_global_variable = { name = pp_sheep_farms_global_min value = var:pp_sheep_farms_fixed_env_bonus }
 			}
 			# Forest Village
 			if = {
@@ -661,19 +629,6 @@ pp_precalculate_building_capacities = {
 		
 		# Calculate Ranges
 		set_global_variable = {
-			name = pp_fruit_orchard_global_range
-			value = global_var:pp_fruit_orchard_global_max
-		}
-		change_global_variable = {
-			name = pp_fruit_orchard_global_range
-			add = { value = global_var:pp_fruit_orchard_global_min multiply = -1 }
-		}
-		if = {
-			limit = { NOT = { global_var:pp_fruit_orchard_global_range > 0 } }
-			set_global_variable = { name = pp_fruit_orchard_global_range value = 1 }
-		}
-		
-		set_global_variable = {
 			name = pp_fishing_village_global_range
 			value = global_var:pp_fishing_village_global_max
 		}
@@ -684,19 +639,6 @@ pp_precalculate_building_capacities = {
 		if = {
 			limit = { NOT = { global_var:pp_fishing_village_global_range > 0 } }
 			set_global_variable = { name = pp_fishing_village_global_range value = 1 }
-		}
-
-		set_global_variable = {
-			name = pp_sheep_farms_global_range
-			value = global_var:pp_sheep_farms_global_max
-		}
-		change_global_variable = {
-			name = pp_sheep_farms_global_range
-			add = { value = global_var:pp_sheep_farms_global_min multiply = -1 }
-		}
-		if = {
-			limit = { NOT = { global_var:pp_sheep_farms_global_range > 0 } }
-			set_global_variable = { name = pp_sheep_farms_global_range value = 1 }
 		}
 
 		set_global_variable = {
@@ -715,7 +657,7 @@ pp_precalculate_building_capacities = {
 }
 
 # Remove all buildings that cannot exist under mod rules (Option B).
-# Runs after precalculate so pp_* variables are set for fruit_orchard_max_level etc.
+# Runs after precalculate so fishing and forest fixed-environment variables are available.
 pp_remove_invalid_buildings = {
 	effect = {
 		every_location_in_the_world = {
@@ -738,26 +680,36 @@ pp_remove_invalid_buildings = {
 					}
 				}
 			}
-			# Fruit orchard: reduce to max (script value floored at 0)
+			# Fruit orchard family: only allowed where fruit RGO exists.
 			if = {
 				limit = {
 					location_building_level = {
 						building_type = building_type:fruit_orchard
 						value > 0
 					}
-					location_building_level = {
-						building_type = building_type:fruit_orchard
-						value > fruit_orchard_max_level
-					}
+					NOT = { raw_material = goods:fruit }
 				}
 				change_building_level_in_location = {
 					building = building_type:fruit_orchard
 					value = {
-						value = fruit_orchard_max_level
-						add = {
-							value = "location_building_level(building_type:fruit_orchard)"
-							multiply = -1
-						}
+						value = "location_building_level(building_type:fruit_orchard)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:pomological_orchard
+						value > 0
+					}
+					NOT = { raw_material = goods:fruit }
+				}
+				change_building_level_in_location = {
+					building = building_type:pomological_orchard
+					value = {
+						value = "location_building_level(building_type:pomological_orchard)"
+						multiply = -1
 					}
 				}
 			}
@@ -863,19 +815,35 @@ pp_remove_invalid_buildings = {
 					}
 				}
 			}
-			# Sheep farms: only allowed where capacity > 0
+			# Sheep farms family: only allowed where wool RGO exists.
 			if = {
 				limit = {
 					location_building_level = {
 						building_type = building_type:sheep_farms
 						value > 0
 					}
-					NOT = { var:pp_sheep_farms_fixed_env_bonus > 0 }
+					NOT = { raw_material = goods:wool }
 				}
 				change_building_level_in_location = {
 					building = building_type:sheep_farms
 					value = {
 						value = "location_building_level(building_type:sheep_farms)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:enclosed_sheep_walks
+						value > 0
+					}
+					NOT = { raw_material = goods:wool }
+				}
+				change_building_level_in_location = {
+					building = building_type:enclosed_sheep_walks
+					value = {
+						value = "location_building_level(building_type:enclosed_sheep_walks)"
 						multiply = -1
 					}
 				}
@@ -4002,7 +3970,6 @@ pp_game_start_effect = {
 				if = {
 					limit = {
 						population > 74
-						var:pp_sheep_farms_fixed_env_bonus > 0
 						raw_material = goods:wool
 					}
 					construct_building = {
@@ -4034,7 +4001,6 @@ pp_game_start_effect = {
 					limit = {
 						population > 74
 						raw_material = goods:fruit
-						var:pp_fruit_orchard_fixed_env_bonus > 0
 					}
 					construct_building = {
 						building_type = building_type:fruit_orchard

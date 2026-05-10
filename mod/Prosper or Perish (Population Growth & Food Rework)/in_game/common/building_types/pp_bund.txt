@@ -2,8 +2,7 @@
 INJECT:bund = {
 	modifier = {
 		local_monthly_food_modifier = -0.10 # vanilla 0.10
-		fruit_orchard_max_level_modifier = 1
-		farming_village_max_level_modifier = 1
+		farm_max_level_modifier = 1
 
 		# The core purpose of bunds: Rice and Terraced Fruit
 		local_rice_output_modifier = 0.05

@@ -28,6 +28,7 @@ BUILDING_CAPACITY_VALUES = (
 )
 GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
 BUILDING_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt"
+LOCATION_RANKS = MOD_ROOT / "in_game" / "common" / "location_ranks" / "pp_location_rank_adjustments.txt"
 FOOD_MAP_MODES = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_food_map_modes.txt"
 PRICE_ROOT = MOD_ROOT / "in_game" / "common" / "prices"
 MODIFIER_TYPE_DEFINITIONS = MOD_ROOT / "main_menu" / "common" / "modifier_type_definitions"
@@ -155,7 +156,7 @@ def test_farm_max_level_uses_live_rgo_population_inputs_only() -> None:
     required_snippets = (
         'desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"\n\t\tvalue = max_rgo_workers\n\t\tmultiply = 0.75',
         'desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"\n\t\tvalue = modifier:local_population_capacity\n\t\tmultiply = 0.08',
-        'desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"\n\t\tvalue = modifier:farming_village_max_level_modifier',
+        'desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"\n\t\tvalue = modifier:farm_max_level_modifier',
         "min = 0",
     )
     missing = [snippet for snippet in required_snippets if snippet not in block]
@@ -211,6 +212,7 @@ def test_farming_capacity_old_fixed_environment_path_is_removed() -> None:
         MOD_ROOT / "in_game" / "common" / "script_values",
         MOD_ROOT / "in_game" / "common" / "on_action",
         MOD_ROOT / "in_game" / "common" / "scripted_effects",
+        MOD_ROOT / "in_game" / "common" / "customizable_localization",
         MOD_ROOT / "in_game" / "common" / "building_types",
         MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes",
         LOCALIZATION_ROOT,
@@ -230,19 +232,117 @@ def test_farming_capacity_old_fixed_environment_path_is_removed() -> None:
     assert offenders == []
 
 
+def test_obsolete_fruit_sheep_capacity_systems_are_removed() -> None:
+    tokens = (
+        "fruit_orchard_max_level",
+        "sheep_farms_max_level",
+        "farming_village_max_level_modifier",
+        "pp_fruit_orchard_fixed_env_bonus",
+        "pp_sheep_farms_fixed_env_bonus",
+        "pp_fruit_orchard_global_",
+        "pp_sheep_farms_global_",
+        "pp_fruit_orchard_capacity_value",
+        "pp_sheep_farms_capacity_value",
+        "MAPMODE_PP_FRUIT_ORCHARD_CAPACITY",
+        "MAPMODE_PP_SHEEP_FARMS_CAPACITY",
+        "mapmode_pp_fruit_orchard_capacity_name",
+        "mapmode_pp_sheep_farms_capacity_name",
+    )
+    roots = (
+        MOD_ROOT / "in_game" / "common" / "script_values",
+        MOD_ROOT / "in_game" / "common" / "on_action",
+        MOD_ROOT / "in_game" / "common" / "scripted_effects",
+        MOD_ROOT / "in_game" / "common" / "customizable_localization",
+        MOD_ROOT / "in_game" / "common" / "building_types",
+        MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes",
+        MODIFIER_TYPE_DEFINITIONS,
+        MODIFIER_ICONS,
+        LOCALIZATION_ROOT,
+        BUILDING_BLUEPRINT_ROOT,
+    )
+    offenders: list[str] = []
+
+    for root in roots:
+        for path in sorted(root.rglob("*")):
+            if path.suffix not in {".txt", ".yml", ".md"}:
+                continue
+            text = path.read_text(encoding="utf-8-sig", errors="replace")
+            for token in tokens:
+                if token in text:
+                    offenders.append(f"{path.relative_to(ROOT)}: {token}")
+
+    obsolete_icons = (
+        MOD_ROOT / "main_menu" / "gfx" / "interface" / "icons" / "map_modes" / "pp_fruit_orchard_capacity.dds",
+        MOD_ROOT / "main_menu" / "gfx" / "interface" / "icons" / "map_modes" / "pp_sheep_farms_capacity.dds",
+        MOD_ROOT
+        / "main_menu"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "modifier_types"
+        / "fruit_orchard_max_level_modifier.dds",
+        MOD_ROOT
+        / "main_menu"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "modifier_types"
+        / "sheep_farms_max_level_modifier.dds",
+        MOD_ROOT
+        / "main_menu"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "modifier_types"
+        / "farming_village_max_level_modifier.dds",
+    )
+    offenders.extend(str(path.relative_to(ROOT)) for path in obsolete_icons if path.exists())
+
+    farm_icon = (
+        MOD_ROOT
+        / "main_menu"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "modifier_types"
+        / "farm_max_level_modifier.dds"
+    )
+    if not farm_icon.exists():
+        offenders.append(f"{farm_icon.relative_to(ROOT)} missing")
+
+    assert offenders == []
+
+
+def test_fishing_and_forest_capacity_systems_remain_present() -> None:
+    cap_values = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
+    cap_text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
+    game_start = GAME_START.read_text(encoding="utf-8-sig")
+    map_text = FOOD_MAP_MODES.read_text(encoding="utf-8-sig")
+    localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
+        encoding="utf-8-sig"
+    )
+
+    for family in ("fishing_village", "forest_village"):
+        assert f"{family}_capacity_value" in cap_values
+        assert f"{family}_max_level" in cap_text
+        assert f"pp_{family}_fixed_env_bonus" in game_start
+        assert f"pp_{family}_global_range" in game_start
+        assert f"pp_{family}_capacity" in map_text
+        assert f"MAPMODE_PP_{family.upper()}_CAPACITY" in localization_text
+
+
 def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
     missing_paths = [path for path in LAND_FARM_BLUEPRINTS if not path.exists()]
     assert missing_paths == []
 
     for blueprint in LAND_FARM_BLUEPRINTS:
         text = blueprint.read_text(encoding="utf-8-sig")
-        text_without_existing_modifier_name = text.replace("farming_village_max_level_modifier", "")
 
         assert "max_levels = farm_max_level" in text
         assert "farm_space_used = 0.9" in text
         assert "farm_capacity_available > 0" in text
         assert "max_levels = farming_capacity" not in text
-        assert "max_levels = farming_village_max_level" not in text_without_existing_modifier_name
+        assert "max_levels = farming_village_max_level" not in text
         assert "location_potential = {" in text
         assert "pp_farming_village_fixed_env_bonus" not in text
 
@@ -252,6 +352,57 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
         assert "OR = {" in text
         assert "max_rgo_workers > 0" in text
         assert "modifier:local_population_capacity > 0" in text
+
+
+def test_fruit_and_sheep_families_use_raw_material_gates() -> None:
+    gates = {
+        "fruit_orchard": "fruit",
+        "pomological_orchard": "fruit",
+        "sheep_farms": "wool",
+        "enclosed_sheep_walks": "wool",
+    }
+
+    for building, raw_material in gates.items():
+        text = (BUILDING_BLUEPRINT_ROOT / f"{building}.yml").read_text(encoding="utf-8-sig")
+        assert f"raw_material = goods:{raw_material}" in text
+        assert "farm_capacity_available > 0" in text
+        assert "pp_fruit_orchard_fixed_env_bonus" not in text
+        assert "pp_sheep_farms_fixed_env_bonus" not in text
+
+    game_start = GAME_START.read_text(encoding="utf-8-sig")
+    assert "NOT = { raw_material = goods:fruit }" in game_start
+    assert "NOT = { raw_material = goods:wool }" in game_start
+    assert "raw_material = goods:fruit" in game_start
+    assert "raw_material = goods:wool" in game_start
+
+
+def test_location_rank_farming_capacity_modifiers_are_canonical() -> None:
+    parsed = parse_file(LOCATION_RANKS)
+    entries = {entry.key: entry.value for entry in parsed.entries}
+    expected = {
+        "TRY_INJECT:megalopolis": -20,
+        "TRY_REPLACE:city": -6,
+        "TRY_REPLACE:town": -2,
+        "TRY_REPLACE:rural_settlement": 0,
+    }
+
+    for rank_key, value in expected.items():
+        rank = entries[rank_key]
+        assert isinstance(rank, CList)
+        rank_modifier = _entry_values(rank)["rank_modifier"]
+        assert isinstance(rank_modifier, CList)
+        modifiers = _entry_values(rank_modifier)
+        assert modifiers["farm_max_level_modifier"] == value
+        assert "fruit_orchard_max_level_modifier" not in modifiers
+        assert "sheep_farms_max_level_modifier" not in modifiers
+        assert "farming_village_max_level_modifier" not in modifiers
+
+    for rank_key in ("TRY_REPLACE:city", "TRY_REPLACE:town", "TRY_REPLACE:rural_settlement"):
+        rank_modifier = _entry_values(entries[rank_key])["rank_modifier"]
+        assert isinstance(rank_modifier, CList)
+        modifiers = _entry_values(rank_modifier)
+        assert "fishing_village_max_level_modifier" in modifiers
+        assert "forest_village_max_level_modifier" in modifiers
 
 
 def test_excluded_buildings_do_not_use_land_farm_capacity_pool() -> None:

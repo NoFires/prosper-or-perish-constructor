@@ -23,83 +23,6 @@
 		}
 	}
 }
-fruit_orchard_max_level = {
-	add = {
-		desc = "BUILDING_LEVEL_BASE"
-		value = 0
-	}
-	add = {
-		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = development
-		multiply = 0.30
-	}
-	add = {
-		desc = "BUILDING_LEVEL_POPULATION"
-		value = population
-		multiply = 0.025
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FROM_ENVIRONMENT_FRUIT"
-		if = {
-			limit = { has_variable = pp_fruit_orchard_fixed_env_bonus }
-			value = var:pp_fruit_orchard_fixed_env_bonus
-		}
-		else = { value = 0 }
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FRUIT"
-		value = modifier:fruit_orchard_max_level_modifier
-	}
-	add = {
-		desc = "BUILDING_LEVEL_AVAILABLE_SPACE"
-		value = total_building_levels
-		multiply = -0.1
-	}
-	if = {
-		limit = {
-			location_rank = location_rank:city
-		}
-		add = {
-			desc = "BUILDING_LEVEL_IS_CITY"
-			value = -1
-		}
-	}
-	min = 0
-}
-sheep_farms_max_level = {
-	add = {
-		desc = "BUILDING_LEVEL_BASE"
-		value = 0
-	}
-	add = {
-		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = development
-		multiply = 0.30
-	}
-	add = {
-		desc = "BUILDING_LEVEL_POPULATION"
-		value = population
-		multiply = 0.025
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FROM_ENVIRONMENT_SHEEP"
-		if = {
-			limit = { has_variable = pp_sheep_farms_fixed_env_bonus }
-			value = var:pp_sheep_farms_fixed_env_bonus
-		}
-		else = { value = 0 }
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_SHEEP"
-		value = modifier:sheep_farms_max_level_modifier
-	}
-	add = {
-		desc = "BUILDING_LEVEL_AVAILABLE_SPACE"
-		value = total_building_levels
-		multiply = -0.1
-	}
-	min = 0
-}
 farm_max_level = {
 	add = {
 		desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"
@@ -113,7 +36,7 @@ farm_max_level = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"
-		value = modifier:farming_village_max_level_modifier
+		value = modifier:farm_max_level_modifier
 	}
 	min = 0
 }
