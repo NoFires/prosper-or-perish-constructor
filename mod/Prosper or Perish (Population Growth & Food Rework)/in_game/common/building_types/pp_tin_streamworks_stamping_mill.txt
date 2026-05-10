@@ -11,6 +11,7 @@ rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
+obsolete = tin_streamworks
 build_time = workshop_build_time
 
 location_potential = {

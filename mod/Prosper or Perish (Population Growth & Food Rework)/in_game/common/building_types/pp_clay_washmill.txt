@@ -43,6 +43,14 @@ unique_production_methods = {
     pp_clay_washmill_horse_pugging = {
         lumber = 0.44
         tools = 0.14
+        horses = 0.09
+        produced = clay
+        output = 2.76
+        category = building_maintenance
+    }
+    pp_clay_washmill_ox_pugging = {
+        lumber = 0.44
+        tools = 0.14
         livestock = 0.18
         produced = clay
         output = 2.76

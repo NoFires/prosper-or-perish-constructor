@@ -82,8 +82,8 @@ localization:
     MODIFIER_TYPE_NAME_pp_bog_iron_smelter_blast_furnace_price_cost_modifier: Bog Iron Blast Furnace Cost
     bog_iron_smelter_blast_furnace_slot_0: Bog Iron Processing
     bog_iron_smelter_blast_furnace: Bog Iron Blast Furnace
-    bog_iron_smelter_blast_furnace_desc: An upgraded wetland ironworks using blast furnace equipment and finery practice to increase bog iron throughput without matching true ore mines.
-    pp_bog_iron_smelter_blast_furnace_maintenance: Bog Iron Blast Furnace Processing
+    bog_iron_smelter_blast_furnace_desc: Blast furnaces and finery hearths let wetland ironworks smelt more bog ore with steadier heat and larger crews.
+    pp_bog_iron_smelter_blast_furnace_maintenance: Bog Iron Furnace Work
     pp_bog_iron_smelter_blast_furnace_finery: Bog Iron Finery Hearths
     pp_bog_iron_smelter_blast_furnace_price: Bog Iron Blast Furnace Price
 icon:

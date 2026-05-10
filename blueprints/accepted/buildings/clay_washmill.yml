@@ -18,6 +18,7 @@ building:
       methods:
         - pp_clay_washmill_no_preparation
         - pp_clay_washmill_horse_pugging
+        - pp_clay_washmill_ox_pugging
     - name: slot_2
       methods:
         - pp_clay_washmill_no_refining
@@ -67,6 +68,14 @@ building:
         pp_clay_washmill_horse_pugging = {
             lumber = 0.44
             tools = 0.14
+            horses = 0.09
+            produced = clay
+            output = 2.76
+            category = building_maintenance
+        }
+        pp_clay_washmill_ox_pugging = {
+            lumber = 0.44
+            tools = 0.14
             livestock = 0.18
             produced = clay
             output = 2.76
@@ -110,15 +119,16 @@ localization:
     clay_washmill_slot_1: Clay Preparation
     clay_washmill_slot_2: Clay Refining
     clay_washmill: Clay Washmill
-    clay_washmill_desc: A horse-driven pugmill turns clay inside a brick-lined wash pit, mixing dug clay with water before it settles into a more regular body for brick, tile, and pottery work. Levigation ponds skim finer clay from the slurry while coarse grit settles out.
+    clay_washmill_desc: Washmills mix dug clay with water and work it in horse- or ox-driven pugmills. Settling ponds separate finer clay for brick, tile, and pottery work.
     pp_clay_washmill_base_clay: Surveyed Clay Beds
     pp_clay_washmill_no_preparation: No Clay Preparation
     pp_clay_washmill_horse_pugging: Horse Pugmill
+    pp_clay_washmill_ox_pugging: Ox Pugmill
     pp_clay_washmill_no_refining: No Clay Refining
     pp_clay_washmill_levigation_ponds: Levigation Ponds
     pp_clay_washmill_price: Clay Washmill Price
     pp_clay_washmill: Clay Washmills
-    pp_clay_washmill_desc: Brick-lined wash pits, settling ponds, and horse-driven pugmills prepare more consistent clay for ceramic trades.
+    pp_clay_washmill_desc: Wash pits, settling ponds, and animal-driven pugmills prepare consistent clay for ceramic trades.
 icon:
   source_png: ../assets/icons/clay_washmill.png
   output_dds: clay_washmill.dds
@@ -143,6 +153,8 @@ evaluation:
     pp_clay_washmill_no_preparation:
       production_efficiency: 1.00
     pp_clay_washmill_horse_pugging:
+      production_efficiency: 1.05
+    pp_clay_washmill_ox_pugging:
       production_efficiency: 1.05
     pp_clay_washmill_no_refining:
       production_efficiency: 1.00

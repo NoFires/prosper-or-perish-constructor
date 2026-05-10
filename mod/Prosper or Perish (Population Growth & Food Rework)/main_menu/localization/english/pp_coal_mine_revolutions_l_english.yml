@@ -7,7 +7,7 @@
   coal_mine_revolutions_slot_1: "Deep Colliery Workings"
   coal_mine_revolutions_slot_2: "Clay Recovery"
   coal_mine_revolutions: "Deep Colliery"
-  coal_mine_revolutions_desc: "Deeper shafts, stronger haulage, better drainage, and systematic sorting raise mined coal output from true coal deposits without extending the gain to charcoal works."
+  coal_mine_revolutions_desc: "Deep shafts, stronger haulage, better drainage, and systematic sorting let large collieries work coal seams at industrial scale."
   pp_coal_mine_revolutions_base_coal: "Deep Coal Seam"
   pp_coal_mine_revolutions_no_primary: "No Deep Colliery Workings"
   pp_coal_mine_revolutions_coal: "Deep Colliery Workings"
@@ -15,5 +15,5 @@
   pp_coal_mine_revolutions_fireclay: "Deep Fireclay Sorting"
   pp_coal_mine_revolutions_price: "Deep Colliery Price"
   coal_improvements_revolutions: "Deep Colliery Improvements"
-  coal_improvements_revolutions_desc: "Late colliery drainage, haulage, and sorting improvements raise output in true coal mines rather than applying a global coal modifier."
+  coal_improvements_revolutions_desc: "Late colliery drainage, haulage, and sorting improvements increase output from organized coal mines."
 # <<< eu5-building-pipeline:coal_mine_revolutions:localization

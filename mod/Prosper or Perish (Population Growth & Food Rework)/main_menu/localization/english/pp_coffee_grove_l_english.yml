@@ -6,7 +6,7 @@
   coffee_grove_slot_0: "Coffee Trees"
   coffee_grove_slot_1: "Washing & Drying"
   coffee_grove: "Coffee Grove"
-  coffee_grove_desc: "A shaded upland grove where laborers pick ripe coffee cherries and dry them for market. Basic crews rely on natural sun-drying, while washing stations use wooden troughs and lined vats to pulp, ferment, wash, and dry cleaner parchment coffee."
+  coffee_grove_desc: "Shaded upland groves raise coffee trees and dry the picked cherries for market. Washing stations pulp and clean more of the crop."
   pp_coffee_grove_base_coffee: "Coffee Trees"
   pp_coffee_grove_no_washing: "No Washing Stations"
   pp_coffee_grove_washing_stations: "Washing Stations"

@@ -97,8 +97,8 @@ localization:
     lead_mine_bole_smelting_slot_0: Galena Vein
     lead_mine_bole_smelting_slot_1: Bole-Smelted Workings
     lead_mine_bole_smelting_slot_2: Silver Recovery
-    lead_mine_bole_smelting: Bole Smelting Lead Mine
-    lead_mine_bole_smelting_desc: Improved upland hearths and ore handling let lead works smelt dressed galena more consistently, raising mine throughput before later ore-dressing systems take over.
+    lead_mine_bole_smelting: Bole Lead Mine
+    lead_mine_bole_smelting_desc: Wind-fed bole hearths smelt dressed galena on exposed uplands. Better ore handling lets lead works process more mine output.
     pp_lead_mine_bole_base_lead: Open Galena Vein
     pp_lead_mine_bole_no_primary: No Bole Smelting
     pp_lead_mine_bole_lead: Bole-Smelted Galena Workings
@@ -106,7 +106,7 @@ localization:
     pp_lead_mine_bole_silver: Bole Silver Picking
     pp_lead_mine_bole_smelting_price: Bole Smelting Lead Mine Price
     bole_smelting: Bole Smelting
-    bole_smelting_desc: Wind-fed upland hearths and better galena preparation improve lead smelting without granting a blanket empire-wide output surge.
+    bole_smelting_desc: Wind-fed upland hearths and better galena preparation improve lead smelting at organized lead mines.
 icon:
   source_png: ../assets/icons/lead_mine_bole_smelting.png
   output_dds: lead_mine_bole_smelting.dds

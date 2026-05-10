@@ -124,7 +124,7 @@ localization:
     iron_mine_improved_slot_1: Ore Workings
     iron_mine_improved_slot_2: Ochre Recovery
     iron_mine_improved: Iron Mine
-    iron_mine_improved_desc: Timbered ore workings use better dressing floors, haulage, and gangue sorting to raise iron output from true ore deposits, while ochre washers recover minor pigment earths distinct from bog-iron smelting.
+    iron_mine_improved_desc: Timbered workings use dressing floors, haulage, and gangue sorting to prepare cleaner iron ore. Ochre washers recover small amounts of pigment earth.
     pp_iron_mine_improved_base_iron: Surveyed Iron Ore
     pp_iron_mine_improved_no_primary: No Iron Mining
     pp_iron_mine_improved_iron: Timbered Ore Workings
@@ -137,7 +137,7 @@ localization:
     efficient_mining: Ore Dressing
     efficient_mining_desc: Better mine surveys, timbering, haulage, and dressing floors separate useful iron ore from silica-rich gangue and other waste before smelting.
     slitting_mills: Slitting Mills
-    slitting_mills_desc: Water-powered slitting and rolling equipment turns smelted blooms and bars into more regular wrought iron, rewarding mines that can feed cleaner dressed ore into regional ironworks.
+    slitting_mills_desc: Water-powered slitting mills turn smelted blooms and bars into more regular wrought iron, increasing demand for cleaner dressed ore.
 icon:
   source_png: ../assets/icons/iron_mine_improved.png
   output_dds: iron_mine_improved.dds

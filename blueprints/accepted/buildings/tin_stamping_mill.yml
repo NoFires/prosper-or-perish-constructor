@@ -1,5 +1,6 @@
 ﻿version: 2
 tag: tin_stamping_mill
+output_tag: tin_streamworks_stamping_mill
 upgrade_chain:
   family: tin_mine
   tier: 1
@@ -36,6 +37,7 @@ building:
     town = yes
     city = yes
     megalopolis = yes
+    obsolete = tin_streamworks
     build_time = workshop_build_time
 
     location_potential = {
@@ -103,7 +105,7 @@ localization:
     tin_stamping_mill_slot_1: Stamped Tin Dressing
     tin_stamping_mill_slot_2: Sulphide Ore Sorting
     tin_stamping_mill: Tin Stamping Mill
-    tin_stamping_mill_desc: Water-powered stamp heads crush lode tin for dressing floors and settling troughs, concentrating cassiterite while associated copper sulphides and lead ores are sorted from the waste.
+    tin_stamping_mill_desc: Water-powered stamps crush lode tin for dressing floors and settling troughs. The mill concentrates cassiterite and sorts copper and lead ores from the waste.
     pp_tin_stamping_mill_base_tin: Surveyed Tin Lode
     pp_tin_stamping_mill_no_primary: No Tin Dressing
     pp_tin_stamping_mill_tin: Stamped Tin Dressing

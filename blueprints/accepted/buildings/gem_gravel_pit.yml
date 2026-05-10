@@ -103,7 +103,7 @@ localization:
     gem_gravel_pit_slot_1: Gem Washing
     gem_gravel_pit_slot_2: Placer Byproducts
     gem_gravel_pit: Gem Gravel Pit
-    gem_gravel_pit_desc: Alluvial gravels are dug from shallow pits and stream beds, then washed in baskets and pans so durable gemstones can be picked from the heavy sand. Small gold specks and washed sand may be recovered as ancillary byproducts.
+    gem_gravel_pit_desc: Workers dig alluvial gravel from shallow pits and stream beds, then wash it in baskets and pans. Heavy sand may yield gemstones, gold specks, and clean sand.
     pp_gem_gravel_pit_base_gems: Gem Gravel Outcrop
     pp_gem_gravel_pit_no_primary: No Gem Washing
     pp_gem_gravel_pit_gems: Hand-Washed Gem Gravel
