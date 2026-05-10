@@ -588,7 +588,6 @@ pp_precalculate_building_capacities = {
 			set_variable = { name = pp_fruit_orchard_fixed_env_bonus value = 0 }
 			set_variable = { name = pp_fishing_village_fixed_env_bonus value = 0 }
 			set_variable = { name = pp_sheep_farms_fixed_env_bonus value = 0 }
-			set_variable = { name = pp_farming_village_fixed_env_bonus value = 0 }
 			set_variable = { name = pp_forest_village_fixed_env_bonus value = 0 }
 		}
 		every_location_in_the_world = {
@@ -606,10 +605,6 @@ pp_precalculate_building_capacities = {
 				value = pp_sheep_farms_capacity_value
 			}
 			set_variable = {
-				name = pp_farming_village_fixed_env_bonus
-				value = pp_farming_village_capacity_value
-			}
-			set_variable = {
 				name = pp_forest_village_fixed_env_bonus
 				value = pp_forest_village_capacity_value
 			}
@@ -621,8 +616,6 @@ pp_precalculate_building_capacities = {
 		set_global_variable = { name = pp_fishing_village_global_max value = 0 }
 		set_global_variable = { name = pp_sheep_farms_global_min value = 100 }
 		set_global_variable = { name = pp_sheep_farms_global_max value = 0 }
-		set_global_variable = { name = pp_farming_village_global_min value = 100 }
-		set_global_variable = { name = pp_farming_village_global_max value = 0 }
 		set_global_variable = { name = pp_forest_village_global_min value = 100 }
 		set_global_variable = { name = pp_forest_village_global_max value = 0 }
 
@@ -654,15 +647,6 @@ pp_precalculate_building_capacities = {
 			if = {
 				limit = { var:pp_sheep_farms_fixed_env_bonus < global_var:pp_sheep_farms_global_min }
 				set_global_variable = { name = pp_sheep_farms_global_min value = var:pp_sheep_farms_fixed_env_bonus }
-			}
-			# Farming Village
-			if = {
-				limit = { var:pp_farming_village_fixed_env_bonus > global_var:pp_farming_village_global_max }
-				set_global_variable = { name = pp_farming_village_global_max value = var:pp_farming_village_fixed_env_bonus }
-			}
-			if = {
-				limit = { var:pp_farming_village_fixed_env_bonus < global_var:pp_farming_village_global_min }
-				set_global_variable = { name = pp_farming_village_global_min value = var:pp_farming_village_fixed_env_bonus }
 			}
 			# Forest Village
 			if = {
@@ -713,19 +697,6 @@ pp_precalculate_building_capacities = {
 		if = {
 			limit = { NOT = { global_var:pp_sheep_farms_global_range > 0 } }
 			set_global_variable = { name = pp_sheep_farms_global_range value = 1 }
-		}
-
-		set_global_variable = {
-			name = pp_farming_village_global_range
-			value = global_var:pp_farming_village_global_max
-		}
-		change_global_variable = {
-			name = pp_farming_village_global_range
-			add = { value = global_var:pp_farming_village_global_min multiply = -1 }
-		}
-		if = {
-			limit = { NOT = { global_var:pp_farming_village_global_range > 0 } }
-			set_global_variable = { name = pp_farming_village_global_range value = 1 }
 		}
 
 		set_global_variable = {
@@ -870,14 +841,19 @@ pp_remove_invalid_buildings = {
 					}
 				}
 			}
-			# Farming village: only allowed where capacity > 0
+			# Farming village: only allowed where the new live capacity inputs exist.
 			if = {
 				limit = {
 					location_building_level = {
 						building_type = building_type:farming_village
 						value > 0
 					}
-					NOT = { var:pp_farming_village_fixed_env_bonus > 0 }
+					NOT = {
+						OR = {
+							max_rgo_workers > 0
+							modifier:local_population_capacity > 0
+						}
+					}
 				}
 				change_building_level_in_location = {
 					building = building_type:farming_village
@@ -3961,7 +3937,10 @@ pp_game_start_effect = {
 				if = {
 					limit = {
 						population > 74
-						var:pp_farming_village_fixed_env_bonus > 0
+						OR = {
+							max_rgo_workers > 0
+							modifier:local_population_capacity > 0
+						}
 						OR = {
 							raw_material = goods:wheat
 							raw_material = goods:maize

@@ -35,7 +35,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = farming_village_max_level
+    max_levels = farming_capacity
     pop_type = laborers
     employment_size = 7
     price = pp_model_farm_price
@@ -52,8 +52,10 @@ building:
     construction_demand = workshop_construction
 
     location_potential = {
-        has_variable = pp_farming_village_fixed_env_bonus
-        var:pp_farming_village_fixed_env_bonus > 0
+        OR = {
+            max_rgo_workers > 0
+            modifier:local_population_capacity > 0
+        }
     }
 
     unique_production_methods = {

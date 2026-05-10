@@ -7,7 +7,6 @@ pp_precalculate_building_capacities = {
 		# Initialize variables
 		set_variable = { name = pp_fruit_orchard_fixed_env_bonus value = 0 }
 		set_variable = { name = pp_sheep_farms_fixed_env_bonus value = 0 }
-		set_variable = { name = pp_farming_village_fixed_env_bonus value = 0 }
 		set_variable = { name = pp_fishing_village_fixed_env_bonus value = 0 }
 		set_variable = { name = pp_forest_village_fixed_env_bonus value = 0 }
 
@@ -16,7 +15,6 @@ pp_precalculate_building_capacities = {
 			limit = { climate = tropical }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -2 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -4 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = 2 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = -2 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 2 }
 		}
@@ -24,7 +22,6 @@ pp_precalculate_building_capacities = {
 			limit = { climate = subtropical }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 1 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -1 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = 4 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 2 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 4 }
 		}
@@ -32,7 +29,6 @@ pp_precalculate_building_capacities = {
 			limit = { climate = oceanic }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 2 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 4 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = 3 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 8 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 6 }
 		}
@@ -40,7 +36,6 @@ pp_precalculate_building_capacities = {
 			limit = { climate = arid }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -3 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = -4 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 0 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = -8 }
 		}
@@ -48,7 +43,6 @@ pp_precalculate_building_capacities = {
 			limit = { climate = cold_arid }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -4 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 1 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = -6 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 4 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = -4 }
 		}
@@ -56,7 +50,6 @@ pp_precalculate_building_capacities = {
 			limit = { climate = mediterranean }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 6 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = 5 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 4 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 2 }
 		}
@@ -64,7 +57,6 @@ pp_precalculate_building_capacities = {
 			limit = { climate = continental }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 0 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = 6 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 8 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 6 }
 		}
@@ -72,7 +64,6 @@ pp_precalculate_building_capacities = {
 			limit = { climate = arctic }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -10 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -8 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = -15 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = -10 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = -6 }
 		}
@@ -82,7 +73,6 @@ pp_precalculate_building_capacities = {
 			limit = { topography = flatland }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 1 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = 8 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 4 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = -2 }
 		}
@@ -90,7 +80,6 @@ pp_precalculate_building_capacities = {
 			limit = { topography = mountains }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -4 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 4 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = -8 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = -6 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 4 }
 		}
@@ -98,7 +87,6 @@ pp_precalculate_building_capacities = {
 			limit = { topography = hills }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 4 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 4 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = 4 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = -2 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 6 }
 		}
@@ -106,7 +94,6 @@ pp_precalculate_building_capacities = {
 			limit = { topography = plateau }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 1 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = 2 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 0 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 2 }
 		}
@@ -114,7 +101,6 @@ pp_precalculate_building_capacities = {
 			limit = { topography = wetlands }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -4 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -5 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = -6 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 6 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 0 }
 		}
@@ -124,7 +110,6 @@ pp_precalculate_building_capacities = {
 			limit = { vegetation = desert }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -5 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -2 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = -10 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 0 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = -10 }
 		}
@@ -132,7 +117,6 @@ pp_precalculate_building_capacities = {
 			limit = { vegetation = sparse }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -2 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 3 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = -4 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 1 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = -4 }
 		}
@@ -140,7 +124,6 @@ pp_precalculate_building_capacities = {
 			limit = { vegetation = grasslands }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 1 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 4 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = 5 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 2 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = -2 }
 		}
@@ -148,7 +131,6 @@ pp_precalculate_building_capacities = {
 			limit = { vegetation = farmland }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 4 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = 2 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = 10 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 2 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = -4 }
 		}
@@ -156,7 +138,6 @@ pp_precalculate_building_capacities = {
 			limit = { vegetation = woods }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = 0 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -1 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = 0 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 4 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 8 }
 		}
@@ -164,7 +145,6 @@ pp_precalculate_building_capacities = {
 			limit = { vegetation = forest }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -1 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -3 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = -2 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = 4 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 10 }
 		}
@@ -172,7 +152,6 @@ pp_precalculate_building_capacities = {
 			limit = { vegetation = jungle }
 			change_variable = { name = pp_fruit_orchard_fixed_env_bonus add = -2 }
 			change_variable = { name = pp_sheep_farms_fixed_env_bonus add = -5 }
-			change_variable = { name = pp_farming_village_fixed_env_bonus add = -4 }
 			change_variable = { name = pp_fishing_village_fixed_env_bonus add = -2 }
 			change_variable = { name = pp_forest_village_fixed_env_bonus add = 4 }
 		}

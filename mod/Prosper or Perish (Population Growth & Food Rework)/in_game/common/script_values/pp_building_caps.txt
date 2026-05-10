@@ -100,28 +100,16 @@ sheep_farms_max_level = {
 	}
 	min = 0
 }
-farming_village_max_level = {
+farming_capacity = {
 	add = {
-		desc = "BUILDING_LEVEL_BASE"
-		value = 0
+		desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"
+		value = max_rgo_workers
+		multiply = 0.75
 	}
 	add = {
-		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = development
-		multiply = 0.30
-	}
-	add = {
-		desc = "BUILDING_LEVEL_POPULATION"
-		value = population
-		multiply = 0.025
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FROM_ENVIRONMENT_FARMING"
-		if = {
-			limit = { has_variable = pp_farming_village_fixed_env_bonus }
-			value = var:pp_farming_village_fixed_env_bonus
-		}
-		else = { value = 0 }
+		desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"
+		value = modifier:local_population_capacity
+		multiply = 0.08
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"
@@ -131,6 +119,16 @@ farming_village_max_level = {
 		desc = "BUILDING_LEVEL_AVAILABLE_SPACE"
 		value = total_building_levels
 		multiply = -0.1
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FARMING_VILLAGE_SPACE"
+		value = "location_building_level(building_type:farming_village)"
+		multiply = -0.25
+	}
+	add = {
+		desc = "BUILDING_LEVEL_MODEL_FARM_SPACE"
+		value = "location_building_level(building_type:model_farm)"
+		multiply = -0.35
 	}
 	min = 0
 }

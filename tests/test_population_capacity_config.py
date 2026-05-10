@@ -77,8 +77,8 @@ def test_population_capacity_config_loads() -> None:
 
     assert config.generated_label == "Prosper or Perish"
     assert config.managed_write_mode == "mod_root"
-    assert config.capacity_scale.minimum == 4
-    assert config.capacity_scale.maximum == 100
+    assert config.capacity_scale.minimum == 5
+    assert config.capacity_scale.maximum == 80
     assert config.calibration.historical_population_policy == "saturation_anchors_only"
     assert config.calibration.saturation_anchors == "population_capacity_saturation_anchors.toml"
     assert config.calibration.land_potential_sources == ("gaez_v4", "hyde", "archaeoglobe")
@@ -261,7 +261,7 @@ def test_development_modifier_preserves_population_and_other_static_values() -> 
     development = _entry_block(static_modifiers.entries, "development")
 
     assert development is not None
-    assert _last_value(development, "local_population_capacity") == 0.25
+    assert _last_value(development, "local_population_capacity") == 0.20
     assert _last_value(development, "local_population_capacity_modifier") == 0.02
     assert _last_value(development, "local_distance_from_capital_speed_propagation") == 0.005
     assert _last_value(development, "local_supply_limit_modifier") == 0.02
@@ -269,15 +269,15 @@ def test_development_modifier_preserves_population_and_other_static_values() -> 
     assert _last_value(development, "local_migration_attraction") == 0.0025
 
 
-def test_building_levels_modifier_adds_population_capacity() -> None:
+def test_building_levels_modifier_does_not_add_population_capacity() -> None:
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
     static_modifiers = load_collection(profile, "static_modifiers")
     building_levels = _entry_block(static_modifiers.entries, "building_levels")
 
     assert building_levels is not None
-    assert _last_value(building_levels, "local_population_capacity") == 0.1
+    assert _last_value(building_levels, "local_population_capacity") is None
     assert _last_value(building_levels, "local_road_building_time") == 0.01
-    assert _last_value(building_levels, "local_build_new_buildings_cost") == 0.05
+    assert _last_value(building_levels, "local_build_new_buildings_cost") == 0.07
 
 
 def test_river_flowing_through_modifiers_neutralize_capacity_and_food_bonuses() -> None:
@@ -455,7 +455,7 @@ def test_generated_population_capacity_values_stay_in_v1_bounds() -> None:
     assert len(capacities) > 20_000
     assert min(capacities.values()) >= config.capacity_scale.minimum
     assert max(capacities.values()) <= config.capacity_scale.maximum
-    assert any(value >= 100 for value in capacities.values())
+    assert any(value >= config.capacity_scale.maximum for value in capacities.values())
     assert any(value <= 10 for value in capacities.values())
 
 

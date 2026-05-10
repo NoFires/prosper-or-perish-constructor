@@ -22,10 +22,18 @@ GOVERNMENT_REFORM_ADJUSTMENTS = (
 ESTATE_ADJUSTMENTS = MOD_ROOT / "in_game" / "common" / "estates" / "pp_estate_adjustments.txt"
 GOODS_DEMAND = MOD_ROOT / "in_game" / "common" / "goods_demand" / "pp_new_goods_demands.txt"
 LAW_ADJUSTMENTS = MOD_ROOT / "in_game" / "common" / "laws" / "pp_law_adjustments.txt"
+BUILDING_CAPS = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_caps.txt"
+BUILDING_CAPACITY_VALUES = (
+    MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_capacity_values.txt"
+)
+GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
+FOOD_MAP_MODES = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_food_map_modes.txt"
 PRICE_ROOT = MOD_ROOT / "in_game" / "common" / "prices"
 MODIFIER_TYPE_DEFINITIONS = MOD_ROOT / "main_menu" / "common" / "modifier_type_definitions"
 MODIFIER_ICONS = MOD_ROOT / "main_menu" / "common" / "modifier_icons"
 LOCALIZATION_ROOT = MOD_ROOT / "main_menu" / "localization" / "english"
+FARMING_VILLAGE_BLUEPRINT = ROOT / "blueprints" / "accepted" / "buildings" / "farming_village.yml"
+MODEL_FARM_BLUEPRINT = ROOT / "blueprints" / "accepted" / "buildings" / "model_farm.yml"
 
 
 def test_constructor_config_loads() -> None:
@@ -71,6 +79,118 @@ def test_constructor_config_loads() -> None:
 def test_accepted_blueprints_validate() -> None:
     for blueprint in accepted_blueprint_files(ROOT / "blueprints" / "accepted"):
         validate_blueprint_file(blueprint)
+
+
+def test_farming_village_capacity_uses_live_rgo_population_and_space_inputs() -> None:
+    parsed = parse_file(BUILDING_CAPS)
+    entries = {entry.key: entry.value for entry in parsed.entries}
+    assert "farming_capacity" in entries
+    assert "farming_village_max_level" not in entries
+
+    block = _text_block_between(
+        BUILDING_CAPS.read_text(encoding="utf-8-sig"),
+        "farming_capacity = {",
+        "\nforest_village_max_level = {",
+    )
+
+    required_snippets = (
+        'desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"\n\t\tvalue = max_rgo_workers\n\t\tmultiply = 0.75',
+        'desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"\n\t\tvalue = modifier:local_population_capacity\n\t\tmultiply = 0.08',
+        'desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"\n\t\tvalue = modifier:farming_village_max_level_modifier',
+        'desc = "BUILDING_LEVEL_AVAILABLE_SPACE"\n\t\tvalue = total_building_levels\n\t\tmultiply = -0.1',
+        'desc = "BUILDING_LEVEL_FARMING_VILLAGE_SPACE"\n\t\tvalue = "location_building_level(building_type:farming_village)"\n\t\tmultiply = -0.25',
+        'desc = "BUILDING_LEVEL_MODEL_FARM_SPACE"\n\t\tvalue = "location_building_level(building_type:model_farm)"\n\t\tmultiply = -0.35',
+        "min = 0",
+    )
+    missing = [snippet for snippet in required_snippets if snippet not in block]
+    assert not missing
+
+    forbidden_snippets = (
+        "pp_farming_village_fixed_env_bonus",
+        "pp_farming_village_capacity_value",
+        "BUILDING_LEVEL_FROM_ENVIRONMENT_FARMING",
+        "value = development",
+        "value = population",
+    )
+    offenders = [snippet for snippet in forbidden_snippets if snippet in block]
+    assert not offenders
+
+
+def test_farming_capacity_old_fixed_environment_path_is_removed() -> None:
+    tokens = (
+        "pp_farming_village_fixed_env_bonus",
+        "pp_farming_village_capacity_value",
+        "pp_farming_village_global_",
+    )
+    roots = (
+        MOD_ROOT / "in_game" / "common" / "script_values",
+        MOD_ROOT / "in_game" / "common" / "on_action",
+        MOD_ROOT / "in_game" / "common" / "scripted_effects",
+        MOD_ROOT / "in_game" / "common" / "building_types",
+        MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes",
+        LOCALIZATION_ROOT,
+        ROOT / "blueprints" / "accepted" / "buildings",
+    )
+    offenders: list[str] = []
+
+    for root in roots:
+        for path in sorted(root.rglob("*")):
+            if path.suffix not in {".txt", ".yml"}:
+                continue
+            text = path.read_text(encoding="utf-8-sig", errors="replace")
+            for token in tokens:
+                if token in text:
+                    offenders.append(f"{path.relative_to(ROOT)}: {token}")
+
+    assert offenders == []
+
+
+def test_farming_building_blueprints_use_live_capacity_gate() -> None:
+    for blueprint in (FARMING_VILLAGE_BLUEPRINT, MODEL_FARM_BLUEPRINT):
+        text = blueprint.read_text(encoding="utf-8-sig")
+
+        assert "max_levels = farming_capacity" in text
+        assert "max_levels = farming_village_max_level" not in text
+        assert "location_potential = {" in text
+        assert "OR = {" in text
+        assert "max_rgo_workers > 0" in text
+        assert "modifier:local_population_capacity > 0" in text
+        assert "pp_farming_village_fixed_env_bonus" not in text
+
+
+def test_farming_capacity_is_the_only_farming_family_cap_value() -> None:
+    cap_references = (
+        MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_caps.txt",
+        MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt",
+        MOD_ROOT / "in_game" / "common" / "building_types" / "pp_farming_village.txt",
+        MOD_ROOT / "in_game" / "common" / "building_types" / "pp_model_farm.txt",
+        MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_food_map_modes.txt",
+        MOD_ROOT / "main_menu" / "localization" / "english" / "pp_building_adjustments_l_english.yml",
+        FARMING_VILLAGE_BLUEPRINT,
+        MODEL_FARM_BLUEPRINT,
+    )
+
+    for path in cap_references:
+        text = path.read_text(encoding="utf-8-sig")
+        text = text.replace("farming_village_max_level_modifier", "")
+        assert "farming_capacity" in text
+        assert "farming_village_max_level" not in text
+
+
+def test_farming_family_culling_uses_shared_capacity() -> None:
+    text = (MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt").read_text(
+        encoding="utf-8-sig"
+    )
+
+    farming_block = _text_block_between(text, "# Farming Village", "\n\t\t\t# Model Farm")
+    model_farm_block = _text_block_between(text, "# Model Farm", "\n\t\t\t# Forest Village")
+
+    assert "building_type = building_type:farming_village" in farming_block
+    assert "value > farming_capacity" in farming_block
+    assert "building = building_type:farming_village" in farming_block
+    assert "building_type = building_type:model_farm" in model_farm_block
+    assert "value > farming_capacity" in model_farm_block
+    assert "building = building_type:model_farm" in model_farm_block
 
 
 def test_replaced_buildings_do_not_reuse_vanilla_unique_method_names() -> None:
@@ -411,6 +531,12 @@ def _entry_mode(raw_key: str) -> tuple[str, str]:
         return "CREATE", raw_key
     mode, key = raw_key.split(":", 1)
     return mode.strip().upper(), key
+
+
+def _text_block_between(text: str, start: str, end: str) -> str:
+    _, tail = text.split(start, 1)
+    block, _ = tail.split(end, 1)
+    return start + block
 
 
 def _unique_production_method_names(block: CList) -> set[str]:

@@ -16,7 +16,8 @@
 @data_before_lighting_blend = 			0.5
 @data_after_lighting_blend = 			0.5
 
-# Map modes for food-producing buildings based on static environmental capacity bonuses.
+# Map modes for food-producing building capacity.
+@pp_farming_village_capacity_map_cap = 30
 
 pp_fruit_orchard_capacity = {
 	map_color = {
@@ -258,24 +259,15 @@ pp_farming_village_capacity = {
 			limit = { is_ownable = no }
 			value = rgb { 128 128 128 }
 		}
-		else_if = {
-			limit = {
-				NOT = { has_variable = pp_farming_village_fixed_env_bonus }
-			}
-			value = rgb { 0 0 0 }
-		}
-		else_if = {
-			limit = { global_var:pp_farming_village_global_range = 0 }
-			value = rgb { 128 128 128 }
-		}
 		else = {
 			lerp = {
 				max_color = rgb { 0 255 0 }
 				min_color = rgb { 255 0 0 }
 				factor = {
-					value = var:pp_farming_village_fixed_env_bonus
-					subtract = global_var:pp_farming_village_global_min
-					divide = { value = global_var:pp_farming_village_global_range min = 1 }
+					value = farming_capacity
+					divide = @pp_farming_village_capacity_map_cap
+					max = 1
+					min = 0
 				}
 			}
 		}

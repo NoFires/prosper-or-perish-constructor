@@ -66,10 +66,20 @@ pp_cull_over_cap_buildings = {
 				limit = {
 					location_building_level = {
 						building_type = building_type:farming_village
-						value > farming_village_max_level
+						value > farming_capacity
 					}
 				}
 				change_building_level_in_location = { building = building_type:farming_village value = -1 }
+			}
+			# Model Farm
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:model_farm
+						value > farming_capacity
+					}
+				}
+				change_building_level_in_location = { building = building_type:model_farm value = -1 }
 			}
 			# Forest Village
 			if = {
