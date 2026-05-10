@@ -71,7 +71,7 @@ localization:
     clove_grove_slot_0: Clove Trees
     clove_grove_slot_1: Curing & Drying
     clove_grove: Clove Grove
-    clove_grove_desc: A warm rural grove where laborers hand-pick unopened clove buds from evergreen trees and dry the spice for market. Basic crews gather and sun-dry the buds, while curing houses use raised wooden racks and controlled heat to finish more of the harvest through wet weather.
+    clove_grove_desc: Warm groves raise clove trees for their unopened flower buds. Curing houses dry and sort the spice for longer storage and trade.
     pp_clove_grove_base_cloves: Clove Trees
     pp_clove_grove_no_curing: No Curing Houses
     pp_clove_grove_curing_houses: Curing Houses

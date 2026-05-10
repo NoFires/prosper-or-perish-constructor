@@ -6,7 +6,7 @@
   cocoa_grove_slot_0: "Cocoa Trees"
   cocoa_grove_slot_1: "Fermentation & Drying"
   cocoa_grove: "Cocoa Grove"
-  cocoa_grove_desc: "A humid tropical grove where laborers cut ripe cacao pods, open them by hand, and dry the beans for market. Basic crews gather and sun-dry the harvest, while fermentation houses use wooden boxes and covered drying frames to cure more beans before they spoil."
+  cocoa_grove_desc: "Humid groves grow cacao trees for their pods and beans. Fermentation houses cure and dry the harvest before it spoils."
   pp_cocoa_grove_base_cocoa: "Cocoa Trees"
   pp_cocoa_grove_no_fermentation: "No Fermentation Houses"
   pp_cocoa_grove_fermentation_houses: "Fermentation Houses"

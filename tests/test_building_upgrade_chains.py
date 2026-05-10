@@ -186,16 +186,6 @@ DEACTIVATED_BOG_IRON_BLUEPRINTS = {
     "buildings/bog_iron_smelter_slitting_mills.yml",
     "buildings/bog_iron_smelter_hot_blast_furnace.yml",
 }
-FORWARD_REFERENCE_OBSOLETE_EXEMPTIONS = {
-    ("enclosed_sheep_walks", "sheep_farms"),
-    ("iron_mine_deep", "iron_mine_improved"),
-    ("lead_mine_cupola_smelting", "lead_mine_improved"),
-    ("managed_forest_village", "forest_village"),
-    ("model_farm", "farming_village"),
-    ("tin_stamping_mill", "tin_streamworks"),
-}
-
-
 def _load_blueprint(key: str) -> dict:
     with (BLUEPRINT_ROOT / "buildings" / f"{key}.yml").open("r", encoding="utf-8") as stream:
         raw = yaml.safe_load(stream)
@@ -297,14 +287,7 @@ def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
                 assert "obsolete =" not in body
             else:
                 previous = chain[tier - 1][0]
-                if (key, previous) in FORWARD_REFERENCE_OBSOLETE_EXEMPTIONS:
-                    assert not re.search(
-                        rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$",
-                        body,
-                        flags=re.M,
-                    )
-                else:
-                    assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
                 assert "icon" in raw, f"{key} must provide its own icon"
                 assert raw["icon"]["output_dds"] == f"{key}.dds"
 
@@ -445,14 +428,7 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
                 assert "obsolete =" not in body
             else:
                 previous = chain[tier - 1][0]
-                if (key, previous) in FORWARD_REFERENCE_OBSOLETE_EXEMPTIONS:
-                    assert not re.search(
-                        rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$",
-                        body,
-                        flags=re.M,
-                    )
-                else:
-                    assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
 
 
 def test_manpower_building_blueprints_do_not_copy_invalid_owner_culture_gate() -> None:

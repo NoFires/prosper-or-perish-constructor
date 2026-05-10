@@ -103,7 +103,7 @@ localization:
     gold_diggings_slot_1: Gold Workings
     gold_diggings_slot_2: Associated Ores
     gold_diggings: Gold Diggings
-    gold_diggings_desc: Auriferous gravels and shallow lode outcrops are washed by hand and worked with simple timbering, while associated ores are picked over for electrum-bearing silver and traces of copper.
+    gold_diggings_desc: Gold-bearing gravels and shallow lode outcrops are washed by hand. Workers also pick over associated ore for silver-bearing electrum and traces of copper.
     pp_gold_diggings_base_gold: Native Gold Deposit
     pp_gold_diggings_no_primary: No Gold Washing
     pp_gold_diggings_gold: Placer Washing

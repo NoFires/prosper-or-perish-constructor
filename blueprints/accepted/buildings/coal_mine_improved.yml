@@ -97,7 +97,7 @@ localization:
     coal_mine_improved_slot_1: Colliery Workings
     coal_mine_improved_slot_2: Clay Recovery
     coal_mine_improved: Colliery
-    coal_mine_improved_desc: Organized colliery galleries use better timbering, haulage, drainage, and coal sorting to work deeper seams, while fireclay is recovered where the coal measures expose useful seat-clay beds.
+    coal_mine_improved_desc: Timbered colliery galleries use better haulage, drainage, and sorting floors to work deeper seams. Fireclay is recovered from useful seat-clay beds.
     pp_coal_mine_improved_base_coal: Surveyed Coal Seam
     pp_coal_mine_improved_no_primary: No Colliery Workings
     pp_coal_mine_improved_coal: Timbered Colliery Workings
@@ -105,7 +105,7 @@ localization:
     pp_coal_mine_improved_fireclay: Fireclay Sorting
     pp_coal_mine_improved_price: Colliery Price
     coal_improvements_absolutism: Colliery Improvements
-    coal_improvements_absolutism_desc: Better surveying, timbering, haulage, and coal sorting let mines work deeper seams while kiln and retort practice improves the handling of solid fuels.
+    coal_improvements_absolutism_desc: Better surveying, timbering, haulage, and coal sorting let collieries work deeper seams and handle solid fuels more reliably.
 icon:
   source_png: ../assets/icons/coal_mine_improved.png
   output_dds: coal_mine_improved.dds

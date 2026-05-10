@@ -7,7 +7,7 @@
   gem_sluice_slot_1: "Sluice Washing"
   gem_sluice_slot_2: "Placer Byproducts"
   gem_sluice: "Gem Sluice"
-  gem_sluice_desc: "Timbered water channels, sorting tables, and controlled washing let workers process larger runs of gem-bearing gravel. Imported sluice practice raises gemstone recovery first, while gold specks and sand remain minor byproducts."
+  gem_sluice_desc: "Timbered sluices and sorting tables wash larger runs of gem-bearing gravel. The same water channels recover gold specks and clean sand."
   pp_gem_sluice_base_gems: "Surveyed Gem Gravels"
   pp_gem_sluice_no_primary: "No Sluice Washing"
   pp_gem_sluice_gems: "Sluiced Gem Gravels"
@@ -16,5 +16,5 @@
   pp_gem_sluice_sand: "Washed Sand Sorting"
   pp_gem_sluice_price: "Gem Sluice Price"
   foreign_mining_techniques: "Foreign Mining Techniques"
-  foreign_mining_techniques_desc: "Imported mine timbering, water control, gravel washing, and sluice practice improve the recovery of gemstones from alluvial deposits and shallow lodes."
+  foreign_mining_techniques_desc: "Imported timbering, water control, and sluice practice improve gemstone recovery from gravel beds and shallow lodes."
 # <<< eu5-building-pipeline:gem_sluice:localization

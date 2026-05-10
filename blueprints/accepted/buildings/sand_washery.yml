@@ -109,7 +109,7 @@ localization:
     sand_washery_slot_1: Screening
     sand_washery_slot_2: Washing
     sand_washery: Sand Washery
-    sand_washery_desc: A larger washing screen, water flumes, and settling tanks let workers grade sand for mortar, molds, and clearer glassmaking. Coarse gravel is screened out while cleaner sand is washed and dried for transport.
+    sand_washery_desc: Screens, washing troughs, and settling tanks grade sand for mortar, molds, and glassmaking. Coarse gravel is removed before the cleaner sand is dried.
     pp_sand_washery_base_sand: Surveyed Sand Beds
     pp_sand_washery_no_screening: No Sand Screening
     pp_sand_washery_riddle_screens: Barrel Screens
@@ -117,7 +117,7 @@ localization:
     pp_sand_washery_glass_sand_washing: Glass-Sand Washing
     pp_sand_washery_price: Sand Washery Price
     pp_sand_washery: Sand Washeries
-    pp_sand_washery_desc: Barrel screens, washing troughs, and settling channels grade cleaner sand for construction, molds, and glassmaking.
+    pp_sand_washery_desc: Screens, washing troughs, and settling channels grade cleaner sand for construction, molds, and glassmaking.
 icon:
   source_png: ../assets/icons/sand_washery.png
   output_dds: sand_washery.dds

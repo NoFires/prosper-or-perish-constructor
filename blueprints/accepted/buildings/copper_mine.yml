@@ -104,11 +104,11 @@ localization:
     copper_mine_slot_0: Copper Lode
     copper_mine_slot_1: Copper Workings
     copper_mine_slot_2: Ore Sorting
-    copper_mine: Copper Work
-    copper_mine_desc: Shallow open works and short headings follow exposed copper lodes with picks, gads, baskets, and simple timbering. Ore pickers separate copper stone from waste and may recover small lots of argentiferous ore or cassiterite where the lode permits.
+    copper_mine: Copper Mine
+    copper_mine_desc: Shallow pits and short headings follow exposed copper lodes. Ore pickers separate copper stone from waste and recover small lots of silver or tin ore when present.
     pp_copper_mine_base_copper: Copper Outcrop
     pp_copper_mine_no_primary: No Copper Workings
-    pp_copper_mine_copper: Pick-and-Gad Workings
+    pp_copper_mine_copper: Hand Copper Workings
     pp_copper_mine_no_secondary: No Secondary Output
     pp_copper_mine_silver: Argentiferous Ore Picking
     pp_copper_mine_tin: Cassiterite Lode Picking

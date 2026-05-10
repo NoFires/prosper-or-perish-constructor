@@ -105,7 +105,7 @@ localization:
     marble_saw_yard_slot_1: Sawed Blocks
     marble_saw_yard_slot_2: Quarry Waste
     marble_saw_yard: Marble Saw Yard
-    marble_saw_yard_desc: Sculptural demand supports organized marble yards where quarry saws, pulleys, water troughs, and sorting sheds square larger blocks for transport. Rubble and crushed washable fines remain secondary products beside the dressed stone.
+    marble_saw_yard_desc: Marble yards saw and square larger blocks for transport to builders and sculptors. Rubble and fine stone waste remain useful secondary products.
     pp_marble_saw_yard_base_marble: Surveyed Marble Face
     pp_marble_saw_yard_no_primary: No Marble Sawing
     pp_marble_saw_yard_marble: Sawed Block Quarrying
@@ -113,7 +113,7 @@ localization:
     pp_marble_saw_yard_stone: Quarry Rubble Sorting
     pp_marble_saw_yard_sand: Marble Fines Washing
     pp_marble_saw_yard_price: Marble Saw Yard Price
-    renaissance_sculptures_desc: Sculptural patronage raises demand for carefully selected stone and marble. Better block selection, quarry saws, and handling of quarry waste improve both ordinary stone and ornamental marble supply.
+    renaissance_sculptures_desc: Sculptural patronage raises demand for selected stone and marble. Better block selection and quarry saws improve both ordinary stone and ornamental marble supply.
 icon:
   source_png: ../assets/icons/marble_saw_yard.png
   output_dds: marble_saw_yard.dds

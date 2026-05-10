@@ -6,7 +6,7 @@
   ocean_fishery_slot_0: "Coastal Waters"
   ocean_fishery_slot_1: "Coastal Gear"
   ocean_fishery: "Coastal Fishery"
-  ocean_fishery_desc: "A coastal fishery where laborers work small boats, nets, curing barrels, and shore landings. Its crews supply the local maritime trade without the capital, range, or heavy gear of offshore fleets."
+  ocean_fishery_desc: "Coastal crews work small boats, nets, curing barrels, and shore landings. They supply nearby markets from familiar waters."
   pp_ocean_fishery_base_catch: "Coastal Waters"
   pp_ocean_fishery_no_coastal_gear: "No Coastal Gear"
   pp_ocean_fishery_coastal_boats: "Coastal Boats"
