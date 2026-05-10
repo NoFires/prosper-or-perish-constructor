@@ -10,6 +10,7 @@ icon = clay_washmill
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 obsolete = clay_pit
 build_time = workshop_build_time
 

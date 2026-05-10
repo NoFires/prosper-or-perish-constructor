@@ -34,6 +34,7 @@ building:
     rural_settlement = yes
     town = yes
     city = yes
+    megalopolis = yes
     build_time = manufactory_build_time
 
     location_potential = {

@@ -10,6 +10,7 @@ icon = coal_mine_revolutions
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 obsolete = coal_mine_improved
 build_time = manufactory_build_time
 

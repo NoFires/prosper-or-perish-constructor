@@ -10,6 +10,7 @@ icon = cinnabar_pit
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 build_time = village_build_time
 
 location_potential = {

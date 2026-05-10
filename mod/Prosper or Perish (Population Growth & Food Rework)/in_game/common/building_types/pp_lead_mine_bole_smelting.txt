@@ -10,6 +10,7 @@ icon = lead_mine_bole_smelting
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 obsolete = lead_mine
 build_time = manufactory_build_time
 

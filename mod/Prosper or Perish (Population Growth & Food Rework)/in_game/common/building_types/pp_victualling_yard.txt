@@ -11,6 +11,7 @@ victualling_yard = {
 	rural_settlement = yes
 	town = yes
 	city = yes
+	megalopolis = yes
 	build_time = workshop_build_time
 	construction_demand = workshop_construction
 	ai_forbid_shutdown = no

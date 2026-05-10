@@ -10,6 +10,7 @@ icon = gold_stamp_mill
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 obsolete = gold_diggings
 build_time = workshop_build_time
 

@@ -10,6 +10,7 @@ icon = alum_works
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 obsolete = alum_quarry
 build_time = workshop_build_time
 

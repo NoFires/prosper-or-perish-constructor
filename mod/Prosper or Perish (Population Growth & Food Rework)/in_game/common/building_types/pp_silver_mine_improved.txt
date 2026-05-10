@@ -10,6 +10,7 @@ icon = silver_mine_improved
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 obsolete = silver_mine
 build_time = workshop_build_time
 

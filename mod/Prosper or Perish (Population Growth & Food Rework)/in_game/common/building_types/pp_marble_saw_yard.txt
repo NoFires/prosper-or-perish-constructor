@@ -10,6 +10,7 @@ icon = marble_saw_yard
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 obsolete = marble_quarry
 build_time = workshop_build_time
 

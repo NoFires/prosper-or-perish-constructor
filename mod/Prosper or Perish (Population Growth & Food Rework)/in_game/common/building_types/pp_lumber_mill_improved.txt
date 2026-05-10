@@ -10,6 +10,7 @@ icon = lumber_mill_improved
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 obsolete = lumber_mill
 build_time = workshop_build_time
 

@@ -10,6 +10,7 @@ icon = copper_mine_adit
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 obsolete = copper_mine
 build_time = workshop_build_time
 

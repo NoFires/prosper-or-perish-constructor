@@ -10,6 +10,7 @@ icon = managed_forest_village
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 forbidden_for_estates = yes
 ai_forbid_shutdown = no
 can_close = yes

@@ -11,6 +11,7 @@ victuals_market = {
 	rural_settlement = yes
 	town = yes
 	city = yes
+	megalopolis = yes
 	ai_forbid_shutdown = no
 	important_for_AI = no
 	can_close = yes

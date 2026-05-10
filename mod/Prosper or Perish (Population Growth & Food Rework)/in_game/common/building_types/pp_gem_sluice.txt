@@ -10,6 +10,7 @@ icon = gem_sluice
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 obsolete = gem_gravel_pit
 build_time = workshop_build_time
 

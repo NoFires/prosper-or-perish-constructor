@@ -54,6 +54,7 @@ building:
     rural_settlement = yes
     town = yes
     city = yes
+    megalopolis = yes
     obsolete = mining_village_slitting_mills
     build_time = manufactory_build_time
 

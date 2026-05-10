@@ -10,6 +10,7 @@ icon = offshore_fishery
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 obsolete = ocean_fishery
 build_time = workshop_build_time
 
