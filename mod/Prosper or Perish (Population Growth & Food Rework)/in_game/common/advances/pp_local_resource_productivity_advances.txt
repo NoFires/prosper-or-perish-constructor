@@ -144,3 +144,74 @@ REPLACE:cupola_smelting = {
 	requires = hot_blast_furnace
 	unlock_building = lead_mine_cupola_smelting
 }
+
+# Convert broad raw-material output advances into RGO capacity instead.
+TRY_INJECT:arabia_felix = {
+	global_raw_material_output = -0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+TRY_INJECT:otm_lord_of_bungo = {
+	global_raw_material_output = -0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+TRY_INJECT:sba_multiple_shugo = {
+	global_raw_material_output = -0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+TRY_INJECT:cultivate_the_land = {
+	global_raw_material_output = -0.05
+	global_max_rgo_size_modifier = 0.05
+}
+
+TRY_INJECT:llama_michis = {
+	global_raw_material_output = -0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+TRY_INJECT:por_estimulate_rural_areas = {
+	global_raw_material_output = -0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+TRY_INJECT:hyanyak_system = {
+	global_raw_material_output = -0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+TRY_INJECT:wealth_of_mesoamerica = {
+	global_raw_material_output = -0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+TRY_INJECT:free_subjects = {
+	global_raw_material_output = -0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+TRY_INJECT:gra_modernized_economy = {
+	global_raw_material_output = -0.20
+	global_max_rgo_size_modifier = 0.20
+}
+
+TRY_INJECT:bur_rich_soil_of_burgundy = {
+	global_raw_material_output = -0.20
+	global_max_rgo_size_modifier = 0.20
+}
+
+TRY_INJECT:neapolitan_industrialization = {
+	global_raw_material_output = -0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+TRY_INJECT:produktplakatet = {
+	global_raw_material_output = -0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+TRY_INJECT:tre_trapezuntine_endurance = {
+	global_raw_material_output = -0.10
+	global_max_rgo_size_modifier = 0.10
+}

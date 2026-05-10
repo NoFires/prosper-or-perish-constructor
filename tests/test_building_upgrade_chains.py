@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import re
 
@@ -72,6 +73,22 @@ LOCATION_MODIFIER_ADJUSTMENTS_PATH = (
     / "static_modifiers"
     / "pp_location_modifier_adjustments.txt"
 )
+RAW_MATERIAL_OUTPUT_TO_RGO_ADVANCES = {
+    "arabia_felix": 0.10,
+    "otm_lord_of_bungo": 0.10,
+    "sba_multiple_shugo": 0.10,
+    "cultivate_the_land": 0.05,
+    "llama_michis": 0.10,
+    "por_estimulate_rural_areas": 0.10,
+    "hyanyak_system": 0.10,
+    "wealth_of_mesoamerica": 0.10,
+    "free_subjects": 0.10,
+    "gra_modernized_economy": 0.20,
+    "bur_rich_soil_of_burgundy": 0.20,
+    "neapolitan_industrialization": 0.10,
+    "produktplakatet": 0.10,
+    "tre_trapezuntine_endurance": 0.10,
+}
 
 EXPECTED_CHAINS = {
     "alum_quarry": [
@@ -201,6 +218,12 @@ def _advance_block(advance: str, text: str) -> str:
     )
     assert match is not None, f"{advance} block missing"
     return match.group("body")
+
+
+def _active_advancement_modifiers() -> dict[str, dict[str, float]]:
+    data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
+    rows = data.advancements.to_dicts()
+    return {row["name"]: json.loads(row.get("modifiers") or "{}") for row in rows}
 
 
 def _production_method_precision_offenders(path: Path) -> list[str]:
@@ -588,6 +611,22 @@ def test_later_alum_modifier_advances_do_not_unlock_alum_buildings() -> None:
     advances = ADVANCES_PATH.read_text(encoding="utf-8")
     for advance in ("shared_products_procedures", "ostentatious_clothing"):
         assert f"REPLACE:{advance}" not in advances
+
+
+def test_raw_material_output_advances_convert_to_rgo_size() -> None:
+    modifiers_by_advance = _active_advancement_modifiers()
+    positive_raw_material_output = {
+        advance: modifiers["global_raw_material_output"]
+        for advance, modifiers in modifiers_by_advance.items()
+        if modifiers.get("global_raw_material_output", 0.0) > 0.0
+    }
+
+    assert positive_raw_material_output == {}
+
+    for advance, expected_value in RAW_MATERIAL_OUTPUT_TO_RGO_ADVANCES.items():
+        modifiers = modifiers_by_advance[advance]
+        assert abs(modifiers.get("global_raw_material_output", 0.0)) < 0.000000001
+        assert modifiers.get("global_max_rgo_size_modifier") == expected_value
 
 
 def test_iron_mine_tiers_are_iron_deposit_only() -> None:
