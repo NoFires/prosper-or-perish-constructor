@@ -59,6 +59,202 @@ farm_capacity_available = {
 	add = farm_capacity_remaining
 	min = 0
 }
+# Start generated land-farm per-building max-level caps
+
+farming_village_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:farming_village)"
+	}
+}
+
+model_farm_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:model_farm)"
+	}
+}
+
+fruit_orchard_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:fruit_orchard)"
+	}
+}
+
+pomological_orchard_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:pomological_orchard)"
+	}
+}
+
+sheep_farms_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:sheep_farms)"
+	}
+}
+
+enclosed_sheep_walks_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:enclosed_sheep_walks)"
+	}
+}
+
+horse_breeders_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:horse_breeders)"
+	}
+}
+
+elephant_kraal_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:elephant_kraal)"
+	}
+}
+
+fiber_crops_farm_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:fiber_crops_farm)"
+	}
+}
+
+cotton_plantation_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:cotton_plantation)"
+	}
+}
+
+sugar_plantation_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:sugar_plantation)"
+	}
+}
+
+tobacco_plantation_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:tobacco_plantation)"
+	}
+}
+
+dye_plantation_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:dye_plantation)"
+	}
+}
+
+chili_plantation_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:chili_plantation)"
+	}
+}
+
+clove_grove_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:clove_grove)"
+	}
+}
+
+cocoa_grove_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:cocoa_grove)"
+	}
+}
+
+coffee_grove_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:coffee_grove)"
+	}
+}
+
+incense_grove_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:incense_grove)"
+	}
+}
+
+pepper_garden_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:pepper_garden)"
+	}
+}
+
+saffron_croft_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:saffron_croft)"
+	}
+}
+
+sericulture_farm_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:sericulture_farm)"
+	}
+}
+
+simplers_grove_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:simplers_grove)"
+	}
+}
+
+tea_garden_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:tea_garden)"
+	}
+}
+
+vineyard_estate_farm_max_level = {
+	add = farm_capacity_available
+	add = {
+		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
+		value = "location_building_level(building_type:vineyard_estate)"
+	}
+}
+
+# End generated land-farm per-building max-level caps
+
 forest_village_max_level = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE"

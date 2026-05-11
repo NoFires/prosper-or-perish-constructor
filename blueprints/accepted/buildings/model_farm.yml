@@ -35,7 +35,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = farm_max_level
+    max_levels = model_farm_farm_max_level
     pop_type = laborers
     employment_size = 7
     price = pp_model_farm_price

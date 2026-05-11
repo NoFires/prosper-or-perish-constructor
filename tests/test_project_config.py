@@ -187,7 +187,7 @@ def test_farm_capacity_remaining_tracks_urbanization_and_farm_space() -> None:
     available_block = _text_block_between(
         text,
         "farm_capacity_available = {",
-        "\nforest_village_max_level = {",
+        "\n# Start generated land-farm per-building max-level caps",
     )
 
     required_remaining = (
@@ -337,10 +337,12 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
 
     for blueprint in LAND_FARM_BLUEPRINTS:
         text = blueprint.read_text(encoding="utf-8-sig")
+        building = blueprint.stem
 
-        assert "max_levels = farm_max_level" in text
+        assert f"max_levels = {building}_farm_max_level" in text
         assert "farm_space_used = 0.9" in text
         assert "farm_capacity_available > 0" in text
+        assert "max_levels = farm_max_level" not in text
         assert "max_levels = farming_capacity" not in text
         assert "max_levels = farming_village_max_level" not in text
         assert "location_potential = {" in text
@@ -352,6 +354,25 @@ def test_land_farm_blueprints_use_shared_capacity_pool() -> None:
         assert "OR = {" in text
         assert "max_rgo_workers > 0" in text
         assert "modifier:local_population_capacity > 0" in text
+
+
+def test_land_farm_building_max_levels_add_current_levels_to_shared_available_capacity() -> None:
+    text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
+    parsed = parse_file(BUILDING_CAPS)
+    entries = {entry.key: entry.value for entry in parsed.entries}
+
+    for index, building in enumerate(LAND_FARM_BUILDINGS):
+        key = f"{building}_farm_max_level"
+        assert key in entries
+        end = (
+            f"\n{LAND_FARM_BUILDINGS[index + 1]}_farm_max_level = {{"
+            if index + 1 < len(LAND_FARM_BUILDINGS)
+            else "\n# End generated land-farm per-building max-level caps"
+        )
+        block = _text_block_between(text, f"{key} = {{", end)
+        assert "add = farm_capacity_available" in block
+        assert 'desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"' in block
+        assert f'value = "location_building_level(building_type:{building})"' in block
 
 
 def test_fruit_and_sheep_families_use_raw_material_gates() -> None:
@@ -419,6 +440,8 @@ def test_excluded_buildings_do_not_use_land_farm_capacity_pool() -> None:
         text = blueprint.read_text(encoding="utf-8-sig")
         if "max_levels = farm_max_level" in text:
             offenders.append(f"{blueprint.relative_to(ROOT)}: farm_max_level")
+        if "_farm_max_level" in text:
+            offenders.append(f"{blueprint.relative_to(ROOT)}: per-building farm max level")
         if "farm_space_used = 0.9" in text:
             offenders.append(f"{blueprint.relative_to(ROOT)}: farm_space_used")
         if "farm_capacity_available > 0" in text:
