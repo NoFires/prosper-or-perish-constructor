@@ -1,0 +1,87 @@
+﻿# >>> eu5-building-pipeline:stone_quarry_improved:building
+stone_quarry_improved = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 4
+price = pp_stone_quarry_improved_price
+category = rgo_building_category
+icon = stone_quarry_improved
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = stone_quarry
+build_time = workshop_build_time
+
+location_potential = {
+    OR = {
+        raw_material = goods:stone
+        AND = {
+            OR = {
+                topography = mountains
+                topography = plateau
+                topography = hills
+            }
+            NOT = {
+                raw_material = goods:stone
+            }
+        }
+    }
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_stone_quarry_improved_base_stone = {
+        produced = stone
+        output = 0.60
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_stone_quarry_improved_no_primary = {
+        category = building_maintenance
+    }
+    pp_stone_quarry_improved_crane_winch_quarrying = {
+        lumber = 1.60 # crane frame, skids
+        tools = 0.75 # chisels, wedges, tackle
+        leather = 0.18 # slings and straps
+        horses = 0.20 # hoist and cart teams
+        produced = stone
+        output = 6.62
+        category = building_maintenance
+    }
+    pp_stone_quarry_improved_ox_haulage = {
+        lumber = 1.50 # skids, block sledges
+        tools = 0.68 # picks, wedges, dressing tools
+        leather = 0.16 # yokes and straps
+        livestock = 0.25 # ox haulage teams
+        produced = stone
+        output = 5.88
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_stone_quarry_improved_no_secondary = {
+        category = building_maintenance
+    }
+    pp_stone_quarry_improved_rubble_breaking = {
+        lumber = 0.16 # sorting screens, bins
+        tools = 0.10 # hammers and sieves
+        produced = sand
+        output = 1.20
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0001
+    local_migration_attraction = 0.01
+}
+}
+# <<< eu5-building-pipeline:stone_quarry_improved:building

@@ -112,23 +112,23 @@ pp_fish_base_capacity_value = {
 			is_ownable = yes
 			raw_material = goods:fish
 		}
-		add = 4
+		add = 3.00
 	}
 	if = {
 		limit = { is_coastal = yes }
-		add = 6
+		add = 4.50
 	}
 	if = {
 		limit = { is_adjacent_to_lake = yes }
-		add = 4
+		add = 3.00
 	}
 	if = {
 		limit = { has_river = yes }
-		add = 3
+		add = 2.25
 	}
 	if = {
 		limit = { topography = wetlands }
-		add = 2
+		add = 1.50
 	}
 }
 

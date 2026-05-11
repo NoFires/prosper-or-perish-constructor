@@ -1,5 +1,11 @@
 version: 2
 tag: stone_quarry
+upgrade_chain:
+  family: stone_quarry
+  tier: 0
+  previous: null
+  next: stone_quarry_improved
+  unlock_advance: null
 building:
   key: stone_quarry
   mode: REPLACE

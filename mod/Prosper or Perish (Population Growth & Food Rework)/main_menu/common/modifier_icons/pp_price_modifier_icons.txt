@@ -172,6 +172,9 @@ pp_silver_mine_price_cost_modifier = {
 pp_simplers_grove_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
+pp_stone_quarry_improved_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
 pp_tea_garden_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }

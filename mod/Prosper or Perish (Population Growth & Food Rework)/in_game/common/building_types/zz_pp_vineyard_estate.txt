@@ -1,0 +1,54 @@
+﻿# >>> eu5-building-pipeline:vineyard_estate:building
+vineyard_estate = {
+is_foreign = no
+max_levels = farm_max_level
+pop_type = laborers
+employment_size = 3
+price = pp_vineyard_estate_price
+category = rgo_building_category
+icon = vineyard_estate
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+build_time = village_build_time
+
+location_potential = {
+    raw_material = goods:wine
+    NOT = { has_building = building_type:winery }
+    NOT = { has_building = building_type:winery_manufactory }
+}
+
+allow = {
+    farm_capacity_available > 0
+}
+
+construction_demand = farm_constructions
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_vineyard_estate_base_wine = {
+        produced = wine
+        output = 0.300
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_vineyard_estate_press_houses = {
+        lumber = 0.500 # presses, stakes, and cask staves
+        pottery = 0.250 # fermentation jars and storage vessels
+        tools = 0.050 # pruning knives and press hardware
+        produced = wine
+        output = 0.667
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_migration_attraction = 0.01
+}
+}
+# <<< eu5-building-pipeline:vineyard_estate:building

@@ -183,7 +183,7 @@ fish_gross_capacity = {
 	add = {
 		desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"
 		value = max_rgo_workers
-		multiply = 1.50
+		multiply = 1.12
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FISH_CAPACITY_IMPROVEMENTS"
@@ -319,30 +319,12 @@ pp_granary_cap = {
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
 		value = development
-		multiply = 0.05
+		multiply = 0.125
 	}
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION"
 		value = population
-		multiply = 0.01
-	}
-	if = {
-		limit = {
-			location_rank = location_rank:town
-		}
-		add = {
-			desc = "BUILDING_LEVEL_IS_TOWN"
-			value = 0.5
-		}
-	}
-	if = {
-		limit = {
-			location_rank = location_rank:city
-		}
-		add = {
-			desc = "BUILDING_LEVEL_IS_CITY"
-			value = 1.0
-		}
+		multiply = 0.0150
 	}
 	max = 6
 }

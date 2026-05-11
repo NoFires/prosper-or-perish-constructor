@@ -1,0 +1,173 @@
+version: 2
+tag: stone_quarry_improved
+upgrade_chain:
+  family: stone_quarry
+  tier: 1
+  previous: stone_quarry
+  next: null
+  unlock_advance: pp_stone_quarry_improvements
+building:
+  key: stone_quarry_improved
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_stone_quarry_improved_base_stone
+    - name: slot_1
+      methods:
+        - pp_stone_quarry_improved_no_primary
+        - pp_stone_quarry_improved_crane_winch_quarrying
+        - pp_stone_quarry_improved_ox_haulage
+    - name: slot_2
+      methods:
+        - pp_stone_quarry_improved_no_secondary
+        - pp_stone_quarry_improved_rubble_breaking
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = rural_building_cap
+    pop_type = laborers
+    employment_size = 4
+    price = pp_stone_quarry_improved_price
+    category = rgo_building_category
+    icon = stone_quarry_improved
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = stone_quarry
+    build_time = workshop_build_time
+
+    location_potential = {
+        OR = {
+            raw_material = goods:stone
+            AND = {
+                OR = {
+                    topography = mountains
+                    topography = plateau
+                    topography = hills
+                }
+                NOT = {
+                    raw_material = goods:stone
+                }
+            }
+        }
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_stone_quarry_improved_base_stone = {
+            produced = stone
+            output = 0.60
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_stone_quarry_improved_no_primary = {
+            category = building_maintenance
+        }
+        pp_stone_quarry_improved_crane_winch_quarrying = {
+            lumber = 1.60 # crane frame, skids
+            tools = 0.75 # chisels, wedges, tackle
+            leather = 0.18 # slings and straps
+            horses = 0.20 # hoist and cart teams
+            produced = stone
+            output = 6.62
+            category = building_maintenance
+        }
+        pp_stone_quarry_improved_ox_haulage = {
+            lumber = 1.50 # skids, block sledges
+            tools = 0.68 # picks, wedges, dressing tools
+            leather = 0.16 # yokes and straps
+            livestock = 0.25 # ox haulage teams
+            produced = stone
+            output = 5.88
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_stone_quarry_improved_no_secondary = {
+            category = building_maintenance
+        }
+        pp_stone_quarry_improved_rubble_breaking = {
+            lumber = 0.16 # sorting screens, bins
+            tools = 0.10 # hammers and sieves
+            produced = sand
+            output = 1.20
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_population_growth = -0.0001
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_stone_quarry_improved_price
+    body: |2-
+      {gold = 200}
+advancements:
+  - key: pp_stone_quarry_improvements
+    body: |2-
+      icon = efficient_mining
+      age = age_3_discovery
+      requires = rgo_logistics_discovery
+      unlock_building = stone_quarry_improved
+      ai_weight = { add = 125 }
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_stone_quarry_improved_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('stone_quarry_improved')|e].
+    MODIFIER_TYPE_NAME_pp_stone_quarry_improved_price_cost_modifier: Stone Dressing Yard Cost
+    stone_quarry_improved_slot_0: Stone Face
+    stone_quarry_improved_slot_1: Block Dressing
+    stone_quarry_improved_slot_2: Quarry Waste
+    stone_quarry_improved: Stone Dressing Yard
+    stone_quarry_improved_desc: Dressing yards pair worked quarry faces with hoists, skids, and block benches so crews can square larger stones for transport. Waste rubble is broken and sorted for lesser construction uses.
+    pp_stone_quarry_improved_base_stone: Surveyed Stone Face
+    pp_stone_quarry_improved_no_primary: No Block Dressing
+    pp_stone_quarry_improved_crane_winch_quarrying: Crane-and-Winch Quarrying
+    pp_stone_quarry_improved_ox_haulage: Ox-Drawn Block Haulage
+    pp_stone_quarry_improved_no_secondary: No Rubble Sorting
+    pp_stone_quarry_improved_rubble_breaking: Rubble Breaking
+    pp_stone_quarry_improved_price: Stone Dressing Yard Price
+    pp_stone_quarry_improvements: Quarry Dressing
+    pp_stone_quarry_improvements_desc: Better quarry logistics, block hoists, skids, and dressing benches let stone yards square larger blocks before transport.
+icon:
+  source_png: ../assets/icons/stone_quarry_improved.png
+  output_dds: stone_quarry_improved.dds
+  size: 512
+  prompt: >-
+    EU5-inspired hand-painted strategy-game icon for Stone Dressing Yard,
+    transparent background. Center an early-modern stone quarry dressing yard
+    with a gray quarry face, wedge-cut blocks, timber crane or gin pole with
+    rope hoist, squared ashlar blocks, timber skids, dressing bench, hand tools,
+    wicker baskets, and draft-haulage yoke. Use readable painterly historical
+    UI art, natural stone grays, weathered wood browns, muted rope and leather
+    tans, no text, no letters, no frame, no modern machinery, not photorealistic,
+    not cartoonish.
+
+evaluation:
+  production_methods:
+    pp_stone_quarry_improved_base_stone:
+      production_efficiency: 1.00
+    pp_stone_quarry_improved_no_primary:
+      production_efficiency: 1.00
+    pp_stone_quarry_improved_crane_winch_quarrying:
+      production_efficiency: 1.05
+    pp_stone_quarry_improved_ox_haulage:
+      production_efficiency: 1.05
+    pp_stone_quarry_improved_no_secondary:
+      production_efficiency: 1.00
+    pp_stone_quarry_improved_rubble_breaking:
+      production_efficiency: 0.75
+      allow_rules:
+        profit_percent: Rubble breaking is an ancillary quarry byproduct, intentionally less profitable than primary block dressing.
+        input_throughput: Rubble breaking is an ancillary quarry byproduct, intentionally smaller than primary block dressing.
+        output_throughput: Rubble breaking is an ancillary quarry byproduct, intentionally smaller than primary block dressing.
+        amortization_months: Rubble breaking is an ancillary quarry byproduct, intentionally smaller than primary block dressing.

@@ -7,6 +7,7 @@ import re
 import yaml
 
 from eu5gameparser.domain.eu5 import load_eu5_data
+from eu5_mod_orchestrator.config import load_project_config
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -367,7 +368,7 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
     assert "potential =" not in steam_block
 
 
-def test_clay_and_sand_pit_upgrade_chains_are_explicit_and_unlockable() -> None:
+def test_clay_sand_and_stone_quarry_upgrade_chains_are_explicit_and_unlockable() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
     expected_chains = {
@@ -378,6 +379,10 @@ def test_clay_and_sand_pit_upgrade_chains_are_explicit_and_unlockable() -> None:
         "sand_pit": [
             ("sand_pit", None),
             ("sand_washery", "pp_sand_washery"),
+        ],
+        "stone_quarry": [
+            ("stone_quarry", None),
+            ("stone_quarry_improved", "pp_stone_quarry_improvements"),
         ],
     }
 
@@ -413,11 +418,6 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
     assert _load_blueprint("fishing_village").get("upgrade_chain") is None
-    obsolete_skips = {
-        "enclosed_sheep_walks",
-        "model_farm",
-        "managed_forest_village",
-    }
     expected_chains = {
         "sheep_farms": [
             ("sheep_farms", None),
@@ -457,10 +457,65 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
                 assert "obsolete =" not in body
             else:
                 previous = chain[tier - 1][0]
-                if key in obsolete_skips:
-                    assert "obsolete =" not in body
-                else:
-                    assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+
+
+def test_blueprint_upgrade_successors_load_after_obsolete_predecessors() -> None:
+    config = load_project_config(ROOT / "constructor.toml")
+    blueprints = {
+        path.stem: yaml.safe_load(path.read_text(encoding="utf-8"))
+        for path in sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml"))
+    }
+    generated_building_paths = {
+        key: config.building_outputs.building_types.format(
+            prefix=config.building_outputs.prefix,
+            tag=raw.get("output_tag", raw["tag"]),
+            key=raw["building"]["key"],
+        )
+        for key, raw in blueprints.items()
+    }
+
+    offenders: list[str] = []
+    for key, raw in blueprints.items():
+        upgrade_chain = raw.get("upgrade_chain")
+        if not upgrade_chain or upgrade_chain.get("previous") is None:
+            continue
+
+        previous = upgrade_chain["previous"]
+        if previous not in generated_building_paths:
+            continue
+
+        previous_path = generated_building_paths[previous]
+        current_path = generated_building_paths[key]
+        if previous_path >= current_path:
+            offenders.append(f"{key}: {current_path} loads before {previous}: {previous_path}")
+
+    assert not offenders
+
+
+def test_enabled_blueprint_upgrade_successors_declare_obsolete_predecessors() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = {Path(entry).stem for entry in manifest["enabled"]}
+
+    offenders: list[str] = []
+    for key in sorted(enabled):
+        raw = _load_blueprint(key)
+        upgrade_chain = raw.get("upgrade_chain")
+        if not upgrade_chain:
+            continue
+
+        body = raw["building"]["body"]
+        previous = upgrade_chain.get("previous")
+        obsolete_match = re.search(r"^\s*obsolete\s*=\s*(?P<previous>[A-Za-z0-9_]+)\s*$", body, flags=re.M)
+        if previous is None:
+            if obsolete_match:
+                offenders.append(f"{key}: base tier declares obsolete = {obsolete_match.group('previous')}")
+            continue
+
+        if not re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M):
+            offenders.append(f"{key}: missing obsolete = {previous}")
+
+    assert not offenders
 
 
 def test_manpower_building_blueprints_do_not_copy_invalid_owner_culture_gate() -> None:

@@ -123,6 +123,7 @@ def test_constructor_config_loads() -> None:
     assert config.profile == "constructor"
     assert config.load_order_path == ROOT / "constructor.load_order.toml"
     assert config.building_outputs.prefix == "pp_"
+    assert config.building_outputs.building_types == "in_game/common/building_types/zz_{prefix}{tag}.txt"
     assert config.building_artifact_dir == ROOT / "artifacts" / "data" / "buildings"
     assert config.savegame_artifact_dir == ROOT / "artifacts" / "data" / "savegame"
     assert config.graph_dir == ROOT / "graphs"
@@ -470,16 +471,18 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
 
     for snippet in (
         "raw_material = goods:fish",
-        "add = 4",
+        "add = 3.00",
         "is_coastal = yes",
-        "add = 6",
+        "add = 4.50",
         "is_adjacent_to_lake = yes",
         "has_river = yes",
+        "add = 2.25",
         "topography = wetlands",
+        "add = 1.50",
     ):
         assert snippet in base_block
 
-    assert "value = max_rgo_workers\n\t\tmultiply = 1.50" in gross_block
+    assert "value = max_rgo_workers\n\t\tmultiply = 1.12" in gross_block
     assert "value = modifier:fish_max_level_modifier" in gross_block
     assert "value = fish_building_levels\n\t\tmultiply = -1" in remaining_block
 

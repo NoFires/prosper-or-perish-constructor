@@ -153,7 +153,7 @@ def test_irrigation_maintenance_is_not_tool_focused() -> None:
         MOD_ROOT / "in_game" / "common" / "goods_demand" / "pp_irrigation_maintenance_adjustment.txt"
     )
     building_text = (
-        MOD_ROOT / "in_game" / "common" / "building_types" / "pp_irrigation_systems.txt"
+        MOD_ROOT / "in_game" / "common" / "building_types" / "zz_pp_irrigation_systems.txt"
     ).read_text(encoding="utf-8-sig")
     localization_text = (
         MOD_ROOT / "main_menu" / "localization" / "english" / "pp_irrigation_systems_l_english.yml"

@@ -14,8 +14,8 @@ When editing the Europedia GUI or concept definitions, preserve this order:
 5. Urbanisation (done)
 6. Food Production (done)
 7. Food Consumption
-8. New Buildings (done)
-9. New Trade Goods (done)
+8. New Trade Goods (done)
+9. New Buildings (done)
 10. Building Capacity (done)
 11. Building Output (done)
 12. Variable Harvests (done)
@@ -39,15 +39,15 @@ Each Europedia card has exactly one game concept file. Filename = card name (sna
 | 5 | Urbanisation | pp_urbanisation.txt |
 | 6 | Food Production | pp_food_production.txt |
 | 7 | Food Consumption | pp_food_consumption.txt |
-| 8 | New Buildings | pp_new_buildings.txt |
-| 9 | New Trade Goods | pp_new_trade_goods.txt |
+| 8 | New Trade Goods | pp_new_trade_goods.txt |
+| 9 | New Buildings | pp_new_buildings.txt |
 | 10 | Building Capacity | pp_farm_capacity.txt |
 | 11 | Building Output | pp_farm_output.txt |
 | 12 | Variable Harvests | pp_variable_harvests.txt |
 | 13 | Population Capacity | pp_population_capacity.txt |
 | 14 | Population Growth | pp_population_growth.txt |
 | 15 | Population Distribution | pp_population_distribution.txt |
-| 16 | Other Changes | other_changes_pp_buildings_in_location.txt, other_changes_pp_prosperity.txt, other_changes_pp_devastation.txt, other_changes_pp_cheap_food.txt, other_changes_pp_expensive_food.txt, other_changes_pp_province_current_food_storage.txt, other_changes_pp_starvation.txt |
+| 16 | Other Changes | other_changes_pp_buildings_in_location.txt, other_changes_pp_available_free_land.txt, other_changes_pp_abundant_free_land.txt, other_changes_pp_prosperity.txt, other_changes_pp_devastation.txt, other_changes_pp_cheap_food.txt, other_changes_pp_expensive_food.txt, other_changes_pp_province_current_food_storage.txt, other_changes_pp_starvation.txt |
 
 Other Changes sub-cards use the `other_changes_` prefix so they group together when browsing the folder.
 

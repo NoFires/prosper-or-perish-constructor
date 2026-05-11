@@ -1,0 +1,46 @@
+﻿# >>> eu5-building-pipeline:salt_collector:building
+REPLACE:salt_collector = {
+is_foreign = no
+pop_type = laborers
+max_levels = rural_building_cap
+employment_size = 3
+category = rgo_building_category
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+
+location_potential = {
+    OR = {
+        raw_material = goods:salt
+        vegetation = desert
+        is_coastal = yes
+    }
+}
+
+unique_production_methods = {
+    pp_salt_collector_base_salt = {
+        produced = salt
+        output = 0.095
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_salt_collector_salt_flats = {
+        category = building_maintenance
+    }
+    pp_salt_collector_lined_pans = {
+        clay = 1.200 # evaporation pan linings
+        pottery = 0.261 # brine jars and settling vessels
+        produced = salt
+        output = 0.210
+        category = building_maintenance
+    }
+}
+
+modifier = {
+}
+build_time = rural_build_time
+construction_demand = farm_constructions
+}
+# <<< eu5-building-pipeline:salt_collector:building

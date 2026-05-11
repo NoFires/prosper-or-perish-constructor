@@ -93,6 +93,7 @@ enabled:
 - buildings/sericulture_farm.yml
 - buildings/simplers_grove.yml
 - buildings/stone_quarry.yml
+- buildings/stone_quarry_improved.yml
 - buildings/sugar_plantation.yml
 - buildings/tea_garden.yml
 - buildings/terraces.yml

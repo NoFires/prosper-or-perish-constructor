@@ -1,0 +1,89 @@
+﻿# >>> eu5-building-pipeline:iron_mine_improved:building
+iron_mine_improved = {
+is_foreign = no
+max_levels = rural_building_cap
+pop_type = laborers
+employment_size = 4
+price = pp_iron_mine_improved_price
+category = rgo_building_category
+icon = iron_mine_improved
+rural_settlement = yes
+town = yes
+city = yes
+megalopolis = yes
+obsolete = iron_mine
+build_time = workshop_build_time
+
+location_potential = {
+    raw_material = goods:iron
+}
+
+construction_demand = workshop_construction
+ai_forbid_shutdown = no
+forbidden_for_estates = no
+important_for_AI = no
+can_close = yes
+
+unique_production_methods = {
+    pp_iron_mine_improved_base_iron = {
+        produced = iron
+        output = 0.30
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_iron_mine_improved_no_primary = {
+        category = building_maintenance
+    }
+    pp_iron_mine_improved_iron = {
+        lumber = 1.306 # timbering, dressing floors
+        tools = 1.383 # picks, pumps, stamps
+        beeswax = 0.307 # mine candles, seals
+        produced = iron
+        output = 2.689
+        category = building_maintenance
+    }
+    pp_iron_mine_improved_slitting_dressed_ore = {
+        lumber = 1.40 # timbering, bar racks
+        tools = 1.52 # slitting rolls, dressing tools
+        beeswax = 0.34 # candles, pump seals
+        produced = iron
+        output = 2.936
+        category = building_maintenance
+    }
+    pp_iron_mine_improved_horse_whim_haulage = {
+        horses = 0.72 # whim draft teams
+        leather = 0.34 # harness, buckets
+        beeswax = 0.20 # mine candles, seals
+        produced = iron
+        output = 1.432
+        category = building_maintenance
+    }
+    pp_iron_mine_improved_ore_dressing_floors = {
+        fiber_crops = 0.80 # sacks, screens
+        cloth = 0.38 # sorting cloths
+        beeswax = 0.20 # candles, seals
+        produced = iron
+        output = 1.256
+        category = building_maintenance
+    }
+}
+unique_production_methods = {
+    pp_iron_mine_improved_no_secondary = {
+        category = building_maintenance
+    }
+    pp_iron_mine_improved_ochre = {
+        lumber = 0.15 # washing troughs, racks
+        tools = 0.10 # sieves, shovels
+        produced = dyes
+        output = 0.158
+        category = building_maintenance
+    }
+}
+
+modifier = {
+    local_population_growth = -0.0002
+    local_migration_attraction = 0.02
+}
+}
+# <<< eu5-building-pipeline:iron_mine_improved:building

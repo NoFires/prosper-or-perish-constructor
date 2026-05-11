@@ -31,7 +31,7 @@ load_order = "constructor.load_order.toml"
 
 [building_outputs]
 prefix = "pp_"
-building_types = "in_game/common/building_types/{prefix}{tag}.txt"
+building_types = "in_game/common/building_types/zz_{prefix}{tag}.txt"
 production_methods = "in_game/common/production_methods/{prefix}{tag}.txt"
 prices = "in_game/common/prices/{prefix}{tag}.txt"
 advances = "in_game/common/advances/{prefix}{tag}.txt"
