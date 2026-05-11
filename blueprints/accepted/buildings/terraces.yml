@@ -10,7 +10,7 @@ building:
     	price = pp_terraces_price
     	modifier = {
     		local_monthly_food_modifier = -0.5 # vanilla 0.5
-    		farm_max_level_modifier = 2
+    		farm_max_level_modifier = 0.60
     		local_maize_output_modifier = 0.1
     		local_potato_output_modifier = 0.1
     		local_rice_output_modifier = 0.06
@@ -29,7 +29,7 @@ building:
 prices:
   - key: pp_terraces_price
     body: |2-
-      {gold = 800}
+      {gold = 100}
 localization:
   entries:
     pp_terraces_price: Terraces Price

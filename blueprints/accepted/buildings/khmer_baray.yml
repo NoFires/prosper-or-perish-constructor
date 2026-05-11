@@ -10,7 +10,7 @@ building:
     	price = pp_khmer_baray_price
     	modifier = {
     		local_monthly_food_modifier = -0.20 # vanilla 0.20
-    		farm_max_level_modifier = 2
+    		farm_max_level_modifier = 0.60
     		local_rice_output_modifier = 0.1
     		local_fish_output_modifier = 0.05
     		local_cotton_output_modifier = 0.03
@@ -21,7 +21,7 @@ building:
 prices:
   - key: pp_khmer_baray_price
     body: |2-
-      {gold = 1000}
+      {gold = 125}
 localization:
   entries:
     pp_khmer_baray_price: Khmer Baray Price

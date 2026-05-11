@@ -10,7 +10,7 @@ building:
     	price = pp_bund_price
     	modifier = {
     		local_monthly_food_modifier = -0.10 # vanilla 0.10
-    		farm_max_level_modifier = 1
+    		farm_max_level_modifier = 0.60
     
     		# The core purpose of bunds: Rice and Terraced Fruit
     		local_rice_output_modifier = 0.05
@@ -47,7 +47,7 @@ building:
 prices:
   - key: pp_bund_price
     body: |2-
-      {gold = 400}
+      {gold = 75}
 localization:
   entries:
     pp_bund_price: Bund Price

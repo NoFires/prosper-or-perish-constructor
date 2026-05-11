@@ -11,9 +11,9 @@ defaults:
   mmr_mean_center: true
   scale: rank_uniform
   scale_args:
-    output_min: -0.6
-    output_max: 0.4
-  null_productivity: -0.6
+    output_min: -0.7
+    output_max: 0.3
+  null_productivity: -0.7
   round_decimals: 2
   drop_zero_productivity: true
 
