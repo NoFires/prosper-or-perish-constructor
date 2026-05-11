@@ -2,7 +2,7 @@
 enclosed_sheep_walks = {
 is_foreign = no
 pop_type = laborers
-max_levels = enclosed_sheep_walks_farm_max_level
+max_levels = farm_max_level
 employment_size = 7
 price = pp_enclosed_sheep_walks_price
 category = rgo_building_category
@@ -11,7 +11,6 @@ rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
-obsolete = sheep_farms
 forbidden_for_estates = yes
 ai_forbid_shutdown = no
 can_close = yes
@@ -19,7 +18,7 @@ build_time = workshop_build_time
 construction_demand = workshop_construction
 
 location_potential = {
-    raw_material = goods:wool
+    pp_pasture_friendly_location > 0
 }
 
 allow = {
@@ -50,7 +49,6 @@ unique_production_methods = {
 }
 
 modifier = {
-    farm_space_used = 0.9
     local_monthly_food = 0.0
     local_wool_output_modifier = 0.02
 }

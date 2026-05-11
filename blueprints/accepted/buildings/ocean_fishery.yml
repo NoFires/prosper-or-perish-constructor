@@ -21,7 +21,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = fishing_village_max_level
+    max_levels = fish_max_level
     pop_type = laborers
     employment_size = 3
     price = pp_ocean_fishery_price
@@ -35,6 +35,10 @@ building:
 
     location_potential = {
         is_coastal = yes
+    }
+
+    allow = {
+        fish_capacity_available > 0
     }
 
     construction_demand = village_construction

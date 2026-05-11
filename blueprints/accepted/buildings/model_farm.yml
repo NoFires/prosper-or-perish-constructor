@@ -35,7 +35,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = model_farm_farm_max_level
+    max_levels = farm_max_level
     pop_type = laborers
     employment_size = 7
     price = pp_model_farm_price
@@ -45,7 +45,6 @@ building:
     town = yes
     city = yes
     megalopolis = yes
-    obsolete = farming_village
     forbidden_for_estates = yes
     ai_forbid_shutdown = no
     can_close = yes
@@ -53,10 +52,7 @@ building:
     construction_demand = workshop_construction
 
     location_potential = {
-        OR = {
-            max_rgo_workers > 0
-            modifier:local_population_capacity > 0
-        }
+        pp_general_farmable_food_location > 0
     }
 
     allow = {
@@ -200,7 +196,6 @@ building:
     }
 
     modifier = {
-        farm_space_used = 0.9
         local_monthly_food = 0.0
         local_laborers_desired_pop = 0.02
     }

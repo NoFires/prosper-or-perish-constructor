@@ -3,6 +3,7 @@ REPLACE:irrigation_systems = {
   is_foreign = no
   max_levels = irrigant_cap
   pop_type = peasants
+  price = pp_irrigation_systems_price
   category = infrastructure_category
   employment_size = generic_peasant_building_employment
   rural_settlement = yes

@@ -5,22 +5,29 @@
 	}
 }
 
-fishing_village_max_level_modifier = {
+farm_rank_capacity_modifier = {
 	decimals = 0
 	game_data = {
 		category = location
 	}
 }
 
-forest_village_max_level_modifier = {
+fish_max_level_modifier = {
 	decimals = 0
 	game_data = {
 		category = location
 	}
 }
 
-farm_space_used = {
-	decimals = 1
+forest_max_level_modifier = {
+	decimals = 0
+	game_data = {
+		category = location
+	}
+}
+
+forest_rank_capacity_modifier = {
+	decimals = 0
 	game_data = {
 		category = location
 	}

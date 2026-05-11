@@ -299,22 +299,79 @@ pp_cull_over_cap_buildings = {
 			# Fishing Village
 			if = {
 				limit = {
+					fish_capacity_remaining < 0
 					location_building_level = {
 						building_type = building_type:fishing_village
-						value > fishing_village_max_level
+						value > 0
 					}
 				}
 				change_building_level_in_location = { building = building_type:fishing_village value = -1 }
 			}
+			# Ocean Fishery
+			if = {
+				limit = {
+					fish_capacity_remaining < 0
+					location_building_level = {
+						building_type = building_type:ocean_fishery
+						value > 0
+					}
+				}
+				change_building_level_in_location = { building = building_type:ocean_fishery value = -1 }
+			}
+			# Offshore Fishery
+			if = {
+				limit = {
+					fish_capacity_remaining < 0
+					location_building_level = {
+						building_type = building_type:offshore_fishery
+						value > 0
+					}
+				}
+				change_building_level_in_location = { building = building_type:offshore_fishery value = -1 }
+			}
 			# Forest Village
 			if = {
 				limit = {
+					forest_capacity_remaining < 0
 					location_building_level = {
 						building_type = building_type:forest_village
-						value > forest_village_max_level
+						value > 0
 					}
 				}
 				change_building_level_in_location = { building = building_type:forest_village value = -1 }
+			}
+			# Managed Forest Village
+			if = {
+				limit = {
+					forest_capacity_remaining < 0
+					location_building_level = {
+						building_type = building_type:managed_forest_village
+						value > 0
+					}
+				}
+				change_building_level_in_location = { building = building_type:managed_forest_village value = -1 }
+			}
+			# Lumber Mill
+			if = {
+				limit = {
+					forest_capacity_remaining < 0
+					location_building_level = {
+						building_type = building_type:lumber_mill
+						value > 0
+					}
+				}
+				change_building_level_in_location = { building = building_type:lumber_mill value = -1 }
+			}
+			# Improved Lumber Mill
+			if = {
+				limit = {
+					forest_capacity_remaining < 0
+					location_building_level = {
+						building_type = building_type:lumber_mill_improved
+						value > 0
+					}
+				}
+				change_building_level_in_location = { building = building_type:lumber_mill_improved value = -1 }
 			}
 		}
 	}

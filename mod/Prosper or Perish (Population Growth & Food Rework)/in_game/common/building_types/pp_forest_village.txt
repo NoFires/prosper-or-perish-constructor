@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:forest_village:building
 REPLACE:forest_village = {
     is_foreign = no
-    max_levels = forest_village_max_level
+    max_levels = forest_max_level
     pop_type = peasants
     category = village_category
     employment_size = 5
@@ -11,8 +11,18 @@ REPLACE:forest_village = {
     forbidden_for_estates = yes
     ai_forbid_shutdown = no
     location_potential = {
-        has_variable = pp_forest_village_fixed_env_bonus
-        var:pp_forest_village_fixed_env_bonus > 0
+        OR = {
+            vegetation = woods
+            vegetation = forest
+            vegetation = jungle
+            raw_material = goods:lumber
+            raw_material = goods:fur
+            raw_material = goods:wild_game
+        }
+    }
+
+    allow = {
+        forest_capacity_available > 0
     }
     build_time = village_build_time
     unique_production_methods = {

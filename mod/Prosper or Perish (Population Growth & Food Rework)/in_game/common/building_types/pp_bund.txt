@@ -1,5 +1,6 @@
 ﻿# >>> eu5-building-pipeline:bund:building
 INJECT:bund = {
+	price = pp_bund_price
 	modifier = {
 		local_monthly_food_modifier = -0.10 # vanilla 0.10
 		farm_max_level_modifier = 1

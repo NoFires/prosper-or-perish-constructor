@@ -1,7 +1,9 @@
 ﻿# >>> eu5-building-pipeline:khmer_baray:building
 TRY_INJECT:khmer_baray = {
+	price = pp_khmer_baray_price
 	modifier = {
 		local_monthly_food_modifier = -0.20 # vanilla 0.20
+		farm_max_level_modifier = 2
 		local_rice_output_modifier = 0.1
 		local_fish_output_modifier = 0.05
 		local_cotton_output_modifier = 0.03

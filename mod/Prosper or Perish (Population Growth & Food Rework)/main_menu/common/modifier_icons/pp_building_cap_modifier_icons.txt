@@ -3,12 +3,15 @@
 farm_max_level_modifier = {
 	positive = "gfx/interface/icons/modifier_types/farm_max_level_modifier.dds"
 }
-fishing_village_max_level_modifier = {
-	positive = "gfx/interface/icons/modifier_types/fishing_village_max_level_modifier.dds"
-}
-forest_village_max_level_modifier = {
-	positive = "gfx/interface/icons/modifier_types/forest_village_max_level_modifier.dds"
-}
-farm_space_used = {
+farm_rank_capacity_modifier = {
 	positive = "gfx/interface/icons/modifier_types/farm_max_level_modifier.dds"
+}
+fish_max_level_modifier = {
+	positive = "gfx/interface/icons/map_modes/pp_fishing_village_capacity.dds"
+}
+forest_max_level_modifier = {
+	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
+}
+forest_rank_capacity_modifier = {
+	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
 }

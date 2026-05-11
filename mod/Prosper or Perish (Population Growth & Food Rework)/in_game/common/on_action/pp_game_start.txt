@@ -585,79 +585,30 @@ pp_apply_rgo_static_modifiers = {
 pp_precalculate_building_capacities = {
 	effect = {
 		every_location_in_the_world = {
-			set_variable = { name = pp_fishing_village_fixed_env_bonus value = 0 }
-			set_variable = { name = pp_forest_village_fixed_env_bonus value = 0 }
+			set_variable = { name = pp_farm_base_capacity value = 0 }
+			set_variable = { name = pp_fish_base_capacity value = 0 }
+			set_variable = { name = pp_forest_base_capacity value = 0 }
 		}
 		every_location_in_the_world = {
-			limit = { is_land = yes }
+			limit = { is_ownable = yes }
 			set_variable = {
-				name = pp_fishing_village_fixed_env_bonus
-				value = pp_fishing_village_capacity_value
+				name = pp_farm_base_capacity
+				value = pp_farm_base_capacity_value
 			}
 			set_variable = {
-				name = pp_forest_village_fixed_env_bonus
-				value = pp_forest_village_capacity_value
+				name = pp_fish_base_capacity
+				value = pp_fish_base_capacity_value
 			}
-		}
-		# Initialize Global Min/Max
-		set_global_variable = { name = pp_fishing_village_global_min value = 100 }
-		set_global_variable = { name = pp_fishing_village_global_max value = 0 }
-		set_global_variable = { name = pp_forest_village_global_min value = 100 }
-		set_global_variable = { name = pp_forest_village_global_max value = 0 }
-
-		every_location_in_the_world = {
-			limit = { is_land = yes }
-			# Fishing Village
-			if = {
-				limit = { var:pp_fishing_village_fixed_env_bonus > global_var:pp_fishing_village_global_max }
-				set_global_variable = { name = pp_fishing_village_global_max value = var:pp_fishing_village_fixed_env_bonus }
+			set_variable = {
+				name = pp_forest_base_capacity
+				value = pp_forest_base_capacity_value
 			}
-			if = {
-				limit = { var:pp_fishing_village_fixed_env_bonus < global_var:pp_fishing_village_global_min }
-				set_global_variable = { name = pp_fishing_village_global_min value = var:pp_fishing_village_fixed_env_bonus }
-			}
-			# Forest Village
-			if = {
-				limit = { var:pp_forest_village_fixed_env_bonus > global_var:pp_forest_village_global_max }
-				set_global_variable = { name = pp_forest_village_global_max value = var:pp_forest_village_fixed_env_bonus }
-			}
-			if = {
-				limit = { var:pp_forest_village_fixed_env_bonus < global_var:pp_forest_village_global_min }
-				set_global_variable = { name = pp_forest_village_global_min value = var:pp_forest_village_fixed_env_bonus }
-			}
-		}
-		
-		# Calculate Ranges
-		set_global_variable = {
-			name = pp_fishing_village_global_range
-			value = global_var:pp_fishing_village_global_max
-		}
-		change_global_variable = {
-			name = pp_fishing_village_global_range
-			add = { value = global_var:pp_fishing_village_global_min multiply = -1 }
-		}
-		if = {
-			limit = { NOT = { global_var:pp_fishing_village_global_range > 0 } }
-			set_global_variable = { name = pp_fishing_village_global_range value = 1 }
-		}
-
-		set_global_variable = {
-			name = pp_forest_village_global_range
-			value = global_var:pp_forest_village_global_max
-		}
-		change_global_variable = {
-			name = pp_forest_village_global_range
-			add = { value = global_var:pp_forest_village_global_min multiply = -1 }
-		}
-		if = {
-			limit = { NOT = { global_var:pp_forest_village_global_range > 0 } }
-			set_global_variable = { name = pp_forest_village_global_range value = 1 }
 		}
 	}
 }
 
 # Remove all buildings that cannot exist under mod rules (Option B).
-# Runs after precalculate so fishing and forest fixed-environment variables are available.
+# Runs after precalculate so static capacity baseline variables are available.
 pp_remove_invalid_buildings = {
 	effect = {
 		every_location_in_the_world = {
@@ -680,14 +631,14 @@ pp_remove_invalid_buildings = {
 					}
 				}
 			}
-			# Fruit orchard family: only allowed where fruit RGO exists.
+			# Fruit orchard family: allowed in orchard-friendly farm locations.
 			if = {
 				limit = {
 					location_building_level = {
 						building_type = building_type:fruit_orchard
 						value > 0
 					}
-					NOT = { raw_material = goods:fruit }
+					NOT = { pp_orchard_friendly_location > 0 }
 				}
 				change_building_level_in_location = {
 					building = building_type:fruit_orchard
@@ -703,7 +654,7 @@ pp_remove_invalid_buildings = {
 						building_type = building_type:pomological_orchard
 						value > 0
 					}
-					NOT = { raw_material = goods:fruit }
+					NOT = { pp_orchard_friendly_location > 0 }
 				}
 				change_building_level_in_location = {
 					building = building_type:pomological_orchard
@@ -736,18 +687,19 @@ pp_remove_invalid_buildings = {
 					}
 				}
 			}
-			# Fishing village: only allowed where freshwater capacity > 0
+			# Fishing village: freshwater access or a fish RGO.
 			if = {
 				limit = {
 					location_building_level = {
 						building_type = building_type:fishing_village
 						value > 0
 					}
-					OR = {
-						NOT = { var:pp_fishing_village_fixed_env_bonus > 0 }
-						NOR = {
+					NOT = {
+						OR = {
 							has_river = yes
 							is_adjacent_to_lake = yes
+							topography = wetlands
+							raw_material = goods:fish
 						}
 					}
 				}
@@ -793,19 +745,14 @@ pp_remove_invalid_buildings = {
 					}
 				}
 			}
-			# Farming village: only allowed where the new live capacity inputs exist.
+			# Farming village: only allowed in general farmable food locations.
 			if = {
 				limit = {
 					location_building_level = {
 						building_type = building_type:farming_village
 						value > 0
 					}
-					NOT = {
-						OR = {
-							max_rgo_workers > 0
-							modifier:local_population_capacity > 0
-						}
-					}
+					NOT = { pp_general_farmable_food_location > 0 }
 				}
 				change_building_level_in_location = {
 					building = building_type:farming_village
@@ -815,14 +762,14 @@ pp_remove_invalid_buildings = {
 					}
 				}
 			}
-			# Sheep farms family: only allowed where wool RGO exists.
+			# Sheep farms family: allowed in pasture-friendly locations.
 			if = {
 				limit = {
 					location_building_level = {
 						building_type = building_type:sheep_farms
 						value > 0
 					}
-					NOT = { raw_material = goods:wool }
+					NOT = { pp_pasture_friendly_location > 0 }
 				}
 				change_building_level_in_location = {
 					building = building_type:sheep_farms
@@ -838,7 +785,7 @@ pp_remove_invalid_buildings = {
 						building_type = building_type:enclosed_sheep_walks
 						value > 0
 					}
-					NOT = { raw_material = goods:wool }
+					NOT = { pp_pasture_friendly_location > 0 }
 				}
 				change_building_level_in_location = {
 					building = building_type:enclosed_sheep_walks
@@ -848,19 +795,103 @@ pp_remove_invalid_buildings = {
 					}
 				}
 			}
-			# Forest village: only allowed where capacity > 0
+			# Forest buildings: forest/woods/jungle terrain or a forest RGO.
 			if = {
 				limit = {
 					location_building_level = {
 						building_type = building_type:forest_village
 						value > 0
 					}
-					NOT = { var:pp_forest_village_fixed_env_bonus > 0 }
+					NOT = {
+						OR = {
+							vegetation = woods
+							vegetation = forest
+							vegetation = jungle
+							raw_material = goods:lumber
+							raw_material = goods:fur
+							raw_material = goods:wild_game
+						}
+					}
 				}
 				change_building_level_in_location = {
 					building = building_type:forest_village
 					value = {
 						value = "location_building_level(building_type:forest_village)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:managed_forest_village
+						value > 0
+					}
+					NOT = {
+						OR = {
+							vegetation = woods
+							vegetation = forest
+							vegetation = jungle
+							raw_material = goods:lumber
+							raw_material = goods:fur
+							raw_material = goods:wild_game
+						}
+					}
+				}
+				change_building_level_in_location = {
+					building = building_type:managed_forest_village
+					value = {
+						value = "location_building_level(building_type:managed_forest_village)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:lumber_mill
+						value > 0
+					}
+					NOT = {
+						OR = {
+							vegetation = woods
+							vegetation = forest
+							vegetation = jungle
+							raw_material = goods:lumber
+							raw_material = goods:fur
+							raw_material = goods:wild_game
+						}
+					}
+				}
+				change_building_level_in_location = {
+					building = building_type:lumber_mill
+					value = {
+						value = "location_building_level(building_type:lumber_mill)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:lumber_mill_improved
+						value > 0
+					}
+					NOT = {
+						OR = {
+							vegetation = woods
+							vegetation = forest
+							vegetation = jungle
+							raw_material = goods:lumber
+							raw_material = goods:fur
+							raw_material = goods:wild_game
+						}
+					}
+				}
+				change_building_level_in_location = {
+					building = building_type:lumber_mill_improved
+					value = {
+						value = "location_building_level(building_type:lumber_mill_improved)"
 						multiply = -1
 					}
 				}
@@ -1355,11 +1386,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						var:pp_fishing_village_fixed_env_bonus > 0
-						OR = {
-							has_river = yes
-							is_adjacent_to_lake = yes
-						}
+						fish_capacity_available > 0
 						NOT = { has_building = building_type:fishing_village }
 					}
 					construct_building = {
@@ -1376,11 +1403,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						var:pp_fishing_village_fixed_env_bonus > 0
-						OR = {
-							has_river = yes
-							is_adjacent_to_lake = yes
-						}
+						fish_capacity_available > 0
 						has_building = building_type:fishing_village
 						location_building_level = {
 							building_type = building_type:fishing_village
@@ -1445,11 +1468,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						var:pp_fishing_village_fixed_env_bonus > 0
-						OR = {
-							has_river = yes
-							is_adjacent_to_lake = yes
-						}
+						fish_capacity_available > 0
 						NOT = { has_building = building_type:fishing_village }
 					}
 					construct_building = {
@@ -1466,11 +1485,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						var:pp_fishing_village_fixed_env_bonus > 0
-						OR = {
-							has_river = yes
-							is_adjacent_to_lake = yes
-						}
+						fish_capacity_available > 0
 						has_building = building_type:fishing_village
 						location_building_level = {
 							building_type = building_type:fishing_village
@@ -1535,11 +1550,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						var:pp_fishing_village_fixed_env_bonus > 0
-						OR = {
-							has_river = yes
-							is_adjacent_to_lake = yes
-						}
+						fish_capacity_available > 0
 						NOT = { has_building = building_type:fishing_village }
 					}
 					construct_building = {
@@ -1556,11 +1567,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { is_coastal = yes }
-						var:pp_fishing_village_fixed_env_bonus > 0
-						OR = {
-							has_river = yes
-							is_adjacent_to_lake = yes
-						}
+						fish_capacity_available > 0
 						has_building = building_type:fishing_village
 						location_building_level = {
 							building_type = building_type:fishing_village
@@ -3951,11 +3958,7 @@ pp_game_start_effect = {
 						population > 74
 						raw_material = goods:fish
 						NOT = { is_coastal = yes }
-						var:pp_fishing_village_fixed_env_bonus > 0
-						OR = {
-							has_river = yes
-							is_adjacent_to_lake = yes
-						}
+						fish_capacity_available > 0
 						NOT = { has_building = building_type:fishing_village }
 						NOT = { has_building = building_type:ocean_fishery }
 					}
@@ -3983,10 +3986,11 @@ pp_game_start_effect = {
 				if = {
 					limit = {
 						population > 74
-						var:pp_forest_village_fixed_env_bonus > 0
+						forest_capacity_available > 0
 						OR = {
 							raw_material = goods:wild_game
 							raw_material = goods:fur
+							raw_material = goods:lumber
 						}
 					}
 					construct_building = {

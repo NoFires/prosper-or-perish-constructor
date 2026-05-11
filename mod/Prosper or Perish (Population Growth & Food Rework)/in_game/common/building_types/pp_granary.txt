@@ -8,9 +8,6 @@ REPLACE:granary = {
 	rural_settlement = yes
 	town = yes
 	city = yes
-	location_potential = {
-		is_province_capital = yes
-	}
 	build_time = government_build_time
 	unique_production_methods = {
 		pp_granary_maintenance = {
@@ -22,7 +19,7 @@ REPLACE:granary = {
 	construction_demand = granary_construction
 	modifier = {
 		local_food_decay_modifier = -0.00035
-		local_food_capacity = 1200
+		local_food_capacity = 1000
 	}
 	ai_forbid_shutdown = yes
 	forbidden_for_estates = no

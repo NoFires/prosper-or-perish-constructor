@@ -345,10 +345,16 @@ def test_finalize_keeps_location_modifier_on_action_separate_and_preserves_newli
     )
     mod_root = repo / "mod" / "test-mod"
     static_modifiers = mod_root / "main_menu" / "common" / "static_modifiers"
+    game_concepts = mod_root / "main_menu" / "common" / "game_concepts"
     on_action = mod_root / "in_game" / "common" / "on_action"
+    script_values = mod_root / "in_game" / "common" / "script_values"
+    scripted_effects = mod_root / "in_game" / "common" / "scripted_effects"
     localization = mod_root / "main_menu" / "localization" / "english"
     static_modifiers.mkdir(parents=True)
+    game_concepts.mkdir(parents=True)
     on_action.mkdir(parents=True)
+    script_values.mkdir(parents=True)
+    scripted_effects.mkdir(parents=True)
     localization.mkdir(parents=True)
 
     location_modifiers = static_modifiers / "pp_location_modifiers.txt"
@@ -386,6 +392,14 @@ def test_finalize_keeps_location_modifier_on_action_separate_and_preserves_newli
     game_start.write_text(original_game_start, encoding="utf-8", newline="")
     (localization / "pp_location_modifiers_l_english.yml").write_text("l_english:\n", encoding="utf-8")
     (localization / "pp_europedia_l_english.yml").write_text("l_english:\n", encoding="utf-8")
+    capacity_bom_paths = (
+        game_concepts / "pp_fish_capacity.txt",
+        game_concepts / "pp_forest_capacity.txt",
+        script_values / "pp_building_capacity_values.txt",
+        scripted_effects / "pp_capacity_precalc.txt",
+    )
+    for path in capacity_bom_paths:
+        path.write_text("# generated\n", encoding="utf-8")
 
     cli._finalize_constructor_mod(repo, repo / "constructor.toml")
 
@@ -404,6 +418,8 @@ def test_finalize_keeps_location_modifier_on_action_separate_and_preserves_newli
     ) in apply_bytes
     assert b"pp_loc_washita_pp" in apply_bytes
     assert game_start_bytes == original_game_start.encode("utf-8")
+    for path in capacity_bom_paths:
+        assert path.read_bytes().startswith(b"\xef\xbb\xbf")
 
 
 def test_build_does_not_finalize_after_failed_orchestrator_build(

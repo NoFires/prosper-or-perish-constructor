@@ -13,6 +13,7 @@ building:
       is_foreign = no
       max_levels = irrigant_cap
       pop_type = peasants
+      price = pp_irrigation_systems_price
       category = infrastructure_category
       employment_size = generic_peasant_building_employment
       rural_settlement = yes
@@ -82,6 +83,12 @@ localization:
   entries:
     irrigation_systems_slot_0: Maintenance
     pp_irrigation_maintenance: Irrigation Maintenance
+    pp_irrigation_systems_price: Irrigation Systems Price
+
+prices:
+  - key: pp_irrigation_systems_price
+    body: |2-
+      {gold = 600}
 
 evaluation:
   production_methods:

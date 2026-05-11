@@ -26,7 +26,7 @@ building:
   possible_production_methods: []
   body: |2-
     is_foreign = no
-    max_levels = rural_building_cap
+    max_levels = forest_max_level
     pop_type = laborers
     employment_size = 6
     price = pp_lumber_mill_improved_price
@@ -45,7 +45,13 @@ building:
             vegetation = forest
             vegetation = jungle
             raw_material = goods:lumber
+            raw_material = goods:fur
+            raw_material = goods:wild_game
         }
+    }
+
+    allow = {
+        forest_capacity_available > 0
     }
 
     construction_demand = workshop_construction

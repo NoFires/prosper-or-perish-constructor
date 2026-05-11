@@ -23,7 +23,15 @@
 		}
 	}
 }
-farm_max_level = {
+farm_gross_capacity = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE_FARM_RGO"
+		if = {
+			limit = { has_variable = pp_farm_base_capacity }
+			value = var:pp_farm_base_capacity
+		}
+		else = { value = 0 }
+	}
 	add = {
 		desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"
 		value = max_rgo_workers
@@ -36,288 +44,240 @@ farm_max_level = {
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"
+		value = modifier:farm_rank_capacity_modifier
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FARM_CAPACITY_IMPROVEMENTS"
 		value = modifier:farm_max_level_modifier
+	}
+}
+
+land_farm_building_levels = {
+	add = {
+		value = "location_building_level(building_type:farming_village)"
+	}
+	add = {
+		value = "location_building_level(building_type:model_farm)"
+	}
+	add = {
+		value = "location_building_level(building_type:fruit_orchard)"
+	}
+	add = {
+		value = "location_building_level(building_type:pomological_orchard)"
+	}
+	add = {
+		value = "location_building_level(building_type:sheep_farms)"
+	}
+	add = {
+		value = "location_building_level(building_type:enclosed_sheep_walks)"
+	}
+	add = {
+		value = "location_building_level(building_type:horse_breeders)"
+	}
+	add = {
+		value = "location_building_level(building_type:elephant_kraal)"
+	}
+	add = {
+		value = "location_building_level(building_type:fiber_crops_farm)"
+	}
+	add = {
+		value = "location_building_level(building_type:cotton_plantation)"
+	}
+	add = {
+		value = "location_building_level(building_type:sugar_plantation)"
+	}
+	add = {
+		value = "location_building_level(building_type:tobacco_plantation)"
+	}
+	add = {
+		value = "location_building_level(building_type:dye_plantation)"
+	}
+	add = {
+		value = "location_building_level(building_type:chili_plantation)"
+	}
+	add = {
+		value = "location_building_level(building_type:clove_grove)"
+	}
+	add = {
+		value = "location_building_level(building_type:cocoa_grove)"
+	}
+	add = {
+		value = "location_building_level(building_type:coffee_grove)"
+	}
+	add = {
+		value = "location_building_level(building_type:incense_grove)"
+	}
+	add = {
+		value = "location_building_level(building_type:pepper_garden)"
+	}
+	add = {
+		value = "location_building_level(building_type:saffron_croft)"
+	}
+	add = {
+		value = "location_building_level(building_type:sericulture_farm)"
+	}
+	add = {
+		value = "location_building_level(building_type:simplers_grove)"
+	}
+	add = {
+		value = "location_building_level(building_type:tea_garden)"
+	}
+	add = {
+		value = "location_building_level(building_type:vineyard_estate)"
+	}
+}
+
+non_farm_building_levels = {
+	add = total_building_levels
+	add = {
+		value = land_farm_building_levels
+		multiply = -1
 	}
 	min = 0
 }
 
 farm_capacity_remaining = {
-	add = farm_max_level
+	add = farm_gross_capacity
 	add = {
 		desc = "BUILDING_LEVEL_AVAILABLE_SPACE"
-		value = total_building_levels
+		value = non_farm_building_levels
 		multiply = -0.1
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_SPACE_USED"
-		value = modifier:farm_space_used
+		value = land_farm_building_levels
 		multiply = -1
 	}
 }
 
-farm_capacity_available = {
+farm_max_level = {
 	add = farm_capacity_remaining
 	min = 0
 }
-# Start generated land-farm per-building max-level caps
 
-farming_village_farm_max_level = {
-	add = farm_capacity_available
+farm_capacity_available = {
+	add = farm_max_level
+}
+
+fish_building_levels = {
 	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:farming_village)"
+		value = "location_building_level(building_type:fishing_village)"
+	}
+	add = {
+		value = "location_building_level(building_type:ocean_fishery)"
+	}
+	add = {
+		value = "location_building_level(building_type:offshore_fishery)"
 	}
 }
 
-model_farm_farm_max_level = {
-	add = farm_capacity_available
+fish_gross_capacity = {
 	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:model_farm)"
-	}
-}
-
-fruit_orchard_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:fruit_orchard)"
-	}
-}
-
-pomological_orchard_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:pomological_orchard)"
-	}
-}
-
-sheep_farms_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:sheep_farms)"
-	}
-}
-
-enclosed_sheep_walks_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:enclosed_sheep_walks)"
-	}
-}
-
-horse_breeders_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:horse_breeders)"
-	}
-}
-
-elephant_kraal_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:elephant_kraal)"
-	}
-}
-
-fiber_crops_farm_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:fiber_crops_farm)"
-	}
-}
-
-cotton_plantation_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:cotton_plantation)"
-	}
-}
-
-sugar_plantation_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:sugar_plantation)"
-	}
-}
-
-tobacco_plantation_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:tobacco_plantation)"
-	}
-}
-
-dye_plantation_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:dye_plantation)"
-	}
-}
-
-chili_plantation_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:chili_plantation)"
-	}
-}
-
-clove_grove_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:clove_grove)"
-	}
-}
-
-cocoa_grove_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:cocoa_grove)"
-	}
-}
-
-coffee_grove_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:coffee_grove)"
-	}
-}
-
-incense_grove_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:incense_grove)"
-	}
-}
-
-pepper_garden_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:pepper_garden)"
-	}
-}
-
-saffron_croft_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:saffron_croft)"
-	}
-}
-
-sericulture_farm_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:sericulture_farm)"
-	}
-}
-
-simplers_grove_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:simplers_grove)"
-	}
-}
-
-tea_garden_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:tea_garden)"
-	}
-}
-
-vineyard_estate_farm_max_level = {
-	add = farm_capacity_available
-	add = {
-		desc = "BUILDING_LEVEL_EXISTING_LAND_FARM_LEVELS"
-		value = "location_building_level(building_type:vineyard_estate)"
-	}
-}
-
-# End generated land-farm per-building max-level caps
-
-forest_village_max_level = {
-	add = {
-		desc = "BUILDING_LEVEL_BASE"
-		value = 0
-	}
-	add = {
-		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = development
-		multiply = 0.30
-	}
-	add = {
-		desc = "BUILDING_LEVEL_POPULATION"
-		value = population
-		multiply = 0.025
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FROM_ENVIRONMENT_FOREST"
+		desc = "BUILDING_LEVEL_BASE_FISHING"
 		if = {
-			limit = { has_variable = pp_forest_village_fixed_env_bonus }
-			value = var:pp_forest_village_fixed_env_bonus
+			limit = { has_variable = pp_fish_base_capacity }
+			value = var:pp_fish_base_capacity
 		}
 		else = { value = 0 }
 	}
+	add = {
+		desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"
+		value = max_rgo_workers
+		multiply = 1.50
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FISH_CAPACITY_IMPROVEMENTS"
+		value = modifier:fish_max_level_modifier
+	}
+}
+
+fish_capacity_remaining = {
+	add = fish_gross_capacity
+	add = {
+		desc = "BUILDING_LEVEL_FISH_SPACE_USED"
+		value = fish_building_levels
+		multiply = -1
+	}
+}
+
+fish_max_level = {
+	add = fish_capacity_remaining
+	min = 0
+}
+
+fish_capacity_available = {
+	add = fish_max_level
+}
+
+forest_building_levels = {
+	add = {
+		value = "location_building_level(building_type:forest_village)"
+	}
+	add = {
+		value = "location_building_level(building_type:managed_forest_village)"
+	}
+	add = {
+		value = "location_building_level(building_type:lumber_mill)"
+	}
+	add = {
+		value = "location_building_level(building_type:lumber_mill_improved)"
+	}
+}
+
+non_forest_building_levels = {
+	add = total_building_levels
+	add = {
+		value = forest_building_levels
+		multiply = -1
+	}
+	min = 0
+}
+
+forest_gross_capacity = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE_FOREST"
+		if = {
+			limit = { has_variable = pp_forest_base_capacity }
+			value = var:pp_forest_base_capacity
+		}
+		else = { value = 0 }
+	}
+	add = {
+		desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"
+		value = max_rgo_workers
+		multiply = 1.25
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FOREST_CAPACITY_IMPROVEMENTS"
+		value = modifier:forest_max_level_modifier
+	}
+}
+
+forest_capacity_remaining = {
+	add = forest_gross_capacity
 	add = {
 		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FOREST"
-		value = modifier:forest_village_max_level_modifier
+		value = modifier:forest_rank_capacity_modifier
 	}
 	add = {
-		desc = "BUILDING_LEVEL_AVAILABLE_SPACE"
-		value = total_building_levels
+		desc = "BUILDING_LEVEL_FOREST_URBANIZATION"
+		value = non_forest_building_levels
 		multiply = -0.1
 	}
+	add = {
+		desc = "BUILDING_LEVEL_FOREST_SPACE_USED"
+		value = forest_building_levels
+		multiply = -1
+	}
+}
+
+forest_max_level = {
+	add = forest_capacity_remaining
 	min = 0
 }
 
-fishing_village_max_level = {
-	add = {
-		desc = "BUILDING_LEVEL_BASE"
-		value = 0
-	}
-	add = {
-		desc = "BUILDING_LEVEL_DEVELOPMENT"
-		value = development
-		multiply = 0.10
-	}
-	add = {
-		desc = "BUILDING_LEVEL_POPULATION"
-		value = population
-		multiply = 0.005
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FROM_ENVIRONMENT_FISHING"
-		if = {
-			limit = { has_variable = pp_fishing_village_fixed_env_bonus }
-			value = var:pp_fishing_village_fixed_env_bonus
-		}
-		else = { value = 0 }
-	}
-	add = {
-		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FISHING"
-		value = modifier:fishing_village_max_level_modifier
-	}
-	min = 0
+forest_capacity_available = {
+	add = forest_max_level
 }
 
 victuals_market_max_level = {
@@ -354,17 +314,26 @@ victuals_market_max_level = {
 pp_granary_cap = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE"
-		value = 1
+		value = 2.25
 	}
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
 		value = development
-		multiply = 0.125
+		multiply = 0.05
 	}
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION"
 		value = population
-		multiply = 0.0150
+		multiply = 0.01
+	}
+	if = {
+		limit = {
+			location_rank = location_rank:town
+		}
+		add = {
+			desc = "BUILDING_LEVEL_IS_TOWN"
+			value = 0.5
+		}
 	}
 	if = {
 		limit = {
@@ -372,7 +341,8 @@ pp_granary_cap = {
 		}
 		add = {
 			desc = "BUILDING_LEVEL_IS_CITY"
-			value = 2
+			value = 1.0
 		}
 	}
+	max = 6
 }

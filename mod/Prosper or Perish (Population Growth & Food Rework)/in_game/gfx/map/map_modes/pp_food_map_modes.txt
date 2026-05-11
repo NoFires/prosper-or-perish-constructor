@@ -18,6 +18,8 @@
 
 # Map modes for food-producing building capacity.
 @pp_farming_village_capacity_map_cap = 30
+@pp_fishing_village_capacity_map_cap = 30
+@pp_forest_village_capacity_map_cap = 30
 
 pp_fishing_village_capacity = {
 	map_color = {
@@ -25,24 +27,15 @@ pp_fishing_village_capacity = {
 			limit = { is_ownable = no }
 			value = rgb { 128 128 128 }
 		}
-		else_if = {
-			limit = {
-				NOT = { has_variable = pp_fishing_village_fixed_env_bonus }
-			}
-			value = rgb { 0 0 0 }
-		}
-		else_if = {
-			limit = { global_var:pp_fishing_village_global_range = 0 }
-			value = rgb { 128 128 128 }
-		}
 		else = {
 			lerp = {
 				max_color = rgb { 0 255 0 }
 				min_color = rgb { 255 0 0 }
 				factor = {
-					value = var:pp_fishing_village_fixed_env_bonus
-					subtract = global_var:pp_fishing_village_global_min
-					divide = { value = global_var:pp_fishing_village_global_range min = 1 }
+					value = fish_capacity_available
+					divide = @pp_fishing_village_capacity_map_cap
+					max = 1
+					min = 0
 				}
 			}
 		}
@@ -172,24 +165,15 @@ pp_forest_village_capacity = {
 			limit = { is_ownable = no }
 			value = rgb { 128 128 128 }
 		}
-		else_if = {
-			limit = {
-				NOT = { has_variable = pp_forest_village_fixed_env_bonus }
-			}
-			value = rgb { 0 0 0 }
-		}
-		else_if = {
-			limit = { global_var:pp_forest_village_global_range = 0 }
-			value = rgb { 128 128 128 }
-		}
 		else = {
 			lerp = {
 				max_color = rgb { 0 255 0 }
 				min_color = rgb { 255 0 0 }
 				factor = {
-					value = var:pp_forest_village_fixed_env_bonus
-					subtract = global_var:pp_forest_village_global_min
-					divide = { value = global_var:pp_forest_village_global_range min = 1 }
+					value = forest_capacity_available
+					divide = @pp_forest_village_capacity_map_cap
+					max = 1
+					min = 0
 				}
 			}
 		}

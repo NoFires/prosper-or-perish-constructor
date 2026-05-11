@@ -76,11 +76,7 @@ pp_fishing_rgo_breakdown = {
 	text = {
 		localization_key = PP_FISHING_RGO
 		trigger = {
-			OR = {
-				raw_material = goods:fish
-				raw_material = goods:salt
-				raw_material = goods:pearls
-			}
+			raw_material = goods:fish
 		}
 	}
 	text = {

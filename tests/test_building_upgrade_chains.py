@@ -412,6 +412,12 @@ def test_clay_and_sand_pit_upgrade_chains_are_explicit_and_unlockable() -> None:
 def test_rural_food_building_upgrade_chains_are_explicit() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
+    assert _load_blueprint("fishing_village").get("upgrade_chain") is None
+    obsolete_skips = {
+        "enclosed_sheep_walks",
+        "model_farm",
+        "managed_forest_village",
+    }
     expected_chains = {
         "sheep_farms": [
             ("sheep_farms", None),
@@ -451,7 +457,10 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
                 assert "obsolete =" not in body
             else:
                 previous = chain[tier - 1][0]
-                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                if key in obsolete_skips:
+                    assert "obsolete =" not in body
+                else:
+                    assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
 
 
 def test_manpower_building_blueprints_do_not_copy_invalid_owner_culture_gate() -> None:

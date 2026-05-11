@@ -61,6 +61,9 @@ LOCATION_MODIFIER_ALIASES = {
 }
 BOM_TEXT_RELATIVE_PATHS = (
     Path("main_menu/common/game_concepts/pp_location_potential.txt"),
+    Path("main_menu/common/game_concepts/pp_fish_capacity.txt"),
+    Path("main_menu/common/game_concepts/pp_forest_capacity.txt"),
+    Path("main_menu/common/game_concepts/pp_population_capacity.txt"),
     Path("main_menu/common/static_modifiers/pp_capacity_pressure_effects.txt"),
     Path("main_menu/common/static_modifiers/pp_location_modifier_adjustments.txt"),
     Path("main_menu/common/static_modifiers/pp_location_modifiers.txt"),
@@ -73,6 +76,8 @@ BOM_TEXT_RELATIVE_PATHS = (
     Path("in_game/common/location_ranks/pp_location_rank_adjustments.txt"),
     Path("in_game/common/advances/pp_local_resource_productivity_advances.txt"),
     Path("in_game/common/advances/pp_prosperity_advances_adjustments.txt"),
+    Path("in_game/common/script_values/pp_building_capacity_values.txt"),
+    Path("in_game/common/scripted_effects/pp_capacity_precalc.txt"),
     Path("in_game/gfx/map/map_modes/pp_local_output_modifier_map_modes.txt"),
     Path("in_game/common/on_action/pp_apply_location_modifiers.txt"),
     Path("in_game/common/building_types/pp_aqueduct_system.txt"),

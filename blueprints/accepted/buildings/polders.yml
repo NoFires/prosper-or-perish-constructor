@@ -7,8 +7,10 @@ building:
   production_method_slots: []
   possible_production_methods: []
   body: |2-
+    	price = pp_polders_price
     	modifier = {
     		local_monthly_food_modifier = -0.05 # vanilla 0.05
+    		farm_max_level_modifier = 2
     		local_wheat_output_modifier = 0.025
     		local_livestock_output_modifier = 0.025
     		local_maize_output_modifier = 0.02
@@ -19,3 +21,10 @@ building:
     	}
     	ai_forbid_shutdown = yes
     	forbidden_for_estates = no
+prices:
+  - key: pp_polders_price
+    body: |2-
+      {gold = 800}
+localization:
+  entries:
+    pp_polders_price: Polders Price

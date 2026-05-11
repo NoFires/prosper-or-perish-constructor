@@ -1,7 +1,7 @@
 ﻿# >>> eu5-building-pipeline:managed_forest_village:building
 managed_forest_village = {
 is_foreign = no
-max_levels = forest_village_max_level
+max_levels = forest_max_level
 pop_type = laborers
 employment_size = 7
 price = pp_managed_forest_village_price
@@ -11,7 +11,6 @@ rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
-obsolete = forest_village
 forbidden_for_estates = yes
 ai_forbid_shutdown = no
 can_close = yes
@@ -19,8 +18,18 @@ build_time = workshop_build_time
 construction_demand = workshop_construction
 
 location_potential = {
-    has_variable = pp_forest_village_fixed_env_bonus
-    var:pp_forest_village_fixed_env_bonus > 0
+    OR = {
+        vegetation = woods
+        vegetation = forest
+        vegetation = jungle
+        raw_material = goods:lumber
+        raw_material = goods:fur
+        raw_material = goods:wild_game
+    }
+}
+
+allow = {
+    forest_capacity_available > 0
 }
 
 unique_production_methods = {
