@@ -214,7 +214,27 @@ DEACTIVATED_BOG_IRON_BLUEPRINTS = {
     "buildings/bog_iron_smelter_hot_blast_furnace.yml",
 }
 SALT_MINE_TOPOGRAPHIES = {"hills", "mountains", "plateau"}
+SALT_MINE_CLIMATES = {"continental", "mediterranean", "oceanic"}
+SALT_MINE_VEGETATION = {"farmland", "forest", "grasslands", "woods"}
 SALT_MINE_MODIFIERS = {"sahara_salt_mines_base", "turda_salt_mines_base"}
+SALT_MINE_DIRECT_LOCATIONS = {
+    "cardona",
+    "chicaquicha",
+    "dina",
+    "dinkot",
+    "hallein",
+    "khewra",
+    "khushab",
+    "salzburg",
+    "wieliczka",
+}
+SALT_MINE_EXCLUDED_LOCATIONS = {"anana", "hall", "moutiers", "salins_les_bains"}
+SALT_MINE_EXCLUDED_REGIONS = {
+    "south_china_region",
+    "tibet_region",
+    "west_china_region",
+    "xinjiang_region",
+}
 
 
 def _load_blueprint(key: str) -> dict:
@@ -226,15 +246,24 @@ def _load_blueprint(key: str) -> dict:
 
 def _has_salt_mine_marker(row: dict) -> bool:
     modifier = str(row.get("modifier") or "")
-    return row.get("topography") in SALT_MINE_TOPOGRAPHIES or any(
-        marker in modifier for marker in SALT_MINE_MODIFIERS
+    if any(marker in modifier for marker in SALT_MINE_MODIFIERS):
+        return True
+    if row.get("location_tag") in SALT_MINE_DIRECT_LOCATIONS:
+        return True
+    if row.get("location_tag") in SALT_MINE_EXCLUDED_LOCATIONS:
+        return False
+    if row.get("region") in SALT_MINE_EXCLUDED_REGIONS:
+        return False
+    return (
+        row.get("topography") in SALT_MINE_TOPOGRAPHIES
+        and row.get("climate") in SALT_MINE_CLIMATES
+        and row.get("vegetation") in SALT_MINE_VEGETATION
     )
 
 
 def _salt_location_families(row: dict) -> list[str]:
     raw_salt = row.get("raw_material") == "salt"
     coastal = row.get("is_coastal") is True
-    salt_pan = row.get("topography") == "salt_pans"
     mine_marker = _has_salt_mine_marker(row)
 
     families: list[str] = []
@@ -242,7 +271,7 @@ def _salt_location_families(row: dict) -> list[str]:
         families.append("coastal_saltern")
     if raw_salt and not coastal and mine_marker:
         families.append("salt_mine")
-    if not coastal and (raw_salt or salt_pan) and not mine_marker:
+    if raw_salt and not coastal and not mine_marker:
         families.append("inland_saltworks")
     return families
 
@@ -489,21 +518,42 @@ def test_salt_building_location_potentials_are_mutually_exclusive() -> None:
         assert "topography = salt_pans" not in body
         for topography in SALT_MINE_TOPOGRAPHIES:
             assert f"topography = {topography}" in body
+        for climate in SALT_MINE_CLIMATES:
+            assert f"climate = {climate}" in body
+        for vegetation in SALT_MINE_VEGETATION:
+            assert f"vegetation = {vegetation}" in body
         for modifier in SALT_MINE_MODIFIERS:
             assert f"has_location_modifier = {modifier}" in body
+        for location in SALT_MINE_DIRECT_LOCATIONS | SALT_MINE_EXCLUDED_LOCATIONS:
+            assert f"this = location:{location}" in body
+        for region in SALT_MINE_EXCLUDED_REGIONS:
+            assert f"region = region:{region}" in body
 
     for key in ("inland_saltworks", "engineered_brine_saltworks"):
         body = bodies[key]
         assert "NOT = { is_coastal = yes }" in body
         assert "raw_material = goods:salt" in body
-        assert "topography = salt_pans" in body
+        assert "topography = salt_pans" not in body
         for modifier in SALT_MINE_MODIFIERS:
             assert f"has_location_modifier = {modifier}" in body
+        for location in SALT_MINE_DIRECT_LOCATIONS | SALT_MINE_EXCLUDED_LOCATIONS:
+            assert f"this = location:{location}" in body
+        for region in SALT_MINE_EXCLUDED_REGIONS:
+            assert f"region = region:{region}" in body
 
 
 def test_salt_location_split_matches_current_location_data() -> None:
     baseline = pl.read_parquet(LABELING_BASELINE).select(
-        ["location_tag", "is_coastal", "topography", "vegetation", "raw_material", "modifier"]
+        [
+            "location_tag",
+            "region",
+            "is_coastal",
+            "topography",
+            "vegetation",
+            "climate",
+            "raw_material",
+            "modifier",
+        ]
     )
     salt_rows = baseline.filter(pl.col("raw_material") == "salt").to_dicts()
 
@@ -517,7 +567,34 @@ def test_salt_location_split_matches_current_location_data() -> None:
         counts[families[0]] += 1
 
     assert offenders == []
-    assert counts == {"coastal_saltern": 233, "salt_mine": 93, "inland_saltworks": 86}
+    assert counts == {"coastal_saltern": 233, "salt_mine": 31, "inland_saltworks": 148}
+
+    rows_by_location = {row["location_tag"]: row for row in salt_rows}
+    expected_mines = {
+        "cardona",
+        "chicaquicha",
+        "hallein",
+        "taghaza",
+        "taoudenni",
+        "turda",
+        "wieliczka",
+    }
+    expected_inland_saltworks = {
+        "anana",
+        "hall",
+        "luneburg",
+        "makgadikgadi",
+        "nantwich",
+        "salins_les_bains",
+        "sambhar",
+        "uyuni",
+        "worcester",
+        "xiexian",
+    }
+    for location in expected_mines:
+        assert _salt_location_families(rows_by_location[location]) == ["salt_mine"]
+    for location in expected_inland_saltworks:
+        assert _salt_location_families(rows_by_location[location]) == ["inland_saltworks"]
 
     generic_coastal = baseline.filter(
         (pl.col("raw_material").fill_null("") != "salt")
@@ -538,7 +615,7 @@ def test_salt_location_split_matches_current_location_data() -> None:
             "topography": "salt_pans",
             "modifier": None,
         }
-    ) == ["inland_saltworks"]
+    ) == []
 
 
 def test_clay_sand_and_stone_quarry_upgrade_chains_are_explicit_and_unlockable() -> None:

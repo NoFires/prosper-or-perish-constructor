@@ -17,11 +17,47 @@ location_potential = {
     raw_material = goods:salt
     NOT = { is_coastal = yes }
     OR = {
-        topography = hills
-        topography = mountains
-        topography = plateau
         has_location_modifier = sahara_salt_mines_base
         has_location_modifier = turda_salt_mines_base
+        this = location:wieliczka
+        this = location:khewra
+        this = location:dina
+        this = location:khushab
+        this = location:dinkot
+        this = location:cardona
+        this = location:hallein
+        this = location:salzburg
+        this = location:chicaquicha
+        AND = {
+            OR = {
+                topography = hills
+                topography = mountains
+                topography = plateau
+            }
+            OR = {
+                climate = continental
+                climate = oceanic
+                climate = mediterranean
+            }
+            OR = {
+                vegetation = forest
+                vegetation = woods
+                vegetation = grasslands
+                vegetation = farmland
+            }
+            NOT = {
+                OR = {
+                    this = location:salins_les_bains
+                    this = location:moutiers
+                    this = location:anana
+                    this = location:hall
+                    region = region:south_china_region
+                    region = region:west_china_region
+                    region = region:tibet_region
+                    region = region:xinjiang_region
+                }
+            }
+        }
     }
 }
 
