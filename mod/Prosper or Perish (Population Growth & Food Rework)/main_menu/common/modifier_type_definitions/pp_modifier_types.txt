@@ -525,3 +525,43 @@ pp_stone_quarry_improved_price_cost_modifier={
 		category=country
 	}
 }
+
+pp_coastal_saltern_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_engineered_brine_saltworks_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_inland_saltworks_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_salt_mine_improved_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_salt_mine_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}

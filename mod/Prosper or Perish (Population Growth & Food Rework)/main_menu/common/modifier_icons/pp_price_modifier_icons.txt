@@ -43,6 +43,9 @@ pp_coal_mine_price_cost_modifier = {
 pp_coal_mine_revolutions_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
+pp_coastal_saltern_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
 pp_cocoa_grove_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
@@ -67,6 +70,9 @@ pp_elephant_kraal_price_cost_modifier = {
 pp_enclosed_sheep_walks_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
+pp_engineered_brine_saltworks_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
 pp_gem_gravel_pit_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
@@ -80,6 +86,9 @@ pp_gold_stamp_mill_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
 pp_incense_grove_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
+pp_inland_saltworks_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
 pp_iron_mine_deep_price_cost_modifier = {
@@ -152,6 +161,12 @@ pp_quicksilver_retort_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
 pp_saffron_croft_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
+pp_salt_mine_improved_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
+pp_salt_mine_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
 pp_saltpeter_beds_price_cost_modifier = {

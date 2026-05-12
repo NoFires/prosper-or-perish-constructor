@@ -38,6 +38,7 @@ MODIFIER_ICONS = MOD_ROOT / "main_menu" / "common" / "modifier_icons"
 GAME_CONCEPT_ROOT = MOD_ROOT / "main_menu" / "common" / "game_concepts"
 LOCALIZATION_ROOT = MOD_ROOT / "main_menu" / "localization" / "english"
 CAPACITY_PRECALC = MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_precalc.txt"
+RGO_STATIC_BONUSES = MOD_ROOT / "in_game" / "common" / "static_modifiers" / "pp_rgo_static_bonuses.txt"
 BUILDING_BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted" / "buildings"
 FARMING_VILLAGE_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "farming_village.yml"
 MODEL_FARM_BLUEPRINT = BUILDING_BLUEPRINT_ROOT / "model_farm.yml"
@@ -102,7 +103,11 @@ EXCLUDED_FARM_CAP_BUILDINGS = (
     "charcoal_maker",
     "improved_charcoal_maker",
     "ivory_hunting_camp",
-    "salt_collector",
+    "coastal_saltern",
+    "salt_mine",
+    "salt_mine_improved",
+    "inland_saltworks",
+    "engineered_brine_saltworks",
     "saltpeter_beds",
     "sand_pit",
     "sand_washery",
@@ -1150,33 +1155,45 @@ def test_current_megalopolis_buildings_allow_megalopolis() -> None:
         assert values["megalopolis"] is True
 
 
-def test_victuals_market_construction_and_salt_collector_debug_keys_are_localized() -> None:
+def test_victuals_market_construction_and_coastal_saltern_debug_keys_are_localized() -> None:
     victuals_market = load_template(ROOT / "blueprints" / "accepted" / "buildings" / "victuals_market.yml")
-    salt_collector = load_template(ROOT / "blueprints" / "accepted" / "buildings" / "salt_collector.yml")
+    coastal_saltern = load_template(ROOT / "blueprints" / "accepted" / "buildings" / "coastal_saltern.yml")
 
     assert victuals_market.localization["victuals_market_construction"] == "Victuals Market Construction"
 
     rendered = parse_text(
-        f"{salt_collector.key} = {{\n{salt_collector.building_body}\n}}\n",
-        path=Path("salt_collector.yml"),
+        f"{coastal_saltern.key} = {{\n{coastal_saltern.building_body}\n}}\n",
+        path=Path("coastal_saltern.yml"),
     )
     body = rendered.entries[0].value
     assert isinstance(body, CList)
     methods = body.values("unique_production_methods")[0]
     assert isinstance(methods, CList)
-    base = _entry_values(methods)["pp_salt_collector_base_salt"]
+    base = _entry_values(methods)["pp_coastal_saltern_base_salt"]
     assert isinstance(base, CList)
     base_values = _entry_values(base)
-    assert base_values["output"] == 0.095
+    assert base_values["output"] == 0.24
 
     worked_methods = body.values("unique_production_methods")[1]
     assert isinstance(worked_methods, CList)
-    lined_pans = _entry_values(worked_methods)["pp_salt_collector_lined_pans"]
+    lined_pans = _entry_values(worked_methods)["pp_coastal_saltern_lined_evaporation_pans"]
     assert isinstance(lined_pans, CList)
     values = _entry_values(lined_pans)
-    assert values["output"] == 0.21
-    assert values["clay"] == 1.2
-    assert values["pottery"] == 0.261
+    assert values["output"] == 0.72
+    assert values["clay"] == 4.0
+    assert values["pottery"] == 1.15
+
+
+def test_salt_rgo_bonus_reduces_food_decay_without_affecting_saltpeter() -> None:
+    bonuses = {entry.key: entry.value for entry in parse_file(RGO_STATIC_BONUSES).entries}
+
+    salt = bonuses["pp_rgo_bonus_salt"]
+    saltpeter = bonuses["pp_rgo_bonus_saltpeter"]
+    assert isinstance(salt, CList)
+    assert isinstance(saltpeter, CList)
+
+    assert _entry_values(salt)["local_food_decay_modifier"] == -0.00070
+    assert "local_food_decay_modifier" not in _entry_values(saltpeter)
 
 
 def test_farming_village_uses_baseline_building_price() -> None:

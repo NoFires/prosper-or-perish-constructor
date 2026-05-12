@@ -300,6 +300,7 @@ pp_rgo_bonus_salt = {
 	game_data = { category = location }
 	# Salt preserved food and expanded trade, but monopoly taxes and salinization weakened local control.
 	local_salt_output_modifier = 0.15
+	local_food_decay_modifier = -0.00070
 	local_peasants_food_consumption = -0.02
 	local_trades_per_burgher = 0.10
 	local_max_control = -0.02

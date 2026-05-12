@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import re
 
+import polars as pl
 import yaml
 
 from eu5gameparser.domain.eu5 import load_eu5_data
@@ -13,6 +14,9 @@ from eu5_mod_orchestrator.config import load_project_config
 ROOT = Path(__file__).resolve().parents[1]
 BLUEPRINT_ROOT = ROOT / "blueprints" / "accepted"
 MANIFEST_PATH = ROOT / "blueprints" / "buildings.manifest.yml"
+LABELING_BASELINE = (
+    ROOT.parent / "ProsperOrPerishLabelingPipeline" / "base_data" / "locations_with_raw_material.parquet"
+)
 ADVANCES_PATH = (
     ROOT
     / "mod"
@@ -168,6 +172,9 @@ GAME_START_DIRECT_RGO_BUILDINGS = {
     "lead_mine",
     "marble_quarry",
     "cinnabar_pit",
+    "salt_collector",
+    "salt_mine",
+    "inland_saltworks",
     "silver_mine",
     "saltpeter_beds",
     "tin_streamworks",
@@ -179,7 +186,9 @@ RAW_MATERIAL_BASE_PRODUCERS = {
     "incense_grove": ("incense", "pp_incense_grove_base_incense"),
     "fiber_crops_farm": ("fiber_crops", "pp_fiber_crops_farm_base_fiber_crops"),
     "ivory_hunting_camp": ("ivory", "pp_ivory_hunting_camp_base_ivory"),
-    "salt_collector": ("salt", "pp_salt_collector_base_salt"),
+    "salt_collector": ("salt", "pp_coastal_saltern_base_salt"),
+    "salt_mine": ("salt", "pp_salt_mine_base_salt"),
+    "inland_saltworks": ("salt", "pp_inland_saltworks_base_salt"),
     "saltpeter_beds": ("saltpeter", "pp_saltpeter_beds_base_saltpeter"),
     "vineyard_estate": ("wine", "pp_vineyard_estate_base_wine"),
     "cotton_plantation": ("cotton", "pp_cotton_plantation_base_cotton"),
@@ -204,11 +213,38 @@ DEACTIVATED_BOG_IRON_BLUEPRINTS = {
     "buildings/bog_iron_smelter_slitting_mills.yml",
     "buildings/bog_iron_smelter_hot_blast_furnace.yml",
 }
+SALT_MINE_TOPOGRAPHIES = {"hills", "mountains", "plateau"}
+SALT_MINE_MODIFIERS = {"sahara_salt_mines_base", "turda_salt_mines_base"}
+
+
 def _load_blueprint(key: str) -> dict:
     with (BLUEPRINT_ROOT / "buildings" / f"{key}.yml").open("r", encoding="utf-8") as stream:
         raw = yaml.safe_load(stream)
     assert isinstance(raw, dict)
     return raw
+
+
+def _has_salt_mine_marker(row: dict) -> bool:
+    modifier = str(row.get("modifier") or "")
+    return row.get("topography") in SALT_MINE_TOPOGRAPHIES or any(
+        marker in modifier for marker in SALT_MINE_MODIFIERS
+    )
+
+
+def _salt_location_families(row: dict) -> list[str]:
+    raw_salt = row.get("raw_material") == "salt"
+    coastal = row.get("is_coastal") is True
+    salt_pan = row.get("topography") == "salt_pans"
+    mine_marker = _has_salt_mine_marker(row)
+
+    families: list[str] = []
+    if raw_salt and coastal:
+        families.append("coastal_saltern")
+    if raw_salt and not coastal and mine_marker:
+        families.append("salt_mine")
+    if not coastal and (raw_salt or salt_pan) and not mine_marker:
+        families.append("inland_saltworks")
+    return families
 
 
 def _advance_block(advance: str, text: str) -> str:
@@ -366,6 +402,143 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
         flags=re.M,
     )
     assert "potential =" not in steam_block
+
+
+def test_salt_production_families_are_explicit_and_unlockable() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+    advances = ADVANCES_PATH.read_text(encoding="utf-8")
+
+    assert "buildings/salt_collector.yml" not in enabled
+    coastal = _load_blueprint("coastal_saltern")
+    assert coastal["building"]["key"] == "salt_collector"
+    assert coastal["building"]["mode"] == "REPLACE"
+
+    expected_chains = {
+        "salt_mine": [
+            ("salt_mine", None),
+            ("salt_mine_improved", "efficient_mining"),
+        ],
+        "inland_saltworks": [
+            ("inland_saltworks", None),
+            ("engineered_brine_saltworks", "pp_engineered_brine_saltworks"),
+        ],
+    }
+    for family, chain in expected_chains.items():
+        for tier, (key, unlock_advance) in enumerate(chain):
+            raw = _load_blueprint(key)
+            assert f"buildings/{key}.yml" in enabled
+            assert raw["tag"] == key
+            assert raw["building"]["key"] == key
+            assert raw.get("upgrade_chain") == {
+                "family": family,
+                "tier": tier,
+                "previous": chain[tier - 1][0] if tier > 0 else None,
+                "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
+                "unlock_advance": unlock_advance,
+            }
+
+            body = raw["building"]["body"]
+            if tier == 0:
+                assert "obsolete =" not in body
+            else:
+                previous = chain[tier - 1][0]
+                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                assert raw["icon"]["output_dds"] == f"{key}.dds"
+
+    efficient_mining = _advance_block("efficient_mining", advances)
+    assert re.search(r"^\s*unlock_building\s*=\s*salt_mine_improved\s*$", efficient_mining, flags=re.M)
+
+    engineered = _load_blueprint("engineered_brine_saltworks")
+    advancements = engineered.get("advancements")
+    assert isinstance(advancements, list)
+    advancement = next(item for item in advancements if item["key"] == "pp_engineered_brine_saltworks")
+    assert re.search(r"^\s*requires\s*=\s*manufactories_advance\s*$", advancement["body"], flags=re.M)
+    assert re.search(r"^\s*unlock_building\s*=\s*engineered_brine_saltworks\s*$", advancement["body"], flags=re.M)
+
+    coal = _advance_block("coal_improvements_absolutism", advances)
+    assert re.search(
+        r"^\s*unlock_production_method\s*=\s*pp_engineered_brine_saltworks_mineral_fired_pans\s*$",
+        coal,
+        flags=re.M,
+    )
+
+
+def test_salt_building_location_potentials_are_mutually_exclusive() -> None:
+    bodies = {
+        key: _load_blueprint(key)["building"]["body"]
+        for key in (
+            "coastal_saltern",
+            "salt_mine",
+            "salt_mine_improved",
+            "inland_saltworks",
+            "engineered_brine_saltworks",
+        )
+    }
+    combined = "\n".join(bodies.values())
+
+    assert "vegetation = desert" not in combined
+    assert re.search(
+        r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:salt\s*is_coastal\s*=\s*yes\s*\}",
+        bodies["coastal_saltern"],
+    )
+    for key in ("salt_mine", "salt_mine_improved"):
+        body = bodies[key]
+        assert "raw_material = goods:salt" in body
+        assert "NOT = { is_coastal = yes }" in body
+        assert "topography = salt_pans" not in body
+        for topography in SALT_MINE_TOPOGRAPHIES:
+            assert f"topography = {topography}" in body
+        for modifier in SALT_MINE_MODIFIERS:
+            assert f"has_location_modifier = {modifier}" in body
+
+    for key in ("inland_saltworks", "engineered_brine_saltworks"):
+        body = bodies[key]
+        assert "NOT = { is_coastal = yes }" in body
+        assert "raw_material = goods:salt" in body
+        assert "topography = salt_pans" in body
+        for modifier in SALT_MINE_MODIFIERS:
+            assert f"has_location_modifier = {modifier}" in body
+
+
+def test_salt_location_split_matches_current_location_data() -> None:
+    baseline = pl.read_parquet(LABELING_BASELINE).select(
+        ["location_tag", "is_coastal", "topography", "vegetation", "raw_material", "modifier"]
+    )
+    salt_rows = baseline.filter(pl.col("raw_material") == "salt").to_dicts()
+
+    counts = {"coastal_saltern": 0, "salt_mine": 0, "inland_saltworks": 0}
+    offenders: list[str] = []
+    for row in salt_rows:
+        families = _salt_location_families(row)
+        if len(families) != 1:
+            offenders.append(f"{row['location_tag']}: {families}")
+            continue
+        counts[families[0]] += 1
+
+    assert offenders == []
+    assert counts == {"coastal_saltern": 233, "salt_mine": 93, "inland_saltworks": 86}
+
+    generic_coastal = baseline.filter(
+        (pl.col("raw_material").fill_null("") != "salt")
+        & pl.col("is_coastal")
+        & (pl.col("topography").fill_null("") != "salt_pans")
+    ).head(500)
+    generic_desert = baseline.filter(
+        (pl.col("raw_material").fill_null("") != "salt")
+        & (pl.col("vegetation") == "desert")
+        & (pl.col("topography").fill_null("") != "salt_pans")
+    ).head(500)
+    assert all(_salt_location_families(row) == [] for row in generic_coastal.to_dicts())
+    assert all(_salt_location_families(row) == [] for row in generic_desert.to_dicts())
+    assert _salt_location_families(
+        {
+            "raw_material": None,
+            "is_coastal": False,
+            "topography": "salt_pans",
+            "modifier": None,
+        }
+    ) == ["inland_saltworks"]
 
 
 def test_clay_sand_and_stone_quarry_upgrade_chains_are_explicit_and_unlockable() -> None:

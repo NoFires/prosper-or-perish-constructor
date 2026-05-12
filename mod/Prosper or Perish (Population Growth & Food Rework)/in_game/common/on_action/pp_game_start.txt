@@ -3020,6 +3020,7 @@ pp_game_start_effect = {
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:salt_collector }
+						can_build_building = building_type:salt_collector
 					}
 					construct_building = {
 						building_type = building_type:salt_collector
@@ -3054,10 +3055,89 @@ pp_game_start_effect = {
 				if = {
 					limit = {
 						raw_material = goods:salt
+						location_rank = location_rank:rural_settlement
+						population > 15
+						development > 10
+						NOT = { has_building = building_type:salt_mine }
+						can_build_building = building_type:salt_mine
+					}
+					construct_building = {
+						building_type = building_type:salt_mine
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
+						location_rank = location_rank:rural_settlement
+						population > 15
+						development > 10
+						has_building = building_type:salt_mine
+						location_building_level = {
+							building_type = building_type:salt_mine
+							value < 2
+						}
+					}
+					change_building_level_in_location = {
+						building = building_type:salt_mine
+						value = {
+							value = 2
+							add = {
+								value = "location_building_level(building_type:salt_mine)"
+								multiply = -1
+							}
+						}
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
+						location_rank = location_rank:rural_settlement
+						population > 15
+						development > 10
+						NOT = { has_building = building_type:inland_saltworks }
+						can_build_building = building_type:inland_saltworks
+					}
+					construct_building = {
+						building_type = building_type:inland_saltworks
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
+						location_rank = location_rank:rural_settlement
+						population > 15
+						development > 10
+						has_building = building_type:inland_saltworks
+						location_building_level = {
+							building_type = building_type:inland_saltworks
+							value < 2
+						}
+					}
+					change_building_level_in_location = {
+						building = building_type:inland_saltworks
+						value = {
+							value = 2
+							add = {
+								value = "location_building_level(building_type:inland_saltworks)"
+								multiply = -1
+							}
+						}
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
 						location_rank = location_rank:town
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:salt_collector }
+						can_build_building = building_type:salt_collector
 					}
 					construct_building = {
 						building_type = building_type:salt_collector
@@ -3092,10 +3172,89 @@ pp_game_start_effect = {
 				if = {
 					limit = {
 						raw_material = goods:salt
+						location_rank = location_rank:town
+						population > 15
+						development > 10
+						NOT = { has_building = building_type:salt_mine }
+						can_build_building = building_type:salt_mine
+					}
+					construct_building = {
+						building_type = building_type:salt_mine
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
+						location_rank = location_rank:town
+						population > 15
+						development > 10
+						has_building = building_type:salt_mine
+						location_building_level = {
+							building_type = building_type:salt_mine
+							value < 2
+						}
+					}
+					change_building_level_in_location = {
+						building = building_type:salt_mine
+						value = {
+							value = 2
+							add = {
+								value = "location_building_level(building_type:salt_mine)"
+								multiply = -1
+							}
+						}
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
+						location_rank = location_rank:town
+						population > 15
+						development > 10
+						NOT = { has_building = building_type:inland_saltworks }
+						can_build_building = building_type:inland_saltworks
+					}
+					construct_building = {
+						building_type = building_type:inland_saltworks
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
+						location_rank = location_rank:town
+						population > 15
+						development > 10
+						has_building = building_type:inland_saltworks
+						location_building_level = {
+							building_type = building_type:inland_saltworks
+							value < 2
+						}
+					}
+					change_building_level_in_location = {
+						building = building_type:inland_saltworks
+						value = {
+							value = 2
+							add = {
+								value = "location_building_level(building_type:inland_saltworks)"
+								multiply = -1
+							}
+						}
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
 						location_rank = location_rank:city
 						population > 15
 						development > 10
 						NOT = { has_building = building_type:salt_collector }
+						can_build_building = building_type:salt_collector
 					}
 					construct_building = {
 						building_type = building_type:salt_collector
@@ -3122,6 +3281,84 @@ pp_game_start_effect = {
 							value = 2
 							add = {
 								value = "location_building_level(building_type:salt_collector)"
+								multiply = -1
+							}
+						}
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
+						location_rank = location_rank:city
+						population > 15
+						development > 10
+						NOT = { has_building = building_type:salt_mine }
+						can_build_building = building_type:salt_mine
+					}
+					construct_building = {
+						building_type = building_type:salt_mine
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
+						location_rank = location_rank:city
+						population > 15
+						development > 10
+						has_building = building_type:salt_mine
+						location_building_level = {
+							building_type = building_type:salt_mine
+							value < 2
+						}
+					}
+					change_building_level_in_location = {
+						building = building_type:salt_mine
+						value = {
+							value = 2
+							add = {
+								value = "location_building_level(building_type:salt_mine)"
+								multiply = -1
+							}
+						}
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
+						location_rank = location_rank:city
+						population > 15
+						development > 10
+						NOT = { has_building = building_type:inland_saltworks }
+						can_build_building = building_type:inland_saltworks
+					}
+					construct_building = {
+						building_type = building_type:inland_saltworks
+						instant = yes
+						cost_multiplier = 0
+						cost_multiplier_reason = "game_start"
+					}
+				}
+				if = {
+					limit = {
+						raw_material = goods:salt
+						location_rank = location_rank:city
+						population > 15
+						development > 10
+						has_building = building_type:inland_saltworks
+						location_building_level = {
+							building_type = building_type:inland_saltworks
+							value < 2
+						}
+					}
+					change_building_level_in_location = {
+						building = building_type:inland_saltworks
+						value = {
+							value = 2
+							add = {
+								value = "location_building_level(building_type:inland_saltworks)"
 								multiply = -1
 							}
 						}

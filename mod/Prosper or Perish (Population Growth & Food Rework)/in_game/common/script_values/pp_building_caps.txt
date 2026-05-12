@@ -314,7 +314,7 @@ victuals_market_max_level = {
 pp_granary_cap = {
 	add = {
 		desc = "BUILDING_LEVEL_BASE"
-		value = 2.25
+		value = 1.00
 	}
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
@@ -326,5 +326,4 @@ pp_granary_cap = {
 		value = population
 		multiply = 0.0150
 	}
-	max = 6
 }

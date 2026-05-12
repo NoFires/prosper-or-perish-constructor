@@ -80,7 +80,11 @@ enabled:
 - buildings/putrefaction_works.yml
 - buildings/regimental_camp.yml
 - buildings/saffron_croft.yml
-- buildings/salt_collector.yml
+- buildings/coastal_saltern.yml
+- buildings/salt_mine.yml
+- buildings/salt_mine_improved.yml
+- buildings/inland_saltworks.yml
+- buildings/engineered_brine_saltworks.yml
 - buildings/saltpeter_beds.yml
 - buildings/saltpeter_guild.yml
 - buildings/saltpeter_workshop.yml

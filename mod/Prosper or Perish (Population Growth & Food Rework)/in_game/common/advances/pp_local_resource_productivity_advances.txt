@@ -25,6 +25,7 @@ REPLACE:efficient_mining = {
 	expand_rgo_mining_cost_modifier = -0.1
 	global_copper_output_modifier = 0.1
 	unlock_building = iron_mine_improved
+	unlock_building = salt_mine_improved
 }
 
 REPLACE:new_currency_demands = {
@@ -107,6 +108,7 @@ REPLACE:coal_improvements_absolutism = {
 	global_coal_output_modifier = 0.33
 	unlock_building = improved_charcoal_maker
 	unlock_building = coal_mine_improved
+	unlock_production_method = pp_engineered_brine_saltworks_mineral_fired_pans
 }
 
 REPLACE:coal_improvements_revolutions = {

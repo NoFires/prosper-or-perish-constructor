@@ -1,9 +1,0 @@
-﻿l_english:
-
-# >>> eu5-building-pipeline:salt_collector:localization
-  salt_collector_slot_0: "Salt Flats"
-  salt_collector_slot_1: "Salt Pans"
-  pp_salt_collector_base_salt: "Salt Flats"
-  pp_salt_collector_salt_flats: "Open Salt Flats"
-  pp_salt_collector_lined_pans: "Lined Evaporation Pans"
-# <<< eu5-building-pipeline:salt_collector:localization

@@ -107,11 +107,11 @@ building:
     			category = building_maintenance
     		}
     		pp_cookery_mutton_and_pease = {
-    			wool = 2.367
-    			legumes = 1.12
-    			salt = 0.133
+    			wool = 1.495
+    			legumes = 0.707
+    			salt = 0.084
     			produced = victuals
-    			output = 2.545
+    			output = 1.607
     			debug_max_profit = 0
     			category = building_maintenance
     		}

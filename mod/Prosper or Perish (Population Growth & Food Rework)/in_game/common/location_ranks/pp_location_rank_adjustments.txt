@@ -47,6 +47,7 @@ TRY_INJECT:town = {
 TRY_INJECT:rural_settlement = {
 	rank_modifier = {
 		local_max_rgo_size_modifier = -0.50
+		local_monthly_food_modifier = -0.10
 		free_building_levels = 10
 		local_population_growth = -0.0035 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		farm_rank_capacity_modifier = 0

@@ -1,0 +1,14 @@
+﻿l_english:
+
+# >>> eu5-building-pipeline:salt_mine_improved:localization
+  MODIFIER_TYPE_DESC_pp_salt_mine_improved_price_cost_modifier: "Affects the cost of building [ShowBuildingTypeName('salt_mine_improved')|e]."
+  MODIFIER_TYPE_NAME_pp_salt_mine_improved_price_cost_modifier: "Improved Salt Mine Cost"
+  salt_mine_improved_slot_0: "Salt Deposit"
+  salt_mine_improved_slot_1: "Haulage"
+  salt_mine_improved: "Improved Salt Mine"
+  salt_mine_improved_desc: "Timbered galleries, drainage, and better haulage let salt mines work larger seams and move heavier blocks without turning every salt source into a mine."
+  pp_salt_mine_improved_base_salt: "Surveyed Salt Workings"
+  pp_salt_mine_improved_no_primary: "No Improved Haulage"
+  pp_salt_mine_improved_timbered_haulage: "Timbered Galleries and Hoists"
+  pp_salt_mine_improved_price: "Improved Salt Mine Price"
+# <<< eu5-building-pipeline:salt_mine_improved:localization
