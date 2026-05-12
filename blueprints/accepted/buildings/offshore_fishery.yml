@@ -62,29 +62,29 @@ building:
             category = building_maintenance
         }
         pp_offshore_fishery_herring_busses = {
-            lumber = 1.40
-            fiber_crops = 0.90
-            salt = 1.30
+            lumber = 2.513
+            fiber_crops = 1.615
+            salt = 0.325
             produced = fish
-            output = 10.92
+            output = 9.28
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_offshore_fishery_distant_water_schooners = {
-            naval_supplies = 1.30
-            victuals = 0.70
-            salt = 1.26
+            naval_supplies = 1.959
+            victuals = 1.056
+            salt = 0.315
             produced = fish
-            output = 12.00
+            output = 10.20
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_offshore_fishery_steam_trawlers = {
-            naval_supplies = 1.70
-            coal = 1.40
-            tools = 1.05
+            naval_supplies = 1.405
+            coal = 1.157
+            tools = 0.868
             produced = fish
-            output = 13.00
+            output = 11.05
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -132,10 +132,11 @@ evaluation:
       production_efficiency: 1.15
       allow_rules:
         amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
+        input_throughput: Herring busses were rebalanced down 15% and shifted most salt demand into hull and net inputs.
     pp_offshore_fishery_distant_water_schooners:
       production_efficiency: 1.05
     pp_offshore_fishery_steam_trawlers:
       production_efficiency: 1.05
       allow_rules:
-        input_throughput: Steam trawling moved to Revolutions as a gating-only change; keep the existing method economics until the offshore fishery rebalance.
-        amortization_months: Pre-steel tools keep steam trawlers available before steel mills; revisit the method economics during the offshore fishery rebalance.
+        input_throughput: Steam trawlers keep a lower post-rebalance input profile while preserving their pre-steel-tool design.
+        amortization_months: Pre-steel tools keep steam trawlers available before steel mills; post-rebalance payback remains intentionally fast.

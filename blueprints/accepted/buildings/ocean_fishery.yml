@@ -59,10 +59,10 @@ building:
             category = building_maintenance
         }
         pp_ocean_fishery_coastal_boats = {
-            lumber = 0.81
-            salt = 0.405
+            lumber = 1.475
+            salt = 0.101
             produced = fish
-            output = 3.27
+            output = 2.78
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -106,3 +106,6 @@ evaluation:
         output_throughput: Method throughput intentionally stays below the global full-building target after error-log input tuning.
     pp_ocean_fishery_coastal_boats:
       production_efficiency: 1.10
+      allow_rules:
+        input_throughput: Coastal boats were rebalanced down 15% and moved most salt demand into gear, intentionally below the generic full-building input target.
+        output_throughput: Coastal boats were rebalanced down 15% from the previous coastal-fishery output level.

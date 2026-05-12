@@ -40,29 +40,29 @@ unique_production_methods = {
         category = building_maintenance
     }
     pp_offshore_fishery_herring_busses = {
-        lumber = 1.40
-        fiber_crops = 0.90
-        salt = 1.30
+        lumber = 2.513
+        fiber_crops = 1.615
+        salt = 0.325
         produced = fish
-        output = 10.92
+        output = 9.28
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_offshore_fishery_distant_water_schooners = {
-        naval_supplies = 1.30
-        victuals = 0.70
-        salt = 1.26
+        naval_supplies = 1.959
+        victuals = 1.056
+        salt = 0.315
         produced = fish
-        output = 12.00
+        output = 10.20
         debug_max_profit = 0
         category = building_maintenance
     }
     pp_offshore_fishery_steam_trawlers = {
-        naval_supplies = 1.70
-        coal = 1.40
-        tools = 1.05
+        naval_supplies = 1.405
+        coal = 1.157
+        tools = 0.868
         produced = fish
-        output = 13.00
+        output = 11.05
         debug_max_profit = 0
         category = building_maintenance
     }
