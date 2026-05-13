@@ -39,6 +39,7 @@ building:
     town = yes
     city = yes
     megalopolis = yes
+    obsolete = iron_mine
     obsolete = iron_mine_improved
     build_time = manufactory_build_time
 
@@ -117,7 +118,7 @@ building:
 prices:
   - key: pp_iron_mine_deep_price
     body: |2-
-      {gold = 400}
+      {gold = 500}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_iron_mine_deep_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('iron_mine_deep')|e].
@@ -168,6 +169,7 @@ evaluation:
       allow_rules:
         input_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
         output_throughput: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
+        amortization_months: Ore dressing floors are a lower-throughput loop-breaking fallback that avoids lumber and tool inputs.
     pp_iron_mine_deep_no_secondary:
       production_efficiency: 1.00
     pp_iron_mine_deep_ochre:

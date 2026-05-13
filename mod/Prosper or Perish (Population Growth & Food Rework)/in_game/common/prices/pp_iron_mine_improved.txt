@@ -1,3 +1,3 @@
 ﻿# >>> eu5-building-pipeline:iron_mine_improved:price
-pp_iron_mine_improved_price = {gold = 200}
+pp_iron_mine_improved_price = {gold = 250}
 # <<< eu5-building-pipeline:iron_mine_improved:price

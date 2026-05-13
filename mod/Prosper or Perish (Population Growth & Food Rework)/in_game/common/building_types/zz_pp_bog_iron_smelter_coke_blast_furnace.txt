@@ -3,7 +3,7 @@ bog_iron_smelter_coke_blast_furnace = {
 is_foreign = no
 max_levels = rural_building_cap
 pop_type = laborers
-employment_size = 6
+employment_size = 3
 price = pp_bog_iron_smelter_coke_blast_furnace_price
 category = rgo_building_category
 icon = bog_iron_smelter_coke_blast_furnace
@@ -11,6 +11,7 @@ rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
+obsolete = bog_iron_smelter
 obsolete = bog_iron_smelter_blast_furnace
 build_time = manufactory_build_time
 
@@ -38,19 +39,19 @@ location_potential = {
 
 unique_production_methods = {
     pp_bog_iron_smelter_coke_blast_furnace_maintenance = {
-        coal = 1.1 # coke fuel, furnace heat
-        tools = 0.18 # tuyere, bellows upkeep
-        lumber = 0.18 # racks, furnace frames
+        coal = 1.20 # coke fuel, furnace heat
+        tools = 0.24 # tuyere, bellows upkeep
+        lumber = 0.24 # racks, furnace frames
         produced = iron
-        output = 1.204
+        output = 1.42
         category = building_maintenance
     }
     pp_bog_iron_smelter_hot_blast_refining_maintenance = {
-        coal = 1.25 # coke fuel, hot blast
-        tools = 0.22 # blast gear, repairs
-        lumber = 0.20 # drying racks, staging
+        coal = 1.35 # coke fuel, hot blast
+        tools = 0.30 # blast gear, repairs
+        lumber = 0.28 # drying racks, staging
         produced = iron
-        output = 1.384
+        output = 1.65
         category = building_maintenance
     }
 }

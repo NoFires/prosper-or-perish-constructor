@@ -105,7 +105,7 @@ building:
 prices:
   - key: pp_iron_mine_price
     body: |2-
-      {gold = 50}
+      {gold = 100}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_iron_mine_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('iron_mine')|e].

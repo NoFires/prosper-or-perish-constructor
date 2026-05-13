@@ -48,9 +48,9 @@ building:
 
     unique_production_methods = {
         pp_bog_iron_maintenance = {
-            coal = 0.4 # charcoal, furnace fuel
+            coal = 0.45 # charcoal, furnace fuel
             produced = iron
-            output = 0.3
+            output = 0.36
             debug_max_profit = 0.2
             category = building_maintenance
         }
@@ -76,10 +76,10 @@ icon:
   size: 512
 
 evaluation:
-  allow_rules:
-    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
-    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
-    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
+  building:
+    employment_size: 1.0
   production_methods:
     pp_bog_iron_maintenance:
       production_efficiency: 1.05
+      allow_rules:
+        input_throughput: Small wetland bloomeries remain below the generic raw-site input baseline.

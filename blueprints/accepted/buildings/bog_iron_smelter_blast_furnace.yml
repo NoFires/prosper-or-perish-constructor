@@ -20,7 +20,7 @@ building:
     is_foreign = no
     max_levels = rural_building_cap
     pop_type = laborers
-    employment_size = 4
+    employment_size = 2
     price = pp_bog_iron_smelter_blast_furnace_price
     category = rgo_building_category
     icon = bog_iron_smelter_blast_furnace
@@ -55,18 +55,18 @@ building:
 
     unique_production_methods = {
         pp_bog_iron_smelter_blast_furnace_maintenance = {
-            coal = 0.6 # charcoal, furnace fuel
-            tools = 0.05 # bloom breaking, tuyere upkeep
+            coal = 0.78 # charcoal, furnace fuel
+            tools = 0.10 # bloom breaking, tuyere upkeep
             produced = iron
-            output = 0.55
+            output = 0.76
             category = building_maintenance
         }
         pp_bog_iron_smelter_blast_furnace_finery = {
-            coal = 0.72 # charcoal, finery heat
-            tools = 0.08 # hammers, furnace repairs
-            lumber = 0.08 # drying racks, frames
+            coal = 0.86 # charcoal, finery heat
+            tools = 0.12 # hammers, furnace repairs
+            lumber = 0.12 # racks, furnace frames
             produced = iron
-            output = 0.75
+            output = 0.90
             category = building_maintenance
         }
     }
@@ -75,7 +75,7 @@ building:
 prices:
   - key: pp_bog_iron_smelter_blast_furnace_price
     body: |2-
-      {gold = 200}
+      {gold = 175}
 localization:
   entries:
     MODIFIER_TYPE_DESC_pp_bog_iron_smelter_blast_furnace_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('bog_iron_smelter_blast_furnace')|e].
@@ -93,13 +93,13 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for Bog Iron Blast Furnace, transparent background. Center an upgraded bog iron smelter in marshland with furnace, smoke stack, wetland reeds, ore piles, and tier-appropriate industrial equipment, no text, no frame, painterly historical UI art.
 
 evaluation:
-  allow_rules:
-    profit_percent: Existing accepted balance predates the global profit-margin band; revisit during the building-specific rebalance.
-    input_throughput: Existing accepted input scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
-    output_throughput: Existing accepted output scale predates the global employment throughput baseline; revisit during the building-specific rebalance.
-    amortization_months: Existing accepted building cost and profit cadence predates the global amortization warning threshold; revisit during the building-specific rebalance.
   production_methods:
     pp_bog_iron_smelter_blast_furnace_maintenance:
-      production_efficiency: 1.10
+      production_efficiency: 1.05
+      allow_rules:
+        input_throughput: Early bog blast furnaces remain a smaller wetland fallback.
+        output_throughput: Early bog blast furnaces remain a smaller wetland fallback.
     pp_bog_iron_smelter_blast_furnace_finery:
-      production_efficiency: 1.12
+      production_efficiency: 1.05
+      allow_rules:
+        input_throughput: Finery hearths improve output while staying below deposit-mine scale.

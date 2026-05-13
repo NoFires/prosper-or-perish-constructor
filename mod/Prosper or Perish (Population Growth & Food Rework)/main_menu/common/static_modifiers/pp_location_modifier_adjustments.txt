@@ -26,13 +26,13 @@ TRY_REPLACE:cheap_food_in_location = {
 	game_data = {
 		category = location
 	}
-	local_nobles_food_consumption = 0.40
-	local_clergy_food_consumption = 0.40
-	local_burghers_food_consumption = 0.35
-	local_laborers_food_consumption = 0.35
-	local_soldiers_food_consumption = 0.35
-	local_peasants_food_consumption = 0.25
-	local_population_growth = 0.0080
+	local_nobles_food_consumption = 0.50
+	local_clergy_food_consumption = 0.50
+	local_burghers_food_consumption = 0.40
+	local_laborers_food_consumption = 0.40
+	local_soldiers_food_consumption = 0.40
+	local_peasants_food_consumption = 0.30
+	local_population_growth = 0.0075
 	local_monthly_prosperity = 0.0040
 	local_devastation_recovery = 0.0025
 }
@@ -433,20 +433,20 @@ TRY_INJECT:agricultural_revolution = {
 
 TRY_INJECT:harsh_winters_modifier = {
 	local_monthly_food_modifier = 0.25 # vanilla -0.25
-	local_wheat_output_modifier = -0.25
-	local_millet_output_modifier = -0.25
-	local_rice_output_modifier = -0.2
-	local_maize_output_modifier = -0.2
-	local_fruit_output_modifier = -0.2
-	local_wine_output_modifier = -0.2
-	local_olives_output_modifier = -0.15
-	local_legumes_output_modifier = -0.15
-	local_fiber_crops_output_modifier = -0.1
-	local_cotton_output_modifier = -0.1
-	local_potato_output_modifier = -0.1
-	local_livestock_output_modifier = -0.08
-	local_wool_output_modifier = -0.08
-	local_beeswax_output_modifier = -0.05
+	local_wheat_output_modifier = -0.38
+	local_millet_output_modifier = -0.38
+	local_rice_output_modifier = -0.30
+	local_maize_output_modifier = -0.30
+	local_fruit_output_modifier = -0.30
+	local_wine_output_modifier = -0.30
+	local_olives_output_modifier = -0.23
+	local_legumes_output_modifier = -0.23
+	local_fiber_crops_output_modifier = -0.15
+	local_cotton_output_modifier = -0.15
+	local_potato_output_modifier = -0.15
+	local_livestock_output_modifier = -0.12
+	local_wool_output_modifier = -0.12
+	local_beeswax_output_modifier = -0.08
 }
 
 TRY_INJECT:pap_drained_marshes = {

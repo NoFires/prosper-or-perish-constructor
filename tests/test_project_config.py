@@ -164,6 +164,7 @@ def test_accepted_blueprints_validate() -> None:
 def test_farm_gross_capacity_uses_live_rgo_population_inputs_only() -> None:
     parsed = parse_file(BUILDING_CAPS)
     entries = {entry.key: entry.value for entry in parsed.entries}
+    assert "farm_rgo_capacity_bonus" in entries
     assert "farm_gross_capacity" in entries
     assert "farm_max_level" in entries
     assert "farm_capacity_remaining" in entries
@@ -173,15 +174,28 @@ def test_farm_gross_capacity_uses_live_rgo_population_inputs_only() -> None:
     assert "farming_capacity" not in entries
     assert "farming_village_max_level" not in entries
 
+    text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
+    bonus_block = _text_block_between(
+        text,
+        "farm_rgo_capacity_bonus = {",
+        "\nfarm_gross_capacity = {",
+    )
     block = _text_block_between(
-        BUILDING_CAPS.read_text(encoding="utf-8-sig"),
+        text,
         "farm_gross_capacity = {",
         "\nland_farm_building_levels = {",
     )
 
+    required_bonus_snippets = (
+        "limit = { has_variable = pp_farm_base_capacity }",
+        'desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"\n\t\t\tvalue = var:pp_farm_base_capacity\n\t\t\tmultiply = max_rgo_workers\n\t\t\tmultiply = 0.125',
+    )
+    missing_bonus = [snippet for snippet in required_bonus_snippets if snippet not in bonus_block]
+    assert not missing_bonus
+
     required_snippets = (
         'desc = "BUILDING_LEVEL_BASE_FARM_RGO"\n\t\tif = {\n\t\t\tlimit = { has_variable = pp_farm_base_capacity }\n\t\t\tvalue = var:pp_farm_base_capacity',
-        'desc = "BUILDING_LEVEL_RGO_SIZE_FARMING"\n\t\tvalue = max_rgo_workers\n\t\tmultiply = 0.75',
+        "add = farm_rgo_capacity_bonus",
         'desc = "BUILDING_LEVEL_POPULATION_CAPACITY_FARMING"\n\t\tvalue = modifier:local_population_capacity\n\t\tmultiply = 0.08',
         'desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING"\n\t\tvalue = modifier:farm_rank_capacity_modifier',
         'desc = "BUILDING_LEVEL_FARM_CAPACITY_IMPROVEMENTS"\n\t\tvalue = modifier:farm_max_level_modifier',
@@ -199,8 +213,9 @@ def test_farm_gross_capacity_uses_live_rgo_population_inputs_only() -> None:
         "BUILDING_LEVEL_FROM_ENVIRONMENT_FARMING",
         "value = development",
         "value = population",
+        "value = max_rgo_workers\n\t\tmultiply = 0.75",
     )
-    offenders = [snippet for snippet in forbidden_snippets if snippet in block]
+    offenders = [snippet for snippet in forbidden_snippets if snippet in block + bonus_block]
     assert not offenders
 
 
@@ -457,11 +472,18 @@ def test_fish_and_forest_fixed_environment_paths_are_removed() -> None:
 def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
     cap_values = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
+    entries = {entry.key for entry in parse_file(BUILDING_CAPS).entries}
+    assert "fish_rgo_capacity_bonus" in entries
 
     base_block = _text_block_between(
         cap_values,
         "pp_fish_base_capacity_value = {",
         "\npp_forest_base_capacity_value = {",
+    )
+    bonus_block = _text_block_between(
+        text,
+        "fish_rgo_capacity_bonus = {",
+        "\nfish_gross_capacity = {",
     )
     gross_block = _text_block_between(
         text,
@@ -487,22 +509,37 @@ def test_fish_capacity_uses_water_rgo_size_and_used_fish_levels_only() -> None:
     ):
         assert snippet in base_block
 
-    assert "value = max_rgo_workers\n\t\tmultiply = 1.12" in gross_block
+    assert "limit = { has_variable = pp_fish_base_capacity }" in bonus_block
+    assert (
+        'desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"\n\t\t\tvalue = var:pp_fish_base_capacity\n\t\t\tmultiply = max_rgo_workers\n\t\t\tmultiply = 0.030'
+        in bonus_block
+    )
+    assert "add = fish_rgo_capacity_bonus" in gross_block
     assert "value = modifier:fish_max_level_modifier" in gross_block
+    assert "max = 20" not in gross_block
     assert "value = fish_building_levels\n\t\tmultiply = -1" in remaining_block
 
     forbidden = ("value = population", "value = development", "local_population_capacity", "total_building_levels", "rank_capacity")
     assert not [token for token in forbidden if token in gross_block + remaining_block]
+    assert "value = max_rgo_workers\n\t\tmultiply = 0.40" not in gross_block + bonus_block
+    assert "multiply = 1.12" not in gross_block + bonus_block
 
 
 def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> None:
     text = BUILDING_CAPS.read_text(encoding="utf-8-sig")
     cap_values = BUILDING_CAPACITY_VALUES.read_text(encoding="utf-8-sig")
+    entries = {entry.key for entry in parse_file(BUILDING_CAPS).entries}
+    assert "forest_rgo_capacity_bonus" in entries
 
     base_block = "pp_forest_base_capacity_value = {" + cap_values.split(
         "pp_forest_base_capacity_value = {",
         1,
     )[1]
+    bonus_block = _text_block_between(
+        text,
+        "forest_rgo_capacity_bonus = {",
+        "\nforest_gross_capacity = {",
+    )
     gross_block = _text_block_between(
         text,
         "forest_gross_capacity = {",
@@ -527,12 +564,20 @@ def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> 
     ):
         assert snippet in base_block
 
-    assert "value = max_rgo_workers\n\t\tmultiply = 1.25" in gross_block
+    assert "limit = { has_variable = pp_forest_base_capacity }" in bonus_block
+    assert (
+        'desc = "BUILDING_LEVEL_RGO_SIZE_FOREST"\n\t\t\tvalue = var:pp_forest_base_capacity\n\t\t\tmultiply = max_rgo_workers\n\t\t\tmultiply = 0.030'
+        in bonus_block
+    )
+    assert "add = forest_rgo_capacity_bonus" in gross_block
     assert "value = modifier:forest_max_level_modifier" in gross_block
+    assert "max = 20" not in gross_block
     assert "value = modifier:forest_rank_capacity_modifier" in remaining_block
     assert "value = non_forest_building_levels\n\t\tmultiply = -0.1" in remaining_block
     assert "value = forest_building_levels\n\t\tmultiply = -1" in remaining_block
     assert not [token for token in ("value = population", "value = development", "local_population_capacity") if token in gross_block + remaining_block]
+    assert "value = max_rgo_workers\n\t\tmultiply = 0.50" not in gross_block + bonus_block
+    assert "multiply = 1.25" not in gross_block + bonus_block
 
 
 def test_land_farm_blueprints_use_shared_capacity_pool() -> None:

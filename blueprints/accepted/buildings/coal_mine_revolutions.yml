@@ -35,6 +35,7 @@ building:
     town = yes
     city = yes
     megalopolis = yes
+    obsolete = coal_mine
     obsolete = coal_mine_improved
     build_time = manufactory_build_time
 

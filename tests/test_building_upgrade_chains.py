@@ -372,11 +372,11 @@ def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
             }
 
             body = raw["building"]["body"]
+            obsolete_entries = re.findall(r"^\s*obsolete\s*=\s*([A-Za-z0-9_]+)\s*$", body, flags=re.M)
             if tier == 0:
-                assert "obsolete =" not in body
+                assert obsolete_entries == []
             else:
-                previous = chain[tier - 1][0]
-                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                assert obsolete_entries == [previous_key for previous_key, _ in chain[:tier]]
                 assert "icon" in raw, f"{key} must provide its own icon"
                 assert raw["icon"]["output_dds"] == f"{key}.dds"
 
