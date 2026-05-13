@@ -1,0 +1,366 @@
+# Prosper or Perish variable harvest generation config.
+# The generator derives subcontinent/family volatility tiers from generated
+# per-location output modifiers, then applies the reviewed overrides below.
+
+subcontinents = [
+    "western_europe",
+    "eastern_europe",
+    "north_asia",
+    "central_asia",
+    "east_asia",
+    "south_asia",
+    "south_east_asia",
+    "middle_east",
+    "north_africa",
+    "west_africa",
+    "east_africa",
+    "central_africa",
+    "southern_africa",
+    "north_america",
+    "south_america",
+    "australasia",
+    "pacific_islands",
+]
+
+[paths]
+static_modifiers = "mod/Prosper or Perish (Population Growth & Food Rework)/in_game/common/static_modifiers/pp_variable_harvest_modifiers.txt"
+scripted_effects = "mod/Prosper or Perish (Population Growth & Food Rework)/in_game/common/scripted_effects/pp_variable_harvest_effects.txt"
+modifier_localization = "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/localization/english/pp_variable_harvest_modifiers_l_english.yml"
+location_modifiers = "mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/common/static_modifiers/pp_location_modifiers.txt"
+
+[derivation]
+high_positive_share = 0.20
+standard_positive_share = 0.05
+high_p90 = 0.25
+standard_p90 = 0.00
+
+[tier_multipliers]
+low = 0.60
+standard = 0.80
+high = 1.00
+
+[shock_weights]
+bad = 20
+neutral = 60
+good = 20
+
+[profiles.neutral]
+abysmal = 5
+very_poor = 10
+poor = 20
+normal = 30
+good = 20
+very_good = 10
+bountiful = 5
+
+[profiles.shock_bad]
+abysmal = 7
+very_poor = 13
+poor = 25
+normal = 30
+good = 15
+very_good = 7
+bountiful = 3
+
+[profiles.shock_good]
+abysmal = 3
+very_poor = 7
+poor = 15
+normal = 30
+good = 25
+very_good = 13
+bountiful = 7
+
+[profiles.memory_bad]
+abysmal = 6
+very_poor = 12
+poor = 24
+normal = 35
+good = 15
+very_good = 6
+bountiful = 2
+
+[profiles.memory_good]
+abysmal = 2
+very_poor = 6
+poor = 15
+normal = 35
+good = 24
+very_good = 12
+bountiful = 6
+
+[profiles.bad_persistent]
+abysmal = 9
+very_poor = 15
+poor = 26
+normal = 28
+good = 13
+very_good = 6
+bountiful = 3
+
+[profiles.good_persistent]
+abysmal = 3
+very_poor = 6
+poor = 13
+normal = 28
+good = 26
+very_good = 15
+bountiful = 9
+
+[severity_scores]
+abysmal = -3
+very_poor = -2
+poor = -1
+normal = 0
+good = 1
+very_good = 2
+bountiful = 3
+
+[food_consumption]
+abysmal = 0.30
+very_poor = 0.20
+poor = 0.11
+good = -0.11
+very_good = -0.20
+bountiful = -0.30
+
+[sensitivity_values.high]
+poor = 0.78
+very_poor = 1.17
+abysmal = 1.56
+
+[sensitivity_values.medium]
+poor = 0.49
+very_poor = 0.78
+abysmal = 0.98
+
+[sensitivity_values.fiber]
+poor = 0.20
+very_poor = 0.29
+abysmal = 0.39
+
+[sensitivity_values.low]
+poor = 0.30
+very_poor = 0.49
+abysmal = 0.58
+
+[sensitivity_values.horse]
+poor = 0.05
+very_poor = 0.09
+abysmal = 0.10
+
+[sensitivity_values.fallback]
+poor = 0.04
+very_poor = 0.11
+abysmal = 0.20
+
+[output_scaling]
+max_abs_output_modifier = 1.00
+
+[families.dry_cereals]
+goods = ["wheat", "millet", "maize"]
+
+[families.rice]
+goods = ["rice"]
+
+[families.field_crops]
+goods = ["legumes", "fiber_crops", "cotton", "tobacco", "dyes"]
+
+[families.orchards]
+goods = ["fruit", "olives", "wine"]
+
+[families.plantations]
+goods = ["cocoa", "coffee", "tea", "sugar", "silk", "incense", "saffron", "pepper", "cloves", "chili", "medicaments"]
+
+[families.resilient]
+goods = ["potato", "livestock", "wool", "beeswax", "horses", "elephants"]
+
+[families.wild_coastal]
+goods = ["fish", "fur", "wild_game"]
+
+[goods]
+wheat = { family = "dry_cereals", sensitivity = "high" }
+millet = { family = "dry_cereals", sensitivity = "high" }
+maize = { family = "dry_cereals", sensitivity = "high" }
+rice = { family = "rice", sensitivity = "high" }
+legumes = { family = "field_crops", sensitivity = "medium" }
+fiber_crops = { family = "field_crops", sensitivity = "fiber" }
+cotton = { family = "field_crops", sensitivity = "medium" }
+tobacco = { family = "field_crops", sensitivity = "medium" }
+dyes = { family = "field_crops", sensitivity = "medium" }
+fruit = { family = "orchards", sensitivity = "medium" }
+olives = { family = "orchards", sensitivity = "medium" }
+wine = { family = "orchards", sensitivity = "medium" }
+cocoa = { family = "plantations", sensitivity = "medium" }
+coffee = { family = "plantations", sensitivity = "medium" }
+tea = { family = "plantations", sensitivity = "medium" }
+sugar = { family = "plantations", sensitivity = "medium" }
+silk = { family = "plantations", sensitivity = "medium" }
+incense = { family = "plantations", sensitivity = "medium" }
+saffron = { family = "plantations", sensitivity = "medium" }
+pepper = { family = "plantations", sensitivity = "medium" }
+cloves = { family = "plantations", sensitivity = "medium" }
+chili = { family = "plantations", sensitivity = "medium" }
+medicaments = { family = "plantations", sensitivity = "medium" }
+potato = { family = "resilient", sensitivity = "low" }
+livestock = { family = "resilient", sensitivity = "low" }
+wool = { family = "resilient", sensitivity = "low" }
+beeswax = { family = "resilient", sensitivity = "low" }
+horses = { family = "resilient", sensitivity = "horse" }
+elephants = { family = "resilient", sensitivity = "low" }
+fish = { family = "wild_coastal", sensitivity = "fallback" }
+fur = { family = "wild_coastal", sensitivity = "fallback" }
+wild_game = { family = "wild_coastal", sensitivity = "fallback" }
+
+[reviewed_tier_overrides.western_europe]
+dry_cereals = "standard"
+rice = "low"
+field_crops = "standard"
+orchards = "standard"
+plantations = "low"
+resilient = "low"
+wild_coastal = "standard"
+
+[reviewed_tier_overrides.eastern_europe]
+dry_cereals = "high"
+rice = "low"
+field_crops = "standard"
+orchards = "low"
+plantations = "low"
+resilient = "standard"
+wild_coastal = "high"
+
+[reviewed_tier_overrides.north_asia]
+dry_cereals = "high"
+rice = "low"
+field_crops = "low"
+orchards = "low"
+plantations = "low"
+resilient = "high"
+wild_coastal = "high"
+
+[reviewed_tier_overrides.central_asia]
+dry_cereals = "high"
+rice = "standard"
+field_crops = "standard"
+orchards = "standard"
+plantations = "low"
+resilient = "high"
+wild_coastal = "standard"
+
+[reviewed_tier_overrides.east_asia]
+dry_cereals = "standard"
+rice = "low"
+field_crops = "standard"
+orchards = "standard"
+plantations = "standard"
+resilient = "low"
+wild_coastal = "standard"
+
+[reviewed_tier_overrides.south_asia]
+dry_cereals = "high"
+rice = "standard"
+field_crops = "high"
+orchards = "standard"
+plantations = "high"
+resilient = "standard"
+wild_coastal = "high"
+
+[reviewed_tier_overrides.south_east_asia]
+dry_cereals = "standard"
+rice = "standard"
+field_crops = "standard"
+orchards = "standard"
+plantations = "standard"
+resilient = "low"
+wild_coastal = "high"
+
+[reviewed_tier_overrides.middle_east]
+dry_cereals = "high"
+rice = "low"
+field_crops = "standard"
+orchards = "high"
+plantations = "standard"
+resilient = "standard"
+wild_coastal = "standard"
+
+[reviewed_tier_overrides.north_africa]
+dry_cereals = "high"
+rice = "low"
+field_crops = "standard"
+orchards = "high"
+plantations = "standard"
+resilient = "standard"
+wild_coastal = "standard"
+
+[reviewed_tier_overrides.west_africa]
+dry_cereals = "high"
+rice = "standard"
+field_crops = "high"
+orchards = "standard"
+plantations = "high"
+resilient = "standard"
+wild_coastal = "high"
+
+[reviewed_tier_overrides.east_africa]
+dry_cereals = "high"
+rice = "standard"
+field_crops = "standard"
+orchards = "standard"
+plantations = "standard"
+resilient = "high"
+wild_coastal = "high"
+
+[reviewed_tier_overrides.central_africa]
+dry_cereals = "standard"
+rice = "standard"
+field_crops = "standard"
+orchards = "standard"
+plantations = "standard"
+resilient = "standard"
+wild_coastal = "high"
+
+[reviewed_tier_overrides.southern_africa]
+dry_cereals = "high"
+rice = "low"
+field_crops = "standard"
+orchards = "standard"
+plantations = "low"
+resilient = "standard"
+wild_coastal = "standard"
+
+[reviewed_tier_overrides.north_america]
+dry_cereals = "high"
+rice = "standard"
+field_crops = "standard"
+orchards = "standard"
+plantations = "standard"
+resilient = "standard"
+wild_coastal = "high"
+
+[reviewed_tier_overrides.south_america]
+dry_cereals = "standard"
+rice = "standard"
+field_crops = "standard"
+orchards = "standard"
+plantations = "standard"
+resilient = "standard"
+wild_coastal = "high"
+
+[reviewed_tier_overrides.australasia]
+dry_cereals = "high"
+rice = "low"
+field_crops = "low"
+orchards = "low"
+plantations = "low"
+resilient = "standard"
+wild_coastal = "standard"
+
+[reviewed_tier_overrides.pacific_islands]
+dry_cereals = "low"
+rice = "low"
+field_crops = "low"
+orchards = "standard"
+plantations = "standard"
+resilient = "low"
+wild_coastal = "standard"

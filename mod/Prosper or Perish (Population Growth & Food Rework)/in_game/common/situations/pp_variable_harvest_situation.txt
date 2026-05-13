@@ -17,6 +17,12 @@
 	on_monthly = {
 		if = {
 			limit = {
+				NOT = { has_game_rule = pp_variable_harvest_disabled }
+			}
+			pp_migrate_regional_harvest_ui_cleanup = yes
+		}
+		if = {
+			limit = {
 				current_month = 9
 				NOT = { has_game_rule = pp_variable_harvest_disabled }
 			}
@@ -80,42 +86,150 @@
 		else_if = {
 			limit = {
 				has_owner = yes
-				has_location_modifier = abysmal_harvest_modifier
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_abysmal
+					has_location_modifier = pp_harvest_eastern_europe_abysmal
+					has_location_modifier = pp_harvest_north_asia_abysmal
+					has_location_modifier = pp_harvest_central_asia_abysmal
+					has_location_modifier = pp_harvest_east_asia_abysmal
+					has_location_modifier = pp_harvest_south_asia_abysmal
+					has_location_modifier = pp_harvest_south_east_asia_abysmal
+					has_location_modifier = pp_harvest_middle_east_abysmal
+					has_location_modifier = pp_harvest_north_africa_abysmal
+					has_location_modifier = pp_harvest_west_africa_abysmal
+					has_location_modifier = pp_harvest_east_africa_abysmal
+					has_location_modifier = pp_harvest_central_africa_abysmal
+					has_location_modifier = pp_harvest_southern_africa_abysmal
+					has_location_modifier = pp_harvest_north_america_abysmal
+					has_location_modifier = pp_harvest_south_america_abysmal
+					has_location_modifier = pp_harvest_australasia_abysmal
+					has_location_modifier = pp_harvest_pacific_islands_abysmal
+				}
 			}
 			value = define:NMapColors|MAP_COLOR_MIN
 		}
 		else_if = {
 			limit = {
 				has_owner = yes
-				has_location_modifier = very_poor_harvest_modifier
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_very_poor
+					has_location_modifier = pp_harvest_eastern_europe_very_poor
+					has_location_modifier = pp_harvest_north_asia_very_poor
+					has_location_modifier = pp_harvest_central_asia_very_poor
+					has_location_modifier = pp_harvest_east_asia_very_poor
+					has_location_modifier = pp_harvest_south_asia_very_poor
+					has_location_modifier = pp_harvest_south_east_asia_very_poor
+					has_location_modifier = pp_harvest_middle_east_very_poor
+					has_location_modifier = pp_harvest_north_africa_very_poor
+					has_location_modifier = pp_harvest_west_africa_very_poor
+					has_location_modifier = pp_harvest_east_africa_very_poor
+					has_location_modifier = pp_harvest_central_africa_very_poor
+					has_location_modifier = pp_harvest_southern_africa_very_poor
+					has_location_modifier = pp_harvest_north_america_very_poor
+					has_location_modifier = pp_harvest_south_america_very_poor
+					has_location_modifier = pp_harvest_australasia_very_poor
+					has_location_modifier = pp_harvest_pacific_islands_very_poor
+				}
 			}
 			value = define:NMapColors|MAP_COLOR_LOW
 		}
 		else_if = {
 			limit = {
 				has_owner = yes
-				has_location_modifier = poor_harvest_modifier
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_poor
+					has_location_modifier = pp_harvest_eastern_europe_poor
+					has_location_modifier = pp_harvest_north_asia_poor
+					has_location_modifier = pp_harvest_central_asia_poor
+					has_location_modifier = pp_harvest_east_asia_poor
+					has_location_modifier = pp_harvest_south_asia_poor
+					has_location_modifier = pp_harvest_south_east_asia_poor
+					has_location_modifier = pp_harvest_middle_east_poor
+					has_location_modifier = pp_harvest_north_africa_poor
+					has_location_modifier = pp_harvest_west_africa_poor
+					has_location_modifier = pp_harvest_east_africa_poor
+					has_location_modifier = pp_harvest_central_africa_poor
+					has_location_modifier = pp_harvest_southern_africa_poor
+					has_location_modifier = pp_harvest_north_america_poor
+					has_location_modifier = pp_harvest_south_america_poor
+					has_location_modifier = pp_harvest_australasia_poor
+					has_location_modifier = pp_harvest_pacific_islands_poor
+				}
 			}
 			value = define:NMapColors|MAP_COLOR_MID
 		}
 		else_if = {
 			limit = {
 				has_owner = yes
-				has_location_modifier = good_harvest_modifier
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_good
+					has_location_modifier = pp_harvest_eastern_europe_good
+					has_location_modifier = pp_harvest_north_asia_good
+					has_location_modifier = pp_harvest_central_asia_good
+					has_location_modifier = pp_harvest_east_asia_good
+					has_location_modifier = pp_harvest_south_asia_good
+					has_location_modifier = pp_harvest_south_east_asia_good
+					has_location_modifier = pp_harvest_middle_east_good
+					has_location_modifier = pp_harvest_north_africa_good
+					has_location_modifier = pp_harvest_west_africa_good
+					has_location_modifier = pp_harvest_east_africa_good
+					has_location_modifier = pp_harvest_central_africa_good
+					has_location_modifier = pp_harvest_southern_africa_good
+					has_location_modifier = pp_harvest_north_america_good
+					has_location_modifier = pp_harvest_south_america_good
+					has_location_modifier = pp_harvest_australasia_good
+					has_location_modifier = pp_harvest_pacific_islands_good
+				}
 			}
 			value = define:NMapColors|MAP_COLOR_HIGH
 		}
 		else_if = {
 			limit = {
 				has_owner = yes
-				has_location_modifier = very_good_harvest_modifier
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_very_good
+					has_location_modifier = pp_harvest_eastern_europe_very_good
+					has_location_modifier = pp_harvest_north_asia_very_good
+					has_location_modifier = pp_harvest_central_asia_very_good
+					has_location_modifier = pp_harvest_east_asia_very_good
+					has_location_modifier = pp_harvest_south_asia_very_good
+					has_location_modifier = pp_harvest_south_east_asia_very_good
+					has_location_modifier = pp_harvest_middle_east_very_good
+					has_location_modifier = pp_harvest_north_africa_very_good
+					has_location_modifier = pp_harvest_west_africa_very_good
+					has_location_modifier = pp_harvest_east_africa_very_good
+					has_location_modifier = pp_harvest_central_africa_very_good
+					has_location_modifier = pp_harvest_southern_africa_very_good
+					has_location_modifier = pp_harvest_north_america_very_good
+					has_location_modifier = pp_harvest_south_america_very_good
+					has_location_modifier = pp_harvest_australasia_very_good
+					has_location_modifier = pp_harvest_pacific_islands_very_good
+				}
 			}
 			value = define:NMapColors|MAP_COLOR_MAX
 		}
 		else_if = {
 			limit = {
 				has_owner = yes
-				has_location_modifier = bountiful_harvest_modifier
+				OR = {
+					has_location_modifier = pp_harvest_western_europe_bountiful
+					has_location_modifier = pp_harvest_eastern_europe_bountiful
+					has_location_modifier = pp_harvest_north_asia_bountiful
+					has_location_modifier = pp_harvest_central_asia_bountiful
+					has_location_modifier = pp_harvest_east_asia_bountiful
+					has_location_modifier = pp_harvest_south_asia_bountiful
+					has_location_modifier = pp_harvest_south_east_asia_bountiful
+					has_location_modifier = pp_harvest_middle_east_bountiful
+					has_location_modifier = pp_harvest_north_africa_bountiful
+					has_location_modifier = pp_harvest_west_africa_bountiful
+					has_location_modifier = pp_harvest_east_africa_bountiful
+					has_location_modifier = pp_harvest_central_africa_bountiful
+					has_location_modifier = pp_harvest_southern_africa_bountiful
+					has_location_modifier = pp_harvest_north_america_bountiful
+					has_location_modifier = pp_harvest_south_america_bountiful
+					has_location_modifier = pp_harvest_australasia_bountiful
+					has_location_modifier = pp_harvest_pacific_islands_bountiful
+				}
 			}
 			value = define:NMapColors|MAP_COLOR_TOP
 		}
@@ -144,11 +258,15 @@
 		desc = "LEGEND_KEY_VERY_GOOD_HARVEST"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
-	legend_key = { 
+	legend_key = {
 		desc = "LEGEND_KEY_BOUNTIFUL_GOOD_HARVEST"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
-	legend_key = { 
+	legend_key = {
+		desc = "LEGEND_KEY_AVERAGE_HARVEST"
+		color = define:NMapColors|DEFAULT_COLOR
+	}
+	legend_key = {
 		desc = "LEGEND_KEY_STARVING"
 		color = define:NMapColors|POPULATION_STARVING_COLOR_STRIPE
 	}
