@@ -40,6 +40,7 @@ HARVEST_LOCALIZATION = (
 EUROPEDIA_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_europedia_l_english.yml"
 SITUATION_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_situations_l_english.yml"
 MODIFIER_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_modifiers_l_english.yml"
+ENCYCLOPEDIA_LATERALVIEW = MOD_ROOT / "in_game" / "gui" / "encyclopedia_lateralview.gui"
 AGENTS = ROOT / "AGENTS.md"
 
 
@@ -280,6 +281,13 @@ def test_variable_harvest_situation_text_uses_plain_formatter_text() -> None:
     assert 'desc = "LEGEND_KEY_FOOD_NEG"' not in situation_script
     assert "pp_harvest_province_is_starving_tt" in situation_text
     assert "PP_HARVEST_LEGEND_KEY_FOOD_NEG" in situation_text
+
+
+def test_variable_harvest_situation_gui_does_not_use_formatter_as_default_style() -> None:
+    gui_text = ENCYCLOPEDIA_LATERALVIEW.read_text(encoding="utf-8-sig")
+
+    assert 'default_format = "#' not in gui_text
+    assert 'default_format = "yellow_titles"' in gui_text
 
 
 def test_variable_harvest_generated_regions_cover_land_subcontinents() -> None:
