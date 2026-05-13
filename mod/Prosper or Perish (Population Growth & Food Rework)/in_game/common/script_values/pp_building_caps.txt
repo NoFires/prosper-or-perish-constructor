@@ -149,7 +149,7 @@ farm_capacity_remaining = {
 	add = {
 		desc = "BUILDING_LEVEL_AVAILABLE_SPACE"
 		value = non_farm_building_levels
-		multiply = -0.1
+		multiply = -0.05
 	}
 	add = {
 		desc = "BUILDING_LEVEL_FARM_SPACE_USED"

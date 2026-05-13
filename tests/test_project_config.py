@@ -249,7 +249,7 @@ def test_farm_capacity_remaining_tracks_urbanization_and_farm_space() -> None:
 
     required_remaining = (
         "add = farm_gross_capacity",
-        'desc = "BUILDING_LEVEL_AVAILABLE_SPACE"\n\t\tvalue = non_farm_building_levels\n\t\tmultiply = -0.1',
+        'desc = "BUILDING_LEVEL_AVAILABLE_SPACE"\n\t\tvalue = non_farm_building_levels\n\t\tmultiply = -0.05',
         'desc = "BUILDING_LEVEL_FARM_SPACE_USED"\n\t\tvalue = land_farm_building_levels\n\t\tmultiply = -1',
     )
     missing = [snippet for snippet in required_remaining if snippet not in remaining_block]
