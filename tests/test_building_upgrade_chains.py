@@ -655,8 +655,8 @@ def test_clay_sand_and_stone_quarry_upgrade_chains_are_explicit_and_unlockable()
             if tier == 0:
                 assert "obsolete =" not in body
             else:
-                previous = chain[tier - 1][0]
-                assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
+                obsolete_entries = re.findall(r"^\s*obsolete\s*=\s*([A-Za-z0-9_]+)\s*$", body, flags=re.M)
+                assert obsolete_entries == [previous_key for previous_key, _ in chain[:tier]]
                 assert raw["icon"]["output_dds"] == f"{key}.dds"
                 advancements = raw.get("advancements")
                 assert isinstance(advancements, list)
@@ -675,6 +675,7 @@ def test_rural_food_building_upgrade_chains_are_explicit() -> None:
         ],
         "farming_village": [
             ("farming_village", None),
+            ("farming_village_rotations", "pp_farming_village_rotations"),
             ("model_farm", "pp_model_farm"),
         ],
         "forest_village": [

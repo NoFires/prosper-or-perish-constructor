@@ -3,7 +3,7 @@
 TRY_INJECT:crown_estate = {
 	power = {
 		food_purchase_cost = 0.85
-		building_upkeep_costs = 0.20
+		building_upkeep_costs = 0.50
 	}
 }
 

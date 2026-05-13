@@ -73,6 +73,9 @@ pp_enclosed_sheep_walks_price_cost_modifier = {
 pp_engineered_brine_saltworks_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
+pp_farming_village_rotations_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
 pp_gem_gravel_pit_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }

@@ -565,3 +565,11 @@ pp_salt_mine_price_cost_modifier={
 		category=country
 	}
 }
+
+pp_farming_village_rotations_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
