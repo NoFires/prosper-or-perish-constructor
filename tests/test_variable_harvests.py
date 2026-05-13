@@ -253,9 +253,19 @@ def test_variable_harvest_localization_is_player_facing_and_value_free() -> None
 
     assert "Localization is player-facing in-game text" in rule_text
     assert "Do not hardcode balance values in localization" in rule_text
+    assert "unsupported formatter tags spam" in rule_text
     assert "broad harvest areas" in europedia_text
     assert "each [region|e] inside it still receives its own harvest result" in europedia_text
     assert "without forcing every region to share the same outcome" in europedia_text
+
+
+def test_variable_harvest_situation_text_uses_plain_formatter_text() -> None:
+    generated_text = HARVEST_LOCALIZATION.read_text(encoding="utf-8-sig")
+    situation_text = "\n".join(_situation_localization_lines(EUROPEDIA_LOCALIZATION))
+    unsupported_link_pattern = re.compile(r"\[[^\]]+\|[eElL]\]")
+
+    assert not unsupported_link_pattern.search(generated_text)
+    assert not unsupported_link_pattern.search(situation_text)
 
 
 def test_variable_harvest_generated_regions_cover_land_subcontinents() -> None:
@@ -331,6 +341,26 @@ def _harvest_localization_lines(path: Path) -> list[str]:
         "game_concept_good_harvest_desc:",
         "game_concept_very_good_harvest_desc:",
         "game_concept_bountiful_harvest_desc:",
+    )
+    return [
+        line
+        for line in path.read_text(encoding="utf-8-sig").splitlines()
+        if line.startswith(prefixes)
+    ]
+
+
+def _situation_localization_lines(path: Path) -> list[str]:
+    prefixes = (
+        "harvest_situation:",
+        "harvest_situation_desc:",
+        "harvest_situation_monthly:",
+        "LEGEND_KEY_ABYSMAL_HARVEST:",
+        "LEGEND_KEY_VERY_POOR_HARVEST:",
+        "LEGEND_KEY_POOR_HARVEST:",
+        "LEGEND_KEY_GOOD_HARVEST:",
+        "LEGEND_KEY_VERY_GOOD_HARVEST:",
+        "LEGEND_KEY_BOUNTIFUL_GOOD_HARVEST:",
+        "LEGEND_KEY_AVERAGE_HARVEST:",
     )
     return [
         line

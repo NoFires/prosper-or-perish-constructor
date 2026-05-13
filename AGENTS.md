@@ -19,3 +19,4 @@
 - Localization is player-facing in-game text, not implementation notes or a restatement of user instructions.
 - Do not hardcode balance values in localization when a modifier, scripted value, building tooltip, or generated modifier effect can display the current value.
 - Explain what the player should understand and where to inspect effects; let modifiers carry exact changing numbers.
+- Use plain text in situation panes and generated static-modifier descriptions unless that target UI is verified to support inline concept links; unsupported formatter tags spam `error.log`.

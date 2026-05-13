@@ -66,3 +66,4 @@ When reporting results, mention the exact `ppc` command used and summarize the i
 - Treat localization as player-facing in-game text, not developer notes or a restatement of requested implementation details.
 - Do not hardcode balance values in localization when a modifier, scripted value, building tooltip, or generated modifier effect can show the current value.
 - Write localization around what the player sees, what it means, and where to inspect the effects; let modifiers carry exact changing numbers.
+- Use plain text in situation panes and generated static-modifier descriptions unless that target UI is verified to support inline concept links; unsupported formatter tags spam `error.log`.

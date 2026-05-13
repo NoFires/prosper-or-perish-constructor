@@ -456,7 +456,7 @@ def _write_localization(config: dict[str, Any]) -> None:
             lines.append(f'  STATIC_MODIFIER_NAME_{modifier}: "{SEVERITY_LABELS[severity]}: {label}"')
             lines.append(
                 f'  STATIC_MODIFIER_DESC_{modifier}: "{SEVERITY_DESCRIPTIONS[severity]} '
-                f"{label}. This [location|e]'s harvest modifier shows the affected goods; "
+                f"{label}. This location's harvest modifier shows the affected goods; "
                 'an average harvest leaves no harvest modifier."'
             )
     path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8-sig")
