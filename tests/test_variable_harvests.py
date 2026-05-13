@@ -38,6 +38,7 @@ HARVEST_LOCALIZATION = (
     / "pp_variable_harvest_modifiers_l_english.yml"
 )
 EUROPEDIA_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_europedia_l_english.yml"
+SITUATION_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_situations_l_english.yml"
 MODIFIER_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_modifiers_l_english.yml"
 AGENTS = ROOT / "AGENTS.md"
 
@@ -261,11 +262,24 @@ def test_variable_harvest_localization_is_player_facing_and_value_free() -> None
 
 def test_variable_harvest_situation_text_uses_plain_formatter_text() -> None:
     generated_text = HARVEST_LOCALIZATION.read_text(encoding="utf-8-sig")
-    situation_text = "\n".join(_situation_localization_lines(EUROPEDIA_LOCALIZATION))
-    unsupported_link_pattern = re.compile(r"\[[^\]]+\|[eElL]\]")
+    situation_script = HARVEST_SITUATION.read_text(encoding="utf-8-sig")
+    situation_text = "\n".join(
+        _situation_localization_lines(EUROPEDIA_LOCALIZATION)
+        + _situation_localization_lines(SITUATION_LOCALIZATION)
+    )
+    unsupported_link_pattern = re.compile(r"\[[^\]]+\|[eElL]\]|\[Link\(")
+    lowercase_formatter_pattern = re.compile(r"#[a-z][A-Za-z_]*")
 
     assert not unsupported_link_pattern.search(generated_text)
     assert not unsupported_link_pattern.search(situation_text)
+    assert not lowercase_formatter_pattern.search(situation_text)
+    assert "custom_tooltip = province_is_starving_tt" not in situation_script
+    assert "custom_tooltip = market_negative_food_balance_tt" not in situation_script
+    assert "custom_tooltip = affected_by_extended_winters_tt" not in situation_script
+    assert 'desc = "LEGEND_KEY_STARVING"' not in situation_script
+    assert 'desc = "LEGEND_KEY_FOOD_NEG"' not in situation_script
+    assert "pp_harvest_province_is_starving_tt" in situation_text
+    assert "PP_HARVEST_LEGEND_KEY_FOOD_NEG" in situation_text
 
 
 def test_variable_harvest_generated_regions_cover_land_subcontinents() -> None:
@@ -351,6 +365,13 @@ def _harvest_localization_lines(path: Path) -> list[str]:
 
 def _situation_localization_lines(path: Path) -> list[str]:
     prefixes = (
+        "pp_mod_welcome_situation:",
+        "pp_mod_welcome_situation_desc:",
+        "pp_harvest_province_is_starving_tt:",
+        "pp_harvest_market_negative_food_balance_tt:",
+        "pp_harvest_affected_by_extended_winters_tt:",
+        "PP_HARVEST_LEGEND_KEY_STARVING:",
+        "PP_HARVEST_LEGEND_KEY_FOOD_NEG:",
         "harvest_situation:",
         "harvest_situation_desc:",
         "harvest_situation_monthly:",
@@ -363,9 +384,9 @@ def _situation_localization_lines(path: Path) -> list[str]:
         "LEGEND_KEY_AVERAGE_HARVEST:",
     )
     return [
-        line
+        line.strip()
         for line in path.read_text(encoding="utf-8-sig").splitlines()
-        if line.startswith(prefixes)
+        if line.strip().startswith(prefixes)
     ]
 
 
