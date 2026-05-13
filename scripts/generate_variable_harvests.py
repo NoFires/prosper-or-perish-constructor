@@ -26,7 +26,6 @@ SEVERITIES = (
 ACTIVE_SEVERITIES = tuple(severity for severity in SEVERITIES if severity != "normal")
 BAD_MEMORY_MARKERS = ("abysmal", "very_poor", "poor")
 GOOD_MEMORY_MARKERS = ("good", "very_good", "bountiful")
-MIGRATION_FLAG = "pp_regional_harvest_ui_cleanup_migrated"
 SEVERITY_LABELS = {
     "abysmal": "Failed Harvest",
     "very_poor": "Bad Harvest",
@@ -42,24 +41,6 @@ SEVERITY_DESCRIPTIONS = {
     "good": "A strong harvest is helping",
     "very_good": "An excellent harvest is lifting",
     "bountiful": "An exceptional harvest is blessing",
-}
-FAMILY_LABELS = {
-    "dry_cereals": "Grain",
-    "rice": "Rice",
-    "field_crops": "Field Crops",
-    "orchards": "Orchard Crops",
-    "plantations": "Plantation Crops",
-    "resilient": "Hardy Crops and Herds",
-    "wild_coastal": "Coastal and Wild Foods",
-}
-FAMILY_DESCRIPTIONS = {
-    "dry_cereals": "grain goods",
-    "rice": "rice",
-    "field_crops": "field crops",
-    "orchards": "orchard goods",
-    "plantations": "plantation goods",
-    "resilient": "hardy crops and herds",
-    "wild_coastal": "coastal and wild foods",
 }
 POSITIVE_SEVERITY_TO_BASE = {
     "good": "poor",
@@ -256,27 +237,6 @@ def _write_static_modifiers(
         for severity in ACTIVE_SEVERITIES:
             lines.extend(_combined_modifier_lines(subcontinent, severity, tiers, config, output_scale))
 
-    lines.append("# Legacy modifiers retained only so old saves can be migrated cleanly.")
-    for severity in ACTIVE_SEVERITIES:
-        lines.extend(_legacy_marker_modifier_lines(severity, config))
-
-    lines.append("# Legacy subcontinent and crop-family output modifiers.")
-    for subcontinent in config["subcontinents"]:
-        lines.append(f"# {subcontinent}")
-        for family in config["families"]:
-            tier = tiers[subcontinent][family]
-            for severity in ACTIVE_SEVERITIES:
-                lines.extend(
-                    _legacy_family_modifier_lines(
-                        subcontinent,
-                        family,
-                        severity,
-                        tier,
-                        config,
-                        output_scale,
-                    )
-                )
-
     path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8-sig")
 
 
@@ -300,39 +260,6 @@ def _combined_modifier_lines(
         for good in family_config["goods"]:
             value = _modifier_value_for_good(good, severity, multiplier, config, output_scale)
             lines.append(f"\tlocal_{good}_output_modifier = {_format_number(value)}")
-    lines.extend(["}", ""])
-    return lines
-
-
-def _legacy_marker_modifier_lines(severity: str, config: dict[str, Any]) -> list[str]:
-    lines = [
-        f"{severity}_harvest_modifier = {{",
-        "\tgame_data = { category = location }",
-    ]
-    value = config["food_consumption"].get(severity)
-    if value is not None:
-        lines.append(f"\tlocal_peasants_food_consumption = {_format_number(value)}")
-    lines.extend(["}", ""])
-    return lines
-
-
-def _legacy_family_modifier_lines(
-    subcontinent: str,
-    family: str,
-    severity: str,
-    tier: str,
-    config: dict[str, Any],
-    output_scale: float,
-) -> list[str]:
-    modifier = f"pp_harvest_{subcontinent}_{family}_{severity}"
-    lines = [
-        f"{modifier} = {{",
-        "\tgame_data = { category = location }",
-    ]
-    multiplier = config["tier_multipliers"][tier]
-    for good in config["families"][family]["goods"]:
-        value = _modifier_value_for_good(good, severity, multiplier, config, output_scale)
-        lines.append(f"\tlocal_{good}_output_modifier = {_format_number(value)}")
     lines.extend(["}", ""])
     return lines
 
@@ -407,8 +334,6 @@ def _write_scripted_effects(config: dict[str, Any], region_map: dict[str, list[s
     for shock in config["shock_weights"]:
         lines.extend(_shock_router_lines(shock))
 
-    lines.extend(_migration_lines(config, region_map))
-
     for profile in config["profiles"]:
         lines.extend(_profile_roll_lines(profile, config))
 
@@ -450,67 +375,6 @@ def _memory_trigger_lines(markers: tuple[str, ...], tabs: int) -> list[str]:
     for marker in markers:
         lines.append(f"{grandchild}has_location_modifier = pp_harvest_$subcontinent$_{marker}")
     lines.extend([f"{child}}}", f"{indent}}}"])
-    return lines
-
-
-def _migration_lines(config: dict[str, Any], region_map: dict[str, list[str]]) -> list[str]:
-    lines = [
-        "pp_migrate_regional_harvest_ui_cleanup = {",
-        "\tif = {",
-        f"\t\tlimit = {{ NOT = {{ has_global_variable = {MIGRATION_FLAG} }} }}",
-    ]
-    for subcontinent in region_map:
-        lines.append(f"\t\tpp_migrate_{subcontinent}_harvest_ui_cleanup = yes")
-    lines.extend(
-        [
-            "\t\tset_global_variable = {",
-            f"\t\t\tname = {MIGRATION_FLAG}",
-            "\t\t\tvalue = yes",
-            "\t\t}",
-            "\t}",
-            "}",
-            "",
-        ]
-    )
-
-    for subcontinent, regions in region_map.items():
-        lines.append(f"pp_migrate_{subcontinent}_harvest_ui_cleanup = {{")
-        for region in regions:
-            lines.extend(
-                [
-                    f"\tregion:{region} = {{",
-                    f"\t\tpp_migrate_region_harvest_ui_cleanup = {{ subcontinent = {subcontinent} }}",
-                    "\t}",
-                ]
-            )
-        lines.extend(["}", ""])
-
-    lines.append("pp_migrate_region_harvest_ui_cleanup = {")
-    first = True
-    for severity in ACTIVE_SEVERITIES:
-        keyword = "if" if first else "else_if"
-        first = False
-        lines.extend(
-            [
-                f"\t{keyword} = {{",
-                "\t\tlimit = {",
-                "\t\t\tany_location_in_region = {",
-                f"\t\t\t\thas_location_modifier = {severity}_harvest_modifier",
-                "\t\t\t}",
-                "\t\t}",
-                f"\t\tpp_apply_region_harvest_outcome = {{ subcontinent = $subcontinent$ severity = {severity} }}",
-                "\t}",
-            ]
-        )
-    lines.extend(
-        [
-            "\telse = {",
-            "\t\tclear_legacy_variable_harvest_effects_in_region = { subcontinent = $subcontinent$ }",
-            "\t}",
-            "}",
-            "",
-        ]
-    )
     return lines
 
 
@@ -565,32 +429,7 @@ def _clear_lines(config: dict[str, Any]) -> list[str]:
     ]
     for severity in ACTIVE_SEVERITIES:
         lines.append(f"\t\tremove_location_modifier = pp_harvest_$subcontinent$_{severity}")
-    lines.extend(_legacy_remove_lines(config))
     lines.extend(["\t}", "}", ""])
-
-    lines.extend(
-        [
-            "clear_legacy_variable_harvest_effects_in_region = {",
-            "\tevery_location_in_region = {",
-            "\t\tlimit = { is_ownable = yes }",
-            *_legacy_remove_lines(config),
-            "\t}",
-            "}",
-            "",
-        ]
-    )
-    return lines
-
-
-def _legacy_remove_lines(config: dict[str, Any]) -> list[str]:
-    lines: list[str] = []
-    for severity in ACTIVE_SEVERITIES:
-        lines.append(f"\t\tremove_location_modifier = {severity}_harvest_modifier")
-    for family in config["families"]:
-        for severity in ACTIVE_SEVERITIES:
-            lines.append(
-                f"\t\tremove_location_modifier = pp_harvest_$subcontinent$_{family}_{severity}"
-            )
     return lines
 
 
@@ -620,23 +459,6 @@ def _write_localization(config: dict[str, Any]) -> None:
                 f"{label}. This [location|e]'s harvest modifier shows the affected goods; "
                 'an average harvest leaves no harvest modifier."'
             )
-    lines.append("  # Fallback localization for retained save-migration modifiers.")
-    for subcontinent in config["subcontinents"]:
-        label = _display_name(subcontinent)
-        for family in config["families"]:
-            family_label = FAMILY_LABELS.get(family, _display_name(family))
-            family_description = FAMILY_DESCRIPTIONS.get(family, "farmed goods")
-            for severity in ACTIVE_SEVERITIES:
-                modifier = f"pp_harvest_{subcontinent}_{family}_{severity}"
-                lines.append(
-                    f'  STATIC_MODIFIER_NAME_{modifier}: "{SEVERITY_LABELS[severity]}: '
-                    f'{label} {family_label}"'
-                )
-                lines.append(
-                    f'  STATIC_MODIFIER_DESC_{modifier}: "{SEVERITY_DESCRIPTIONS[severity]} '
-                    f"{label}, affecting {family_description}. This [location|e]'s harvest "
-                    'modifier shows the affected goods; an average harvest leaves no harvest modifier."'
-                )
     path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8-sig")
 
 

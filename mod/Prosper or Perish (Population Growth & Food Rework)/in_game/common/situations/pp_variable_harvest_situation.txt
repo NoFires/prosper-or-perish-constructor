@@ -17,12 +17,6 @@
 	on_monthly = {
 		if = {
 			limit = {
-				NOT = { has_game_rule = pp_variable_harvest_disabled }
-			}
-			pp_migrate_regional_harvest_ui_cleanup = yes
-		}
-		if = {
-			limit = {
 				current_month = 9
 				NOT = { has_game_rule = pp_variable_harvest_disabled }
 			}

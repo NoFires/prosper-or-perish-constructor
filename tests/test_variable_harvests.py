@@ -12,7 +12,6 @@ from eu5gameparser.domain.eu5 import load_eu5_data
 from scripts.generate_variable_harvests import (
     ACTIVE_SEVERITIES,
     LAND_SUPER_REGIONS,
-    MIGRATION_FLAG,
     PROFILE,
     ROOT,
     _regions_by_subcontinent,
@@ -39,6 +38,7 @@ HARVEST_LOCALIZATION = (
     / "pp_variable_harvest_modifiers_l_english.yml"
 )
 EUROPEDIA_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_europedia_l_english.yml"
+MODIFIER_LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_modifiers_l_english.yml"
 AGENTS = ROOT / "AGENTS.md"
 
 
@@ -173,21 +173,29 @@ def test_variable_harvest_effects_are_global_ownable_and_memory_based() -> None:
         assert f"modifier = pp_harvest_$subcontinent$_{family}_$severity$" not in text
 
 
-def test_variable_harvest_legacy_modifiers_are_migrated_and_cleared() -> None:
+def test_variable_harvest_has_no_legacy_modifiers_or_migration_paths() -> None:
     config = _load_config()
-    text = HARVEST_EFFECTS.read_text(encoding="utf-8-sig")
+    generated_text = "\n".join(
+        [
+            HARVEST_MODIFIERS.read_text(encoding="utf-8-sig"),
+            HARVEST_EFFECTS.read_text(encoding="utf-8-sig"),
+            HARVEST_SITUATION.read_text(encoding="utf-8-sig"),
+            HARVEST_LOCALIZATION.read_text(encoding="utf-8-sig"),
+            MODIFIER_LOCALIZATION.read_text(encoding="utf-8-sig"),
+        ]
+    )
     situation = HARVEST_SITUATION.read_text(encoding="utf-8-sig")
 
-    assert "pp_migrate_regional_harvest_ui_cleanup = yes" in situation
-    assert "pp_migrate_regional_harvest_ui_cleanup = {" in text
-    assert MIGRATION_FLAG in text
-    assert "clear_legacy_variable_harvest_effects_in_region = {" in text
-    assert "has_location_modifier = abysmal_harvest_modifier" in text
-    assert "remove_location_modifier = abysmal_harvest_modifier" in text
-    assert "remove_location_modifier = bountiful_harvest_modifier" in text
-    for family in config["families"]:
-        assert f"remove_location_modifier = pp_harvest_$subcontinent$_{family}_abysmal" in text
-        assert f"remove_location_modifier = pp_harvest_$subcontinent$_{family}_bountiful" in text
+    assert "pp_migrate_regional_harvest_ui_cleanup = yes" not in situation
+    assert "legacy" not in generated_text.lower()
+    assert "migrate" not in generated_text.lower()
+    assert "clear_legacy_variable_harvest_effects_in_region" not in generated_text
+    family_names = "|".join(re.escape(family) for family in config["families"])
+    severity_names = "|".join(ACTIVE_SEVERITIES)
+    family_pattern = re.compile(rf"pp_harvest_[a-z_]+_({family_names})_({severity_names})")
+    assert not family_pattern.search(generated_text)
+    for severity in ACTIVE_SEVERITIES:
+        assert f"{severity}_harvest_modifier" not in generated_text
 
 
 def test_variable_harvest_combined_modifiers_are_localized() -> None:
