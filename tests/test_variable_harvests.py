@@ -166,7 +166,10 @@ def test_variable_harvest_effects_are_global_ownable_and_memory_based() -> None:
     assert "pp_harvest_$subcontinent$_normal" not in text
     assert "has_location_modifier = pp_harvest_$subcontinent$_abysmal" in text
     assert "has_location_modifier = pp_harvest_$subcontinent$_bountiful" in text
-    assert "LEGEND_KEY_AVERAGE_HARVEST" in situation
+    assert "PP_HARVEST_LEGEND_KEY_AVERAGE" in situation
+    assert 'desc = "LEGEND_KEY_' not in situation
+    for severity in ACTIVE_SEVERITIES:
+        assert f'PP_HARVEST_LEGEND_KEY_{severity.upper()}' in situation
     for subcontinent in config["subcontinents"]:
         assert f"sub_continent:{subcontinent}" in text
         assert f"has_location_modifier = pp_harvest_{subcontinent}_abysmal" in situation
@@ -279,7 +282,10 @@ def test_variable_harvest_situation_text_uses_plain_formatter_text() -> None:
     assert "custom_tooltip = affected_by_extended_winters_tt" not in situation_script
     assert 'desc = "LEGEND_KEY_STARVING"' not in situation_script
     assert 'desc = "LEGEND_KEY_FOOD_NEG"' not in situation_script
+    assert 'desc = "LEGEND_KEY_' not in situation_script
     assert "pp_harvest_province_is_starving_tt" in situation_text
+    assert "PP_HARVEST_LEGEND_KEY_ABYSMAL" in situation_text
+    assert "PP_HARVEST_LEGEND_KEY_AVERAGE" in situation_text
     assert "PP_HARVEST_LEGEND_KEY_FOOD_NEG" in situation_text
 
 
@@ -378,18 +384,18 @@ def _situation_localization_lines(path: Path) -> list[str]:
         "pp_harvest_province_is_starving_tt:",
         "pp_harvest_market_negative_food_balance_tt:",
         "pp_harvest_affected_by_extended_winters_tt:",
+        "PP_HARVEST_LEGEND_KEY_ABYSMAL:",
+        "PP_HARVEST_LEGEND_KEY_VERY_POOR:",
+        "PP_HARVEST_LEGEND_KEY_POOR:",
+        "PP_HARVEST_LEGEND_KEY_GOOD:",
+        "PP_HARVEST_LEGEND_KEY_VERY_GOOD:",
+        "PP_HARVEST_LEGEND_KEY_BOUNTIFUL:",
+        "PP_HARVEST_LEGEND_KEY_AVERAGE:",
         "PP_HARVEST_LEGEND_KEY_STARVING:",
         "PP_HARVEST_LEGEND_KEY_FOOD_NEG:",
         "harvest_situation:",
         "harvest_situation_desc:",
         "harvest_situation_monthly:",
-        "LEGEND_KEY_ABYSMAL_HARVEST:",
-        "LEGEND_KEY_VERY_POOR_HARVEST:",
-        "LEGEND_KEY_POOR_HARVEST:",
-        "LEGEND_KEY_GOOD_HARVEST:",
-        "LEGEND_KEY_VERY_GOOD_HARVEST:",
-        "LEGEND_KEY_BOUNTIFUL_GOOD_HARVEST:",
-        "LEGEND_KEY_AVERAGE_HARVEST:",
     )
     return [
         line.strip()

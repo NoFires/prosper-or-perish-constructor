@@ -232,32 +232,32 @@
 		}
 	}
 	
-	legend_key = { 
-		desc = "LEGEND_KEY_ABYSMAL_HARVEST"
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_ABYSMAL"
 		color = define:NMapColors|MAP_COLOR_MIN
 	}
-	legend_key = { 
-		desc = "LEGEND_KEY_VERY_POOR_HARVEST"
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_VERY_POOR"
 		color = define:NMapColors|MAP_COLOR_LOW
 	}
-	legend_key = { 
-		desc = "LEGEND_KEY_POOR_HARVEST"
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_POOR"
 		color = define:NMapColors|MAP_COLOR_MID
 	}
-	legend_key = { 
-		desc = "LEGEND_KEY_GOOD_HARVEST"
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_GOOD"
 		color = define:NMapColors|MAP_COLOR_HIGH
 	}
-	legend_key = { 
-		desc = "LEGEND_KEY_VERY_GOOD_HARVEST"
+	legend_key = {
+		desc = "PP_HARVEST_LEGEND_KEY_VERY_GOOD"
 		color = define:NMapColors|MAP_COLOR_MAX
 	}
 	legend_key = {
-		desc = "LEGEND_KEY_BOUNTIFUL_GOOD_HARVEST"
+		desc = "PP_HARVEST_LEGEND_KEY_BOUNTIFUL"
 		color = define:NMapColors|MAP_COLOR_TOP
 	}
 	legend_key = {
-		desc = "LEGEND_KEY_AVERAGE_HARVEST"
+		desc = "PP_HARVEST_LEGEND_KEY_AVERAGE"
 		color = define:NMapColors|DEFAULT_COLOR
 	}
 	legend_key = {

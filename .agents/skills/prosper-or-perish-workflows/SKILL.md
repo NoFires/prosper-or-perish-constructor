@@ -67,4 +67,5 @@ When reporting results, mention the exact `ppc` command used and summarize the i
 - Do not hardcode balance values in localization when a modifier, scripted value, building tooltip, or generated modifier effect can show the current value.
 - Write localization around what the player sees, what it means, and where to inspect the effects; let modifiers carry exact changing numbers.
 - Use plain text in situation panes and generated static-modifier descriptions unless that target UI is verified to support inline concept links; unsupported formatter tags spam `error.log`.
+- Use mod-owned plain localization keys for situation map legends rather than inherited or generic `LEGEND_KEY_*` keys; the legend UI is sensitive to formatter syntax.
 - In GUI files, do not prefix `default_format` style names with `#`; use the raw style key such as `yellow_titles` so the text formatter does not parse it as an inline tag.
