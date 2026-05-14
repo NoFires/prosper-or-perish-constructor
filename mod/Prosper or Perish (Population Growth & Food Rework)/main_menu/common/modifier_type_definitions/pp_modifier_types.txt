@@ -573,3 +573,11 @@ pp_farming_village_rotations_price_cost_modifier={
 		category=country
 	}
 }
+
+pp_water_sawmill_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}

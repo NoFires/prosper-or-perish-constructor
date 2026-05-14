@@ -143,18 +143,18 @@ pp_forest_base_capacity_value = {
 				raw_material = goods:wild_game
 			}
 		}
-		add = 4
+		add = 4.4
 	}
 	if = {
 		limit = { vegetation = forest }
-		add = 6
+		add = 6.6
 	}
 	else_if = {
 		limit = { vegetation = woods }
-		add = 4
+		add = 4.4
 	}
 	else_if = {
 		limit = { vegetation = jungle }
-		add = 3
+		add = 3.3
 	}
 }

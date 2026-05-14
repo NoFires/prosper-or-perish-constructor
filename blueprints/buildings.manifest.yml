@@ -44,6 +44,7 @@ enabled:
 - buildings/khmer_baray.yml
 - buildings/local_smelters.yml
 - buildings/lumber_mill.yml
+- buildings/water_sawmill.yml
 - buildings/lumber_mill_improved.yml
 - buildings/coal_mine.yml
 - buildings/coal_mine_improved.yml

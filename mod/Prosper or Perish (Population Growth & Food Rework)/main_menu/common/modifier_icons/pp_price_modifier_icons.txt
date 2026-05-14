@@ -211,3 +211,6 @@ pp_victualling_yard_price_cost_modifier = {
 pp_vineyard_estate_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
+pp_water_sawmill_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}

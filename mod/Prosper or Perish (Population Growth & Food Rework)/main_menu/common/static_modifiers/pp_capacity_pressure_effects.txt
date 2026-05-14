@@ -5,7 +5,7 @@
 	local_migration_attraction = 2
 	local_population_growth = 0
 	local_monthly_food_modifier = 0
-	local_monthly_food = 6
+	local_monthly_food = 5
 	local_chili_output_modifier = 0.45
 	local_cloves_output_modifier = 0.45
 	local_cocoa_output_modifier = 0.45
@@ -50,7 +50,7 @@ TRY_REPLACE:available_free_land = {
 	local_migration_attraction = 1
 	local_population_growth = 0
 	local_monthly_food_modifier = 0
-	local_monthly_food = 2.5
+	local_monthly_food = 2.0
 	local_chili_output_modifier = 0.23
 	local_cloves_output_modifier = 0.23
 	local_cocoa_output_modifier = 0.23
@@ -98,4 +98,5 @@ TRY_REPLACE:overpopulation = {
 	local_migration_speed = 0.0025
 	local_disease_resistance = -0.25
 	local_peasants_food_consumption = 0.10
+	local_population_growth = -0.0001
 }

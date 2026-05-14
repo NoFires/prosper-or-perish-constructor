@@ -1,0 +1,195 @@
+version: 2
+tag: water_sawmill
+output_tag: lumber_mill_hydraulic_sawmill
+upgrade_chain:
+  family: lumber_mill
+  tier: 1
+  previous: lumber_mill
+  next: lumber_mill_improved
+  unlock_advance: lumber_improvements_reformation
+building:
+  key: water_sawmill
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_water_sawmill_base_lumber
+    - name: slot_1
+      methods:
+        - pp_water_sawmill_no_primary
+        - pp_water_sawmill_sash_saw
+        - pp_water_sawmill_millrace_yards
+        - pp_water_sawmill_log_ponds
+    - name: slot_2
+      methods:
+        - pp_water_sawmill_no_crew_support
+        - pp_water_sawmill_extra_rations
+        - pp_water_sawmill_wound_salves
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = forest_max_level
+    pop_type = laborers
+    employment_size = 4
+    price = pp_water_sawmill_price
+    category = rgo_building_category
+    icon = water_sawmill
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    obsolete = lumber_mill
+    build_time = workshop_build_time
+
+    location_potential = {
+        OR = {
+            vegetation = woods
+            vegetation = forest
+            vegetation = jungle
+            raw_material = goods:lumber
+            raw_material = goods:fur
+            raw_material = goods:wild_game
+        }
+    }
+
+    allow = {
+        forest_capacity_available > 0
+    }
+
+    construction_demand = workshop_construction
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_water_sawmill_base_lumber = {
+            produced = lumber
+            output = 0.315
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_water_sawmill_no_primary = {
+            category = building_maintenance
+        }
+        pp_water_sawmill_sash_saw = {
+            produced = lumber
+            output = 4.620
+            tools = 1.30 # saw frame, gearing
+            horses = 0.35 # log hauling
+            victuals = 0.25 # saw crews
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_water_sawmill_millrace_yards = {
+            produced = lumber
+            output = 5.145
+            tools = 1.45 # waterwheel upkeep
+            horses = 0.45 # yard teams
+            victuals = 0.35 # mill hands
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_water_sawmill_log_ponds = {
+            produced = lumber
+            output = 5.200
+            tools = 1.40 # booms, saw upkeep
+            horses = 0.55 # log hauling
+            victuals = 0.45 # pond crews
+            paper = 0.05 # cutting records
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_water_sawmill_no_crew_support = {
+            category = building_maintenance
+        }
+        pp_water_sawmill_extra_rations = {
+            victuals = 2.45 # crew rations
+            produced = lumber
+            output = 4.200
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+        pp_water_sawmill_wound_salves = {
+            medicaments = 0.75 # injury treatment
+            produced = lumber
+            output = 0.551
+            debug_max_profit = 0
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_build_buildings_cost = -0.01
+        local_migration_attraction = 0.02
+        local_population_growth = -0.00005
+    }
+prices:
+  - key: pp_water_sawmill_price
+    body: |2-
+      {gold = 600}
+advancements:
+  - key: REPLACE:lumber_improvements_reformation
+    body: |2-
+      icon = water_sawmill
+      age = age_4_reformation
+      requires = construction_speed_reformation
+      unlock_production_method = pp_lumber_mill_timber_drives
+      unlock_building = water_sawmill
+      ai_weight = { add = 150 }
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_water_sawmill_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('water_sawmill')|e].
+    MODIFIER_TYPE_NAME_pp_water_sawmill_price_cost_modifier: Water Sawmill Cost
+    lumber_improvements_reformation: Water Sawmills
+    lumber_improvements_reformation_desc: Water-powered saw frames, millraces, and log landings let lumber crews saw boards more regularly while drawing logs from a wider forest hinterland.
+    pp_water_sawmill_base_lumber: Woodland Cutting
+    pp_water_sawmill_extra_rations: Extra Rations
+    pp_water_sawmill_log_ponds: Log Ponds
+    pp_water_sawmill_millrace_yards: Millrace Yards
+    pp_water_sawmill_no_crew_support: No Crew Support
+    pp_water_sawmill_no_primary: No Water Sawing
+    pp_water_sawmill_price: Water Sawmill Price
+    pp_water_sawmill_sash_saw: Sash Saw
+    pp_water_sawmill_wound_salves: Wound Salves
+    water_sawmill: Water Sawmill
+    water_sawmill_desc: Water sawmills use millraces and reciprocating saw frames to turn logs into boards. Log ponds and sawn-timber yards move woodland cutting toward regular lumber production.
+    water_sawmill_slot_0: Woodland Cutting
+    water_sawmill_slot_1: Water Sawing
+    water_sawmill_slot_2: Crew Support
+icon:
+  source_png: ../assets/icons/water_sawmill.png
+  output_dds: water_sawmill.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a water-powered sawmill, transparent background. Center a timber millrace and waterwheel driving a single vertical sash saw, stacked logs, fresh boards, log pond edge, and simple timber yard. Use readable painterly historical UI art, weathered wood, water accents, forest greens, no text, no frame, not photorealistic, not cartoonish.
+
+evaluation:
+  allow_rules:
+    amortization_months: Mid-chain lumber upgrade uses accepted high-payback rural producer tuning; revisit during the lumber-family payback pass.
+  production_methods:
+    pp_water_sawmill_base_lumber:
+      production_efficiency: 1.00
+      allow_rules:
+        amortization_months: Passive baseline is not the payback driver for the water sawmill tier.
+    pp_water_sawmill_no_primary:
+      production_efficiency: 1.00
+    pp_water_sawmill_sash_saw:
+      production_efficiency: 1.00
+    pp_water_sawmill_millrace_yards:
+      production_efficiency: 1.00
+    pp_water_sawmill_log_ponds:
+      production_efficiency: 1.00
+    pp_water_sawmill_no_crew_support:
+      production_efficiency: 1.00
+    pp_water_sawmill_extra_rations:
+      production_efficiency: 1.00
+    pp_water_sawmill_wound_salves:
+      production_efficiency: 1.00
+      allow_rules:
+        input_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary sawmill throughput.
+        output_throughput: Wound salves are an ancillary crew-recovery support method, intentionally smaller than primary sawmill throughput.
+        amortization_months: Wound salves are an ancillary crew-recovery support method, not a standalone payback driver for water sawmills.

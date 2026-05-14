@@ -236,6 +236,9 @@ forest_building_levels = {
 		value = "location_building_level(building_type:lumber_mill)"
 	}
 	add = {
+		value = "location_building_level(building_type:water_sawmill)"
+	}
+	add = {
 		value = "location_building_level(building_type:lumber_mill_improved)"
 	}
 }

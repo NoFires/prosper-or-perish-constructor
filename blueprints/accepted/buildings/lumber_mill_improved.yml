@@ -2,8 +2,8 @@
 tag: lumber_mill_improved
 upgrade_chain:
   family: lumber_mill
-  tier: 1
-  previous: lumber_mill
+  tier: 2
+  previous: water_sawmill
   next: null
   unlock_advance: lumber_improvements_absolutism
 building:
@@ -37,6 +37,7 @@ building:
     city = yes
     megalopolis = yes
     obsolete = lumber_mill
+    obsolete = water_sawmill
     build_time = workshop_build_time
 
     location_potential = {
@@ -63,7 +64,7 @@ building:
     unique_production_methods = {
         pp_lumber_mill_improved_base_lumber = {
             produced = lumber
-            output = 0.30
+            output = 0.315
             category = building_maintenance
         }
     }
@@ -74,16 +75,16 @@ building:
         pp_lumber_mill_improved_managed_stands = {
             tools = 0.188 # axes and camp upkeep
             produced = lumber
-            output = 0.45
+            output = 0.473
             category = building_maintenance
         }
         pp_lumber_mill_improved_forest_ordinances = {
             produced = lumber
-            output = 7.752
-            tools = 1.85
-            horses = 1.15
-            victuals = 0.75
-            paper = 0.10
+            output = 8.140
+            tools = 1.85 # saw frames, axes
+            horses = 1.15 # log hauling
+            victuals = 0.75 # saw crews
+            paper = 0.10 # harvest registers
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -93,9 +94,9 @@ building:
             category = building_maintenance
         }
         pp_lumber_mill_improved_wound_salves = {
-            medicaments = 1.00
+            medicaments = 1.00 # injury treatment
             produced = lumber
-            output = 0.70
+            output = 0.735
             debug_max_profit = 0
             category = building_maintenance
         }

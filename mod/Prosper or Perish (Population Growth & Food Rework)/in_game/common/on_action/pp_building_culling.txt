@@ -362,6 +362,17 @@ pp_cull_over_cap_buildings = {
 				}
 				change_building_level_in_location = { building = building_type:lumber_mill value = -1 }
 			}
+			# Water Sawmill
+			if = {
+				limit = {
+					forest_capacity_remaining < 0
+					location_building_level = {
+						building_type = building_type:water_sawmill
+						value > 0
+					}
+				}
+				change_building_level_in_location = { building = building_type:water_sawmill value = -1 }
+			}
 			# Improved Lumber Mill
 			if = {
 				limit = {

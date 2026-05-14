@@ -664,6 +664,42 @@ def test_clay_sand_and_stone_quarry_upgrade_chains_are_explicit_and_unlockable()
                 assert re.search(rf"^\s*unlock_building\s*=\s*{re.escape(key)}\s*$", advancement["body"], flags=re.M)
 
 
+def test_lumber_mill_upgrade_chain_is_explicit_and_unlockable() -> None:
+    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
+    enabled = set(manifest["enabled"])
+    chain = [
+        ("lumber_mill", None),
+        ("water_sawmill", "lumber_improvements_reformation"),
+        ("lumber_mill_improved", "lumber_improvements_absolutism"),
+    ]
+
+    for tier, (key, unlock_advance) in enumerate(chain):
+        raw = _load_blueprint(key)
+
+        assert f"buildings/{key}.yml" in enabled
+        assert raw["tag"] == key
+        assert raw["building"]["key"] == key
+        assert raw.get("upgrade_chain") == {
+            "family": "lumber_mill",
+            "tier": tier,
+            "previous": chain[tier - 1][0] if tier > 0 else None,
+            "next": chain[tier + 1][0] if tier + 1 < len(chain) else None,
+            "unlock_advance": unlock_advance,
+        }
+
+        body = raw["building"]["body"]
+        if tier == 0:
+            assert "obsolete =" not in body
+        else:
+            obsolete_entries = re.findall(r"^\s*obsolete\s*=\s*([A-Za-z0-9_]+)\s*$", body, flags=re.M)
+            assert obsolete_entries == [previous_key for previous_key, _ in chain[:tier]]
+            assert raw["icon"]["output_dds"] == f"{key}.dds"
+            advancements = raw.get("advancements")
+            assert isinstance(advancements, list)
+            advancement = next(item for item in advancements if item["key"].split(":")[-1] == unlock_advance)
+            assert re.search(rf"^\s*unlock_building\s*=\s*{re.escape(key)}\s*$", advancement["body"], flags=re.M)
+
+
 def test_rural_food_building_upgrade_chains_are_explicit() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])

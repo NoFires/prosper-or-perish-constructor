@@ -78,6 +78,7 @@ FOREST_CAP_BUILDINGS = (
     "forest_village",
     "managed_forest_village",
     "lumber_mill",
+    "water_sawmill",
     "lumber_mill_improved",
 )
 FISH_CAP_BLUEPRINTS = tuple(BUILDING_BLUEPRINT_ROOT / f"{key}.yml" for key in FISH_CAP_BUILDINGS)
@@ -99,6 +100,7 @@ EXCLUDED_FARM_CAP_BUILDINGS = (
     "forest_village",
     "managed_forest_village",
     "lumber_mill",
+    "water_sawmill",
     "lumber_mill_improved",
     "charcoal_maker",
     "improved_charcoal_maker",
@@ -556,11 +558,11 @@ def test_forest_capacity_uses_forest_rgo_rank_urbanization_and_used_levels() -> 
         "raw_material = goods:fur",
         "raw_material = goods:wild_game",
         "vegetation = forest",
-        "add = 6",
+        "add = 6.6",
         "vegetation = woods",
-        "add = 4",
+        "add = 4.4",
         "vegetation = jungle",
-        "add = 3",
+        "add = 3.3",
     ):
         assert snippet in base_block
 

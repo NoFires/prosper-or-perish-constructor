@@ -874,6 +874,31 @@ pp_remove_invalid_buildings = {
 			if = {
 				limit = {
 					location_building_level = {
+						building_type = building_type:water_sawmill
+						value > 0
+					}
+					NOT = {
+						OR = {
+							vegetation = woods
+							vegetation = forest
+							vegetation = jungle
+							raw_material = goods:lumber
+							raw_material = goods:fur
+							raw_material = goods:wild_game
+						}
+					}
+				}
+				change_building_level_in_location = {
+					building = building_type:water_sawmill
+					value = {
+						value = "location_building_level(building_type:water_sawmill)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
 						building_type = building_type:lumber_mill_improved
 						value > 0
 					}

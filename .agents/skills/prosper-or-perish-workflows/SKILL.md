@@ -57,6 +57,13 @@ uv run --project /mnt/c/Development/ProsperOrPerishConstructor ppc --repo /mnt/c
 - Do not put `TRY_REPLACE`, `REPLACE`, or `INJECT` inside `unique_production_methods`; those modes only apply to top-level common database entries.
 - After changing a building override, run `uv run eu5-orchestrator validate --project constructor.toml` and `uv run ppc test tests/test_project_config.py::test_replaced_buildings_do_not_reuse_vanilla_unique_method_names tests/test_project_config.py::test_constructor_building_methods_are_resolved_and_unique`.
 
+## Building Icon Style
+
+- Building icons must be generated as detailed historic bitmap cutouts: material-rich, painterly, three-quarter-view isolated buildings or production complexes with real period props and readable machinery/worksite details.
+- Use the approved `water_sawmill` and `lumber_mill_improved` icons as the reference style for new generated building icons.
+- Do not use SVG-like, flat-vector, UI-glyph, simple 2D symbol, or square scenic landscape styles for building icons.
+- Generate icon subjects on a perfectly flat magenta chroma-key background and remove it locally so the committed `source_png` has real alpha before writing the DDS output.
+
 ## Output Style
 
 When reporting results, mention the exact `ppc` command used and summarize the important pass/fail lines. If a command writes a graph or dashboard, report the path under `graphs/`, `docs/examples/`, or `artifacts/data/population_capacity/current_capacity_map/`.
