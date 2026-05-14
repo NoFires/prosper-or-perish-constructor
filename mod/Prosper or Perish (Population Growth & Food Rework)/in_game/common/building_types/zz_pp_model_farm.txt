@@ -14,7 +14,6 @@ rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
-obsolete = farming_village
 obsolete = farming_village_rotations
 forbidden_for_estates = yes
 ai_forbid_shutdown = no

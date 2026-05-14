@@ -243,6 +243,10 @@ def _load_blueprint(key: str) -> dict:
     return raw
 
 
+def _obsolete_entries(body: str) -> list[str]:
+    return re.findall(r"^\s*obsolete\s*=\s*([A-Za-z0-9_]+)\s*$", body, flags=re.M)
+
+
 def _has_salt_mine_marker(row: dict) -> bool:
     modifier = str(row.get("modifier") or "")
     if any(marker in modifier for marker in SALT_MINE_MODIFIERS):
@@ -371,11 +375,11 @@ def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
             }
 
             body = raw["building"]["body"]
-            obsolete_entries = re.findall(r"^\s*obsolete\s*=\s*([A-Za-z0-9_]+)\s*$", body, flags=re.M)
+            obsolete_entries = _obsolete_entries(body)
             if tier == 0:
                 assert obsolete_entries == []
             else:
-                assert obsolete_entries == [previous_key for previous_key, _ in chain[:tier]]
+                assert obsolete_entries == [chain[tier - 1][0]]
                 assert "icon" in raw, f"{key} must provide its own icon"
                 assert raw["icon"]["output_dds"] == f"{key}.dds"
 
@@ -654,8 +658,8 @@ def test_clay_sand_and_stone_quarry_upgrade_chains_are_explicit_and_unlockable()
             if tier == 0:
                 assert "obsolete =" not in body
             else:
-                obsolete_entries = re.findall(r"^\s*obsolete\s*=\s*([A-Za-z0-9_]+)\s*$", body, flags=re.M)
-                assert obsolete_entries == [previous_key for previous_key, _ in chain[:tier]]
+                obsolete_entries = _obsolete_entries(body)
+                assert obsolete_entries == [chain[tier - 1][0]]
                 assert raw["icon"]["output_dds"] == f"{key}.dds"
                 advancements = raw.get("advancements")
                 assert isinstance(advancements, list)
@@ -690,8 +694,8 @@ def test_lumber_mill_upgrade_chain_is_explicit_and_unlockable() -> None:
         if tier == 0:
             assert "obsolete =" not in body
         else:
-            obsolete_entries = re.findall(r"^\s*obsolete\s*=\s*([A-Za-z0-9_]+)\s*$", body, flags=re.M)
-            assert obsolete_entries == [previous_key for previous_key, _ in chain[:tier]]
+            obsolete_entries = _obsolete_entries(body)
+            assert obsolete_entries == [chain[tier - 1][0]]
             assert raw["icon"]["output_dds"] == f"{key}.dds"
             advancements = raw.get("advancements")
             assert isinstance(advancements, list)
@@ -779,27 +783,25 @@ def test_blueprint_upgrade_successors_load_after_obsolete_predecessors() -> None
     assert not offenders
 
 
-def test_enabled_blueprint_upgrade_successors_declare_obsolete_predecessors() -> None:
-    manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
-    enabled = {Path(entry).stem for entry in manifest["enabled"]}
-
+def test_accepted_building_upgrade_chains_obsolete_only_direct_predecessor() -> None:
     offenders: list[str] = []
-    for key in sorted(enabled):
-        raw = _load_blueprint(key)
+    for path in sorted((BLUEPRINT_ROOT / "buildings").glob("*.yml")):
+        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        assert isinstance(raw, dict)
+
         upgrade_chain = raw.get("upgrade_chain")
         if not upgrade_chain:
             continue
 
         body = raw["building"]["body"]
         previous = upgrade_chain.get("previous")
-        obsolete_match = re.search(r"^\s*obsolete\s*=\s*(?P<previous>[A-Za-z0-9_]+)\s*$", body, flags=re.M)
-        if previous is None:
-            if obsolete_match:
-                offenders.append(f"{key}: base tier declares obsolete = {obsolete_match.group('previous')}")
+        expected = [] if previous is None else [previous]
+        actual = _obsolete_entries(body)
+        if actual == expected:
             continue
 
-        if not re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M):
-            offenders.append(f"{key}: missing obsolete = {previous}")
+        key = raw.get("tag", path.stem)
+        offenders.append(f"{key}: expected obsolete {expected}, found {actual}")
 
     assert not offenders
 

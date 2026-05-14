@@ -11,7 +11,6 @@ rural_settlement = yes
 town = yes
 city = yes
 megalopolis = yes
-obsolete = bog_iron_smelter
 obsolete = bog_iron_smelter_blast_furnace
 build_time = manufactory_build_time
 
