@@ -4,7 +4,7 @@ upgrade_chain:
   family: lead_mine
   tier: 1
   previous: lead_mine
-  next: lead_mine_improved
+  next: lead_mine_cupola_smelting
   unlock_advance: bole_smelting
 building:
   key: lead_mine_bole_smelting

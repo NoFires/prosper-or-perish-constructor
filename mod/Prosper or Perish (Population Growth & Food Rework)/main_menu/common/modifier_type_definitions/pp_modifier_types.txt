@@ -246,14 +246,6 @@ pp_lead_mine_cupola_smelting_price_cost_modifier={
 	}
 }
 
-pp_lead_mine_improved_price_cost_modifier={
-	color=bad
-	percent=yes
-	game_data={
-		category=country
-	}
-}
-
 pp_lead_mine_price_cost_modifier={
 	color=bad
 	percent=yes

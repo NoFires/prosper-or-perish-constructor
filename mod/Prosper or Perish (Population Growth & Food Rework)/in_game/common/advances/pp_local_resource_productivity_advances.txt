@@ -131,7 +131,6 @@ REPLACE:lead_ore_dressing = {
 	icon = serbian_mining
 	requires = manufactories_advance
 	global_lead_output_modifier = 0.25
-	unlock_building = lead_mine_improved
 }
 
 REPLACE:bole_smelting = {

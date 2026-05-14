@@ -116,6 +116,11 @@ pp_fur_output_raw = {
 	multiply = market_access
 }
 
+pp_furniture_output_raw = {
+	value = "goods_output(goods:furniture)"
+	multiply = market_access
+}
+
 pp_gems_output_raw = {
 	value = "goods_output(goods:gems)"
 	multiply = market_access
@@ -186,6 +191,11 @@ pp_livestock_output_raw = {
 	multiply = market_access
 }
 
+pp_lumber_output_raw = {
+	value = "goods_output(goods:lumber)"
+	multiply = market_access
+}
+
 pp_maize_output_raw = {
 	value = "goods_output(goods:maize)"
 	multiply = market_access
@@ -248,6 +258,11 @@ pp_porcelain_output_raw = {
 
 pp_potato_output_raw = {
 	value = "goods_output(goods:potato)"
+	multiply = market_access
+}
+
+pp_pottery_output_raw = {
+	value = "goods_output(goods:pottery)"
 	multiply = market_access
 }
 

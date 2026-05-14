@@ -1243,6 +1243,51 @@ def test_salt_rgo_bonus_reduces_food_decay_without_affecting_saltpeter() -> None
     assert "local_food_decay_modifier" not in _entry_values(saltpeter)
 
 
+def test_rgo_static_bonus_own_good_outputs_are_twenty_percent() -> None:
+    for good, values in _rgo_bonus_values().items():
+        own_output = f"local_{good}_output_modifier"
+        assert values[own_output] == 0.20, good
+
+
+def test_rgo_static_bonuses_do_not_use_rejected_modifier_hooks() -> None:
+    rejected = {
+        "local_trade_center_power",
+        "local_ship_build_speed",
+        "local_slave_pop_satisfaction",
+    }
+
+    for good, values in _rgo_bonus_values().items():
+        assert rejected.isdisjoint(values), good
+
+
+def test_rgo_static_bonus_production_efficiency_is_limited_and_has_downsides() -> None:
+    bonuses = _rgo_bonus_values()
+    allowed = {"alum", "dyes", "mercury"}
+    actual = {good for good, values in bonuses.items() if "local_production_efficiency" in values}
+    assert actual == allowed
+
+    negative_downsides = {
+        "local_disease_resistance",
+        "local_population_capacity_modifier",
+        "local_population_growth",
+    }
+    for good in allowed:
+        values = bonuses[good]
+        has_negative_downside = any(float(values.get(key, 0)) < 0 for key in negative_downsides)
+        has_unrest_downside = float(values.get("local_unrest", 0)) > 0
+        assert has_negative_downside or has_unrest_downside, good
+
+
+def test_rgo_static_bonus_max_control_magnitude_is_capped() -> None:
+    for good, values in _rgo_bonus_values().items():
+        if "local_max_control" in values:
+            assert abs(float(values["local_max_control"])) <= 0.05, good
+
+
+def test_wool_rgo_bonus_has_no_population_growth_penalty() -> None:
+    assert "local_population_growth" not in _rgo_bonus_values()["wool"]
+
+
 def test_farming_village_uses_baseline_building_price() -> None:
     data = load_eu5_data(profile="constructor", load_order_path=ROOT / "constructor.load_order.toml")
     annotated = annotate_building_data_availability(data.building_data, data.advancements)
@@ -1314,6 +1359,16 @@ def _vanilla_unique_methods_by_building() -> dict[str, set[str]]:
 
 def _entry_values(block: CList) -> dict[str, object]:
     return {entry.key: entry.value for entry in block.entries}
+
+
+def _rgo_bonus_values() -> dict[str, dict[str, object]]:
+    bonuses: dict[str, dict[str, object]] = {}
+    for entry in parse_file(RGO_STATIC_BONUSES).entries:
+        if not entry.key.startswith("pp_rgo_bonus_"):
+            continue
+        assert isinstance(entry.value, CList)
+        bonuses[entry.key.removeprefix("pp_rgo_bonus_")] = _entry_values(entry.value)
+    return bonuses
 
 
 def _database_keys(root: Path) -> set[str]:

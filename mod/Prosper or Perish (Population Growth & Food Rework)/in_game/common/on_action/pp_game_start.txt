@@ -157,7 +157,7 @@ pp_apply_adjacent_to_lake_modifier = {
 		}
 	}
 }
-# +10% local output for each location's RGO; food RGOs also apply local_peasants_food_consumption from vanilla food values (see pp_rgo_static_bonuses.txt).
+# +20% local output for each location's RGO, plus focused local flavor effects (see pp_rgo_static_bonuses.txt).
 # If a location's raw_material changes mid-campaign (e.g. Columbian Exchange), this modifier is not updated unless you mirror this logic in on_raw_material_changed.
 pp_apply_rgo_static_modifiers = {
 	effect = {

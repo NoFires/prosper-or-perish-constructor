@@ -120,7 +120,6 @@ EXPECTED_CHAINS = {
     "lead_mine": [
         ("lead_mine", None),
         ("lead_mine_bole_smelting", "bole_smelting"),
-        ("lead_mine_improved", "lead_ore_dressing"),
         ("lead_mine_cupola_smelting", "cupola_smelting"),
     ],
     "marble_quarry": [
@@ -995,7 +994,7 @@ def test_silver_mine_tiers_are_silver_deposit_only_and_have_unique_icons() -> No
 
 
 def test_lead_mine_tiers_are_lead_deposit_only_and_have_unique_icons() -> None:
-    for key in ("lead_mine", "lead_mine_bole_smelting", "lead_mine_improved", "lead_mine_cupola_smelting"):
+    for key in ("lead_mine", "lead_mine_bole_smelting", "lead_mine_cupola_smelting"):
         raw = _load_blueprint(key)
         body = raw["building"]["body"]
         assert re.search(r"location_potential\s*=\s*\{\s*raw_material\s*=\s*goods:lead\s*\}", body)

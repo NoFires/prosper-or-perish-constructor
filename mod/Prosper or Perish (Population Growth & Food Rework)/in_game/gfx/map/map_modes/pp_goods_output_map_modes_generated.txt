@@ -1465,6 +1465,69 @@ pp_fur_output = {
 	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus MarketReach }
 }
 
+pp_furniture_output = {
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				"goods_output(goods:furniture)" > 0
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = pp_furniture_output_raw
+					divide = @pp_goods_output_color_scale_max
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					NOT = { has_owner = yes }
+					is_land = no
+				}
+			}
+			value = rgb { 128 128 128 }
+		}
+	}
+	legend_key = { desc = "MAPMODE_PP_FURNITURE_OUTPUT" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = { limit = { is_land = yes } value = MAPMODE_PP_FURNITURE_OUTPUT_TT_LAND }
+		else = { value = MAPMODE_PP_FURNITURE_OUTPUT_TT_WATER }
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = economy
+	index = 3
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+	color_refresh_counters = { Month ProductionList LocationConstructionUnitChanged MarketReach }
+	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus MarketReach }
+}
+
 pp_gems_output = {
 	map_color = {
 		if = {
@@ -2347,6 +2410,69 @@ pp_livestock_output = {
 	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus MarketReach }
 }
 
+pp_lumber_output = {
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				"goods_output(goods:lumber)" > 0
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = pp_lumber_output_raw
+					divide = @pp_goods_output_color_scale_max
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					NOT = { has_owner = yes }
+					is_land = no
+				}
+			}
+			value = rgb { 128 128 128 }
+		}
+	}
+	legend_key = { desc = "MAPMODE_PP_LUMBER_OUTPUT" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = { limit = { is_land = yes } value = MAPMODE_PP_LUMBER_OUTPUT_TT_LAND }
+		else = { value = MAPMODE_PP_LUMBER_OUTPUT_TT_WATER }
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = economy
+	index = 3
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+	color_refresh_counters = { Month ProductionList LocationConstructionUnitChanged MarketReach }
+	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus MarketReach }
+}
+
 pp_maize_output = {
 	map_color = {
 		if = {
@@ -3135,6 +3261,69 @@ pp_potato_output = {
 	tooltip_key = {
 		if = { limit = { is_land = yes } value = MAPMODE_PP_POTATO_OUTPUT_TT_LAND }
 		else = { value = MAPMODE_PP_POTATO_OUTPUT_TT_WATER }
+	}
+	small_map_names = location
+	medium_map_names = location
+	large_map_names = location
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	fill_in_impassable = yes
+	enable_snow = no
+	flatmap_behaviour = always
+	use_fow = no
+	category = economy
+	index = 3
+	map_markers = { all = no }
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = @data_gradient_alpha_inside
+		gradient_alpha_outside = @data_gradient_alpha_outside
+		gradient_width = @data_gradient_width
+		gradient_color_mult = @data_gradient_color_mult
+		edge_width = @data_edge_width
+		edge_sharpness = @data_edge_sharpness
+		edge_alpha = @data_edge_alpha
+		edge_color_mult = @data_edge_color_mult
+		before_lighting_blend = @data_before_lighting_blend
+		after_lighting_blend = @data_after_lighting_blend
+	}
+	color_refresh_counters = { Month ProductionList LocationConstructionUnitChanged MarketReach }
+	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus MarketReach }
+}
+
+pp_pottery_output = {
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				"goods_output(goods:pottery)" > 0
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = {
+					value = pp_pottery_output_raw
+					divide = @pp_goods_output_color_scale_max
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					NOT = { has_owner = yes }
+					is_land = no
+				}
+			}
+			value = rgb { 128 128 128 }
+		}
+	}
+	legend_key = { desc = "MAPMODE_PP_POTTERY_OUTPUT" color = define:NMapColors|MAP_COLOR_HIGH }
+	tooltip_key = {
+		if = { limit = { is_land = yes } value = MAPMODE_PP_POTTERY_OUTPUT_TT_LAND }
+		else = { value = MAPMODE_PP_POTTERY_OUTPUT_TT_WATER }
 	}
 	small_map_names = location
 	medium_map_names = location
@@ -4551,4 +4740,3 @@ pp_wool_output = {
 	color_refresh_counters = { Month ProductionList LocationConstructionUnitChanged MarketReach }
 	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus MarketReach }
 }
-

@@ -1,10 +1,9 @@
 ﻿version: 2
 tag: lead_mine_cupola_smelting
-output_tag: lead_mine_improved_cupola_smelting
 upgrade_chain:
   family: lead_mine
-  tier: 3
-  previous: lead_mine_improved
+  tier: 2
+  previous: lead_mine_bole_smelting
   next: null
   unlock_advance: cupola_smelting
 building:
@@ -38,7 +37,6 @@ building:
     megalopolis = yes
     obsolete = lead_mine
     obsolete = lead_mine_bole_smelting
-    obsolete = lead_mine_improved
     build_time = manufactory_build_time
 
     location_potential = {
