@@ -62,20 +62,20 @@ TRY_REPLACE:positive_province_food_growth = {
 	local_peasants_food_consumption = 0.075
 }
 
-TRY_REPLACE:surplus_jobs = {
+TRY_INJECT:surplus_jobs = {
 	game_data = {
 		category = location
 	}
-	local_migration_attraction = 0.3
-	local_migration_speed = 0.001
+	local_migration_attraction = 0.2
 }
+
 # I want to in general move more towards satisfaction mattering more and being more dependent on demand
 TRY_REPLACE:average_satisfaction_inverted = {
 	game_data = {
 		category = location
 	}
-	local_monthly_prosperity = -0.0050
-	local_max_control = -0.10
+	local_monthly_prosperity = -0.0030
+	local_max_control = -0.05
 	local_levy_size_modifier = -0.30
 }
 # Idea is that if there is lots of free land, people can pick good food production spots

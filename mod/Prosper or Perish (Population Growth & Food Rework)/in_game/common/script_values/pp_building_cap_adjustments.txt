@@ -6,12 +6,12 @@
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
 		value = development
-		multiply = 0.3
+		multiply = 0.15
 	}
 	add = {
 		desc = "BUILDING_LEVEL_RGO_MAX"
 		value = max_rgo_workers
-		multiply = 1.0
+		multiply = 0.65
 	}
 	if = {
 		limit = {

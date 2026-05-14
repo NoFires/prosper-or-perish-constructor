@@ -107,18 +107,18 @@ building:
     			category = building_maintenance
     		}
     		pp_cookery_mutton_and_pease = {
-    			wool = 1.495
-    			legumes = 0.707
-    			salt = 0.084
+            wool = 1.645
+            legumes = 0.778
+            salt = 0.092
     			produced = victuals
     			output = 1.607
     			debug_max_profit = 0
     			category = building_maintenance
     		}
     		pp_cookery_surstromming = {
-    			fish = 3.12
-    			millet = 0.313
-    			salt = 0.313
+            fish = 3.432
+            millet = 0.344
+            salt = 0.344
     			produced = victuals
     			output = 1.651
     			debug_max_profit = 0
@@ -176,7 +176,7 @@ building:
     
     		# --- OCEANIA (NEW) ---
     		pp_cookery_ika_mata = { # Capitalizes on Oceania's massive 18.9 fish and 11.7 fruit RGOs
-    			fish = 2.667
+            fish = 3.2
     			fruit = 1.667
     			salt = 0.067
     			produced = victuals
@@ -238,7 +238,7 @@ building:
     			category = building_maintenance
     		}
     		pp_cookery_liquor = {
-    			liquor = 1.1
+            liquor = 1.21
     			produced = victuals
     			output = 0.941
     			debug_max_profit = 0

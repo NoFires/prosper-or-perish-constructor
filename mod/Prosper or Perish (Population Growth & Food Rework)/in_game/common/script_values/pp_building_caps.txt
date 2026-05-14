@@ -346,11 +346,11 @@ pp_granary_cap = {
 	add = {
 		desc = "BUILDING_LEVEL_DEVELOPMENT"
 		value = development
-		multiply = 0.125
+		multiply = 0.175
 	}
 	add = {
 		desc = "BUILDING_LEVEL_POPULATION"
 		value = population
-		multiply = 0.0150
+		multiply = 0.0200
 	}
 }
