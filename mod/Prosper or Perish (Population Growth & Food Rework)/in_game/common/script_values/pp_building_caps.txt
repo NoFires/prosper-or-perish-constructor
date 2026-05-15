@@ -92,10 +92,19 @@ land_farm_building_levels = {
 		value = "location_building_level(building_type:cotton_plantation)"
 	}
 	add = {
+		value = "location_building_level(building_type:cotton_farm)"
+	}
+	add = {
 		value = "location_building_level(building_type:sugar_plantation)"
 	}
 	add = {
+		value = "location_building_level(building_type:sugarcane_farm)"
+	}
+	add = {
 		value = "location_building_level(building_type:tobacco_plantation)"
+	}
+	add = {
+		value = "location_building_level(building_type:tobacco_farm)"
 	}
 	add = {
 		value = "location_building_level(building_type:dye_plantation)"
@@ -179,15 +188,25 @@ fish_building_levels = {
 	}
 }
 
-fish_rgo_capacity_bonus = {
+fish_rgo_scaling_capacity = {
 	if = {
 		limit = { has_variable = pp_fish_base_capacity }
-		add = {
-			desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"
-			value = var:pp_fish_base_capacity
-			multiply = max_rgo_workers
-			multiply = 0.030
-		}
+		add = { value = var:pp_fish_base_capacity }
+	}
+	else = {
+		add = pp_fish_base_capacity_value
+	}
+	add = {
+		value = modifier:fish_max_level_modifier
+	}
+}
+
+fish_rgo_capacity_bonus = {
+	add = {
+		desc = "BUILDING_LEVEL_RGO_SIZE_FISHING"
+		value = fish_rgo_scaling_capacity
+		multiply = max_rgo_workers
+		multiply = 0.030
 	}
 }
 
@@ -198,7 +217,7 @@ fish_gross_capacity = {
 			limit = { has_variable = pp_fish_base_capacity }
 			value = var:pp_fish_base_capacity
 		}
-		else = { value = 0 }
+		else = { value = pp_fish_base_capacity_value }
 	}
 	add = fish_rgo_capacity_bonus
 	add = {

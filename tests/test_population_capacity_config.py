@@ -284,6 +284,10 @@ def test_river_flowing_through_modifiers_neutralize_capacity_and_food_bonuses() 
     profile = profile_from("constructor", ROOT / "constructor.load_order.toml")
     static_modifiers = load_collection(profile, "static_modifiers")
     maps = current_modifier_maps(profile)
+    expected_fish_capacity = {1: 1, 2: 1, 3: 2, 4: 3, 5: 4}
+    expected_farm_capacity = {1: 1, 2: 1, 3: 2, 4: 3, 5: 4}
+    expected_irrigation_capacity = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
+    obsolete_modifier = "fish_" "natural_capacity_modifier"
 
     for size in range(1, 6):
         key = f"river_flowing_through_{size}"
@@ -291,6 +295,10 @@ def test_river_flowing_through_modifiers_neutralize_capacity_and_food_bonuses() 
 
         assert block is not None
         assert maps["static_modifiers"][key]["local_population_capacity_modifier"] == 0
+        assert not block.values(obsolete_modifier)
+        assert sum(block.values("fish_max_level_modifier")) == expected_fish_capacity[size]
+        assert sum(block.values("farm_max_level_modifier")) == expected_farm_capacity[size]
+        assert sum(block.values("irrigant_cap_modifier")) == expected_irrigation_capacity[size]
         assert sum(block.values("local_monthly_food_modifier")) == 0
         assert "local_population_capacity" not in maps["static_modifiers"][key]
 

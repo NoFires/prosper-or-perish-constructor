@@ -1,0 +1,19 @@
+﻿# Prosper or Perish - shared building capacity culling helpers
+
+pp_cull_capacity_building_above_max = {
+	if = {
+		limit = {
+			location_building_level = {
+				building_type = building_type:$building$
+				value > {
+					value = $max_level$
+					add = 1
+				}
+			}
+		}
+		change_building_level_in_location = {
+			building = building_type:$building$
+			value = -1
+		}
+	}
+}

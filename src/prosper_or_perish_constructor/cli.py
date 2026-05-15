@@ -76,10 +76,13 @@ BOM_TEXT_RELATIVE_PATHS = (
     Path("in_game/common/location_ranks/pp_location_rank_adjustments.txt"),
     Path("in_game/common/advances/pp_local_resource_productivity_advances.txt"),
     Path("in_game/common/advances/pp_prosperity_advances_adjustments.txt"),
+    Path("in_game/common/building_types/pp_mercury_patio_adjustments.txt"),
     Path("in_game/common/script_values/pp_building_capacity_values.txt"),
     Path("in_game/common/scripted_effects/pp_capacity_precalc.txt"),
+    Path("in_game/common/scripted_effects/pp_capacity_culling_effects.txt"),
     Path("in_game/gfx/map/map_modes/pp_local_output_modifier_map_modes.txt"),
     Path("in_game/common/on_action/pp_apply_location_modifiers.txt"),
+    Path("in_game/common/on_action/pp_building_capacity_culling_v2.txt"),
     Path("in_game/common/building_types/pp_aqueduct_system.txt"),
 )
 PRICE_MODIFIER_TYPE_DEFINITIONS = Path(
@@ -1836,8 +1839,7 @@ def _smart_sync(args: argparse.Namespace, repo: Path, project: Path) -> int:
         state[stage] = fingerprints[stage]
         ran_generator = True
 
-    if ran_generator:
-        _finalize_constructor_mod(repo, project)
+    _finalize_constructor_mod(repo, project)
 
     validation_before = _validation_fingerprint(repo, project)
     if ran_generator or args.force_build or state.get("validation") != validation_before:

@@ -573,3 +573,27 @@ pp_water_sawmill_price_cost_modifier={
 		category=country
 	}
 }
+
+pp_cotton_farm_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_sugarcane_farm_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}
+
+pp_tobacco_farm_price_cost_modifier={
+	color=bad
+	percent=yes
+	game_data={
+		category=country
+	}
+}

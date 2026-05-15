@@ -19,6 +19,13 @@ fish_max_level_modifier = {
 	}
 }
 
+irrigant_cap_modifier = {
+	decimals = 0
+	game_data = {
+		category = location
+	}
+}
+
 forest_max_level_modifier = {
 	decimals = 0
 	game_data = {

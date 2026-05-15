@@ -1,0 +1,3 @@
+﻿# >>> eu5-building-pipeline:tobacco_farm:price
+pp_tobacco_farm_price = {gold = 50}
+# <<< eu5-building-pipeline:tobacco_farm:price

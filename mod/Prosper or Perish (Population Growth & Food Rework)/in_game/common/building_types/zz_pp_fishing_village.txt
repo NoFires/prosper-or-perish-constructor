@@ -20,7 +20,10 @@ REPLACE:fishing_village = {
     }
 
     allow = {
-        fish_capacity_available > 0
+        custom_tooltip = {
+            text = PP_HAS_AVAILABLE_FISHING_CAPACITY
+            fish_capacity_available > 0
+        }
     }
     build_time = village_build_time
     # Slot 0 â€” fishery ground / climate (temperate vs arctic)

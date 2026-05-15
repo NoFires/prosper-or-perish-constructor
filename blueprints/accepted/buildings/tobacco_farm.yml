@@ -1,0 +1,101 @@
+version: 2
+tag: tobacco_farm
+building:
+  key: tobacco_farm
+  mode: CREATE
+  source: pp_new_buildings.txt
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_tobacco_farm_base_tobacco
+    - name: slot_1
+      methods:
+        - pp_tobacco_farm_field_cutting
+        - pp_tobacco_farm_curing_barns
+  possible_production_methods: []
+  body: |2-
+    is_foreign = no
+    max_levels = farm_max_level
+    pop_type = laborers
+    employment_size = 3
+    price = pp_tobacco_farm_price
+    category = rgo_building_category
+    icon = tobacco_farm
+    rural_settlement = yes
+    town = yes
+    city = yes
+    megalopolis = yes
+    build_time = village_build_time
+
+    location_potential = {
+        raw_material = goods:tobacco
+    }
+
+    allow = {
+        farm_capacity_available > 0
+    }
+
+    construction_demand = basic_construction_needs
+    ai_forbid_shutdown = no
+    forbidden_for_estates = no
+    important_for_AI = no
+    can_close = yes
+
+    unique_production_methods = {
+        pp_tobacco_farm_base_tobacco = {
+            produced = tobacco
+            output = 0.120
+            category = building_maintenance
+        }
+    }
+    unique_production_methods = {
+        pp_tobacco_farm_field_cutting = {
+            category = building_maintenance
+        }
+        pp_tobacco_farm_curing_barns = {
+            lumber = 0.350 # curing barns
+            fiber_crops = 0.050 # hanging cords, packing twine
+            tools = 0.045 # knives and presses
+            produced = tobacco
+            output = 0.266
+            category = building_maintenance
+        }
+    }
+
+    modifier = {
+        local_migration_attraction = 0.01
+    }
+prices:
+  - key: pp_tobacco_farm_price
+    body: |2-
+      {gold = 50}
+localization:
+  entries:
+    MODIFIER_TYPE_DESC_pp_tobacco_farm_price_cost_modifier: Affects the cost of building a [ShowBuildingTypeName('tobacco_farm')|e].
+    MODIFIER_TYPE_NAME_pp_tobacco_farm_price_cost_modifier: Tobacco Farm Cost
+    tobacco_farm_slot_0: Tobacco Fields
+    tobacco_farm_slot_1: Curing
+    tobacco_farm: Tobacco Farm
+    tobacco_farm_desc: Tobacco farms tend field rows, cut the leaves at harvest, and cure them in barns before packing them for trade.
+    pp_tobacco_farm_base_tobacco: Tobacco Fields
+    pp_tobacco_farm_field_cutting: Field Cutting
+    pp_tobacco_farm_curing_barns: Curing Barns
+    pp_tobacco_farm_price: Tobacco Farm Price
+icon:
+  source_png: ../assets/icons/tobacco_farm.png
+  output_dds: tobacco_farm.dds
+  size: 512
+  prompt: EU5-inspired hand-painted strategy-game icon for a tobacco farm, transparent background. Center rows of broad tobacco leaves, cut stalks, hanging leaves in a timber curing barn, clay storage jars, and hand knives. Use readable painterly historical UI art, deep greens, cured leaf browns, warm timber, no text, no frame.
+
+evaluation:
+  allow_rules:
+    input_throughput: Specialty crop farms preserve the accepted low-input rural RGO scale below the generic laborer throughput baseline.
+    output_throughput: Specialty crop farms preserve the accepted low-output rural RGO scale below the generic laborer throughput baseline.
+    amortization_months: Specialty crop farms use a low-cost, slow-payback cadence matching the existing small crop RGO buildings.
+  production_methods:
+    pp_tobacco_farm_base_tobacco:
+      production_efficiency: 1.00
+      allow_rules:
+        base_output_per_1k: Passive field output follows the accepted small specialty-crop baseline rather than the generic raw-site band.
+    pp_tobacco_farm_curing_barns:
+      production_efficiency: 1.05

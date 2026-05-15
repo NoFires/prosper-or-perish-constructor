@@ -142,6 +142,17 @@ pp_cull_over_cap_buildings = {
 				}
 				change_building_level_in_location = { building = building_type:cotton_plantation value = -1 }
 			}
+			# Cotton Farm
+			if = {
+				limit = {
+					farm_capacity_remaining < 0
+					location_building_level = {
+						building_type = building_type:cotton_farm
+						value > 0
+					}
+				}
+				change_building_level_in_location = { building = building_type:cotton_farm value = -1 }
+			}
 			# Sugar Plantation
 			if = {
 				limit = {
@@ -153,6 +164,17 @@ pp_cull_over_cap_buildings = {
 				}
 				change_building_level_in_location = { building = building_type:sugar_plantation value = -1 }
 			}
+			# Sugarcane Farm
+			if = {
+				limit = {
+					farm_capacity_remaining < 0
+					location_building_level = {
+						building_type = building_type:sugarcane_farm
+						value > 0
+					}
+				}
+				change_building_level_in_location = { building = building_type:sugarcane_farm value = -1 }
+			}
 			# Tobacco Plantation
 			if = {
 				limit = {
@@ -163,6 +185,17 @@ pp_cull_over_cap_buildings = {
 					}
 				}
 				change_building_level_in_location = { building = building_type:tobacco_plantation value = -1 }
+			}
+			# Tobacco Farm
+			if = {
+				limit = {
+					farm_capacity_remaining < 0
+					location_building_level = {
+						building_type = building_type:tobacco_farm
+						value > 0
+					}
+				}
+				change_building_level_in_location = { building = building_type:tobacco_farm value = -1 }
 			}
 			# Dye Plantation
 			if = {

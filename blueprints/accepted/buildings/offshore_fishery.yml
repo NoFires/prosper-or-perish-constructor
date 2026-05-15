@@ -41,7 +41,10 @@ building:
     }
 
     allow = {
-        fish_capacity_available > 0
+        custom_tooltip = {
+            text = PP_HAS_AVAILABLE_FISHING_CAPACITY
+            fish_capacity_available > 0
+        }
     }
 
     construction_demand = workshop_construction
@@ -66,7 +69,7 @@ building:
             fiber_crops = 1.462 # drift nets
             salt = 0.294 # barrel curing
             produced = fish
-            output = 8.352
+            output = 7.934
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -75,7 +78,7 @@ building:
             victuals = 1.003 # fleet provisions
             salt = 0.299 # catch curing
             produced = fish
-            output = 9.67
+            output = 9.380
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -84,7 +87,7 @@ building:
             coal = 1.099 # steam fuel
             tools = 0.825 # winches, repairs
             produced = fish
-            output = 10.50
+            output = 9.24
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -122,6 +125,11 @@ icon:
   prompt: EU5-inspired hand-painted strategy-game icon for an offshore fishery, transparent background. Center a larger historical fishing fleet with a herring buss, distant-water schooner, trawl gear, salt barrels, provision crates, and choppy open sea. Use readable painterly shapes, softly outlined historical UI art, muted sea blues, weathered wood, tan nets, silver fish, white salt sacks, no text, no frame, not photorealistic, not cartoonish.
 
 evaluation:
+  bands:
+    output_gold_per_1k:
+      max: 1.42
+    amortization_months:
+      max: 900
   production_methods:
     pp_offshore_fishery_base_catch:
       production_efficiency: 1.00
@@ -132,12 +140,13 @@ evaluation:
     pp_offshore_fishery_herring_busses:
       production_efficiency: 1.15
       allow_rules:
-        amortization_months: Method payback intentionally sits outside the global building-payback target after error-log profit tuning.
         input_throughput: Herring busses keep a lower gear profile after repeated fish-output tuning, with most salt demand shifted into hull and net inputs.
     pp_offshore_fishery_distant_water_schooners:
       production_efficiency: 1.05
+      allow_rules:
+        amortization_months: Output-only offshore fish tuning intentionally allows slower schooner payback while keeping inputs and unlock timing stable.
     pp_offshore_fishery_steam_trawlers:
       production_efficiency: 1.05
       allow_rules:
         input_throughput: Steam trawlers keep a lower post-rebalance input profile while preserving their pre-steel-tool design.
-        amortization_months: Pre-steel tools keep steam trawlers available before steel mills; post-rebalance payback remains intentionally fast.
+        output_throughput: Late-game offshore fish output is intentionally capped below the generic laborer throughput target.

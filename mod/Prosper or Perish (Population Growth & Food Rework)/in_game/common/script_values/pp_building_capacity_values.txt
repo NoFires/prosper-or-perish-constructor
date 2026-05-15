@@ -123,10 +123,6 @@ pp_fish_base_capacity_value = {
 		add = 3.00
 	}
 	if = {
-		limit = { has_river = yes }
-		add = 2.25
-	}
-	if = {
 		limit = { topography = wetlands }
 		add = 1.50
 	}

@@ -61,6 +61,9 @@ pp_copper_mine_adit_price_cost_modifier = {
 pp_copper_mine_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
+pp_cotton_farm_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
 pp_dye_plantation_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
@@ -190,6 +193,9 @@ pp_simplers_grove_price_cost_modifier = {
 pp_stone_quarry_improved_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
+pp_sugarcane_farm_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
 pp_tea_garden_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
@@ -200,6 +206,9 @@ pp_tin_stamping_mill_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
 pp_tin_streamworks_price_cost_modifier = {
+	positive = "gfx/interface/icons/modifier_types/_default.dds"
+}
+pp_tobacco_farm_price_cost_modifier = {
 	positive = "gfx/interface/icons/modifier_types/_default.dds"
 }
 pp_victualling_yard_price_cost_modifier = {

@@ -38,7 +38,10 @@ building:
     }
 
     allow = {
-        fish_capacity_available > 0
+        custom_tooltip = {
+            text = PP_HAS_AVAILABLE_FISHING_CAPACITY
+            fish_capacity_available > 0
+        }
     }
 
     construction_demand = village_construction

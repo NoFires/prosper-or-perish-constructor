@@ -20,6 +20,7 @@ enabled:
 - buildings/cookery.yml
 - buildings/victualling_yard.yml
 - buildings/cotton_plantation.yml
+- buildings/cotton_farm.yml
 - buildings/dye_plantation.yml
 - buildings/dock.yml
 - buildings/dry_dock.yml
@@ -100,9 +101,11 @@ enabled:
 - buildings/stone_quarry.yml
 - buildings/stone_quarry_improved.yml
 - buildings/sugar_plantation.yml
+- buildings/sugarcane_farm.yml
 - buildings/tea_garden.yml
 - buildings/terraces.yml
 - buildings/tobacco_plantation.yml
+- buildings/tobacco_farm.yml
 - buildings/training_fields.yml
 - buildings/victuals_market.yml
 - buildings/vineyard_estate.yml

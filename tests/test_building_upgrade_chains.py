@@ -191,8 +191,51 @@ RAW_MATERIAL_BASE_PRODUCERS = {
     "saltpeter_beds": ("saltpeter", "pp_saltpeter_beds_base_saltpeter"),
     "vineyard_estate": ("wine", "pp_vineyard_estate_base_wine"),
     "cotton_plantation": ("cotton", "pp_cotton_plantation_base_cotton"),
+    "cotton_farm": ("cotton", "pp_cotton_farm_base_cotton"),
     "sugar_plantation": ("sugar", "pp_sugar_plantation_base_sugar"),
+    "sugarcane_farm": ("sugar", "pp_sugarcane_farm_base_sugar"),
     "tobacco_plantation": ("tobacco", "pp_tobacco_plantation_base_tobacco"),
+    "tobacco_farm": ("tobacco", "pp_tobacco_farm_base_tobacco"),
+}
+SLAVE_PLANTATION_REPLACEMENTS = {
+    "cotton_plantation": "cotton",
+    "sugar_plantation": "sugar",
+    "tobacco_plantation": "tobacco",
+}
+NON_SLAVE_CROP_FARMS = {
+    "cotton_farm": {
+        "good": "cotton",
+        "base_method": "pp_cotton_farm_base_cotton",
+        "worked_method": "pp_cotton_farm_gin_house",
+        "inputs": {
+            "lumber": "0.280",
+            "fiber_crops": "0.120",
+            "tools": "0.034",
+        },
+        "removed_inputs": {"leather", "slaves_goods"},
+    },
+    "sugarcane_farm": {
+        "good": "sugar",
+        "base_method": "pp_sugarcane_farm_base_sugar",
+        "worked_method": "pp_sugarcane_farm_boiling_house",
+        "inputs": {
+            "lumber": "0.250",
+            "pottery": "0.300",
+            "tools": "0.029",
+        },
+        "removed_inputs": {"coal", "slaves_goods"},
+    },
+    "tobacco_farm": {
+        "good": "tobacco",
+        "base_method": "pp_tobacco_farm_base_tobacco",
+        "worked_method": "pp_tobacco_farm_curing_barns",
+        "inputs": {
+            "lumber": "0.350",
+            "fiber_crops": "0.050",
+            "tools": "0.045",
+        },
+        "removed_inputs": {"pottery", "slaves_goods"},
+    },
 }
 RAW_PROCESSOR_EXCLUSIONS = {
     "perfumery": "incense",
@@ -434,6 +477,28 @@ def test_ocean_fishery_upgrade_chain_is_explicit_and_globally_unlockable() -> No
         flags=re.M,
     )
     assert "potential =" not in steam_block
+
+
+def test_offshore_fishery_output_tuning_and_evaluation_bands_are_locked() -> None:
+    raw = _load_blueprint("offshore_fishery")
+    body = raw["building"]["body"]
+    expected_outputs = {
+        "pp_offshore_fishery_herring_busses": "7.934",
+        "pp_offshore_fishery_distant_water_schooners": "9.380",
+        "pp_offshore_fishery_steam_trawlers": "9.24",
+    }
+
+    for method, output in expected_outputs.items():
+        assert re.search(
+            rf"{method}\s*=\s*\{{.*?\bproduced\s*=\s*fish\b.*?\boutput\s*=\s*{re.escape(output)}\b",
+            body,
+            flags=re.S,
+        )
+
+    assert raw["evaluation"]["bands"] == {
+        "output_gold_per_1k": {"max": 1.42},
+        "amortization_months": {"max": 900},
+    }
 
 
 def test_salt_production_families_are_explicit_and_unlockable() -> None:
@@ -898,6 +963,73 @@ def test_target_raw_material_producers_have_no_input_base_methods() -> None:
         assert row["building"] == building
         assert row["produced"] == good
         assert row["input_goods"] == []
+
+
+def test_slave_plantation_replacements_keep_colonial_rgo_gate_and_farm_capacity() -> None:
+    for building, good in SLAVE_PLANTATION_REPLACEMENTS.items():
+        blueprint = _load_blueprint(building)
+        body = blueprint["building"]["body"]
+
+        assert blueprint["building"]["mode"] == "REPLACE"
+        assert f"raw_material = goods:{good}" in body
+        assert "is_overseas_for_owner = yes" in body
+        assert "owner ?= { is_colonial_subject = yes }" in body
+        assert "pop_type = slaves" in body
+        assert "slaves_goods" in body
+        assert "max_levels = farm_max_level" in body
+        assert "farm_capacity_available > 0" in body
+
+
+def test_non_slave_crop_farms_are_default_rgo_laborer_buildings() -> None:
+    for building, expected in NON_SLAVE_CROP_FARMS.items():
+        blueprint = _load_blueprint(building)
+        body = blueprint["building"]["body"]
+        good = expected["good"]
+        base_method = expected["base_method"]
+        worked_method = expected["worked_method"]
+
+        assert blueprint["building"]["mode"] == "CREATE"
+        assert blueprint["building"]["source"] == "pp_new_buildings.txt"
+        assert "pop_type = laborers" in body
+        assert "max_levels = farm_max_level" in body
+        assert "farm_capacity_available > 0" in body
+        assert re.search(
+            rf"location_potential\s*=\s*\{{\s*raw_material\s*=\s*goods:{good}\s*\}}",
+            body,
+        )
+        assert "slaves_goods" not in body
+        assert "is_overseas_for_owner" not in body
+        assert "is_colonial_subject" not in body
+        assert "plantation_buildings_advance" not in body
+        assert re.search(
+            rf"{base_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*0\.120\b",
+            body,
+            flags=re.S,
+        )
+        assert re.search(
+            rf"{worked_method}\s*=\s*\{{.*?\bproduced\s*=\s*{good}\b.*?\boutput\s*=\s*0\.266\b",
+            body,
+            flags=re.S,
+        )
+        worked_match = re.search(rf"{worked_method}\s*=\s*\{{(?P<block>.*?)\n    \}}", body, flags=re.S)
+        assert worked_match
+        worked_block = worked_match.group("block")
+        for input_good, amount in expected["inputs"].items():
+            assert re.search(rf"\b{input_good}\s*=\s*{re.escape(amount)}\b", worked_block)
+        for removed_input in expected["removed_inputs"]:
+            assert removed_input not in worked_block
+
+        evaluation = blueprint["evaluation"]
+        assert set(evaluation["allow_rules"]) == {
+            "input_throughput",
+            "output_throughput",
+            "amortization_months",
+        }
+        assert (
+            evaluation["production_methods"][base_method]["allow_rules"].keys()
+            == {"base_output_per_1k"}
+        )
+        assert evaluation["production_methods"][worked_method]["production_efficiency"] == 1.05
 
 
 def test_raw_processor_replacements_exclude_matching_raw_materials() -> None:

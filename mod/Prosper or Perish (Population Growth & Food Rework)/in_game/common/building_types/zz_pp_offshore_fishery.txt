@@ -19,7 +19,10 @@ location_potential = {
 }
 
 allow = {
-    fish_capacity_available > 0
+    custom_tooltip = {
+        text = PP_HAS_AVAILABLE_FISHING_CAPACITY
+        fish_capacity_available > 0
+    }
 }
 
 construction_demand = workshop_construction
@@ -44,7 +47,7 @@ unique_production_methods = {
         fiber_crops = 1.462 # drift nets
         salt = 0.294 # barrel curing
         produced = fish
-        output = 8.352
+        output = 7.934
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -53,7 +56,7 @@ unique_production_methods = {
         victuals = 1.003 # fleet provisions
         salt = 0.299 # catch curing
         produced = fish
-        output = 9.67
+        output = 9.380
         debug_max_profit = 0
         category = building_maintenance
     }
@@ -62,7 +65,7 @@ unique_production_methods = {
         coal = 1.099 # steam fuel
         tools = 0.825 # winches, repairs
         produced = fish
-        output = 10.50
+        output = 9.24
         debug_max_profit = 0
         category = building_maintenance
     }

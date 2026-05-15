@@ -102,6 +102,7 @@ def test_sync_smart_skips_unchanged_build_stages(
         encoding="utf-8",
     )
     calls: list[list[str]] = []
+    finalized: list[Path] = []
 
     monkeypatch.setattr(
         cli,
@@ -113,6 +114,11 @@ def test_sync_smart_skips_unchanged_build_stages(
         },
     )
     monkeypatch.setattr(cli, "_validation_fingerprint", lambda repo_arg, project_arg: "validation")
+    monkeypatch.setattr(
+        cli,
+        "_finalize_constructor_mod",
+        lambda repo_arg, project_arg: finalized.append(project_arg),
+    )
 
     def fake_run(command, cwd):
         calls.append([str(part) for part in command])
@@ -126,6 +132,7 @@ def test_sync_smart_skips_unchanged_build_stages(
     assert calls == [
         ["eu5-orchestrator", "deploy", "--project", str(repo / "constructor.toml"), "--clean"]
     ]
+    assert finalized == [repo / "constructor.toml"]
 
 
 def test_sync_smart_runs_changed_stages_and_validation(
@@ -347,12 +354,14 @@ def test_finalize_keeps_location_modifier_on_action_separate_and_preserves_newli
     static_modifiers = mod_root / "main_menu" / "common" / "static_modifiers"
     game_concepts = mod_root / "main_menu" / "common" / "game_concepts"
     on_action = mod_root / "in_game" / "common" / "on_action"
+    building_types = mod_root / "in_game" / "common" / "building_types"
     script_values = mod_root / "in_game" / "common" / "script_values"
     scripted_effects = mod_root / "in_game" / "common" / "scripted_effects"
     localization = mod_root / "main_menu" / "localization" / "english"
     static_modifiers.mkdir(parents=True)
     game_concepts.mkdir(parents=True)
     on_action.mkdir(parents=True)
+    building_types.mkdir(parents=True)
     script_values.mkdir(parents=True)
     scripted_effects.mkdir(parents=True)
     localization.mkdir(parents=True)
@@ -395,8 +404,11 @@ def test_finalize_keeps_location_modifier_on_action_separate_and_preserves_newli
     capacity_bom_paths = (
         game_concepts / "pp_fish_capacity.txt",
         game_concepts / "pp_forest_capacity.txt",
+        building_types / "pp_mercury_patio_adjustments.txt",
         script_values / "pp_building_capacity_values.txt",
         scripted_effects / "pp_capacity_precalc.txt",
+        scripted_effects / "pp_capacity_culling_effects.txt",
+        on_action / "pp_building_capacity_culling_v2.txt",
     )
     for path in capacity_bom_paths:
         path.write_text("# generated\n", encoding="utf-8")

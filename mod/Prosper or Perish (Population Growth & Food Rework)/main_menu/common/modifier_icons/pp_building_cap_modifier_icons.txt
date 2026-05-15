@@ -9,6 +9,9 @@ farm_rank_capacity_modifier = {
 fish_max_level_modifier = {
 	positive = "gfx/interface/icons/map_modes/pp_fishing_village_capacity.dds"
 }
+irrigant_cap_modifier = {
+	positive = "gfx/interface/icons/buildings/irrigation_systems.dds"
+}
 forest_max_level_modifier = {
 	positive = "gfx/interface/icons/map_modes/pp_forest_village_capacity.dds"
 }

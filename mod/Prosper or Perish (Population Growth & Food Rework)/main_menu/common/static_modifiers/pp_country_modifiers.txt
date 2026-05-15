@@ -1,0 +1,4 @@
+﻿TRY_INJECT:inflation_impact = {
+	building_upkeep_costs = -0.90
+	food_purchase_cost = -0.95
+}
