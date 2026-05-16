@@ -1,0 +1,42 @@
+# Steam Workshop description metadata for Prosper or Perish.
+# Steamworks currently limits Workshop item descriptions to 8000 bytes, not
+# Unicode characters, so tests validate the UTF-8 byte length of the BBCode file.
+
+description_path = "docs/steam_workshop_description.bbcode"
+max_description_bytes = 8000
+language = "english"
+format = "steam_bbcode"
+
+[sources]
+set_item_description = "https://partner.steamgames.com/doc/api/ISteamUGC#SetItemDescription"
+description_limit = "https://partner.steamgames.com/doc/api/ISteamRemoteStorage#k_cchPublishedDocumentDescriptionMax"
+formatting_help = "https://steamcommunity.com/comment/WorkshopItem/formattinghelp"
+
+[links]
+kofi = "https://ko-fi.com/prosperorperish"
+github = "https://github.com/JanB1989/prosper-or-perish-constructor"
+discord = "https://discord.gg/WVrSnfuW"
+
+[styling]
+note = """
+Steam Workshop descriptions use BBCode-style formatting. Steam Community formatting help documents headings, bold, underline, italic, strikethrough, spoiler, noparse, horizontal rule, URL links, unordered and ordered lists, quote, code, and plain URL widgets for YouTube, Steam store, and Workshop/UGC links. This project also allows img tags because the current live Workshop description uses direct hosted image embeds successfully.
+"""
+allowed_bbcode_tags = [
+    "*",
+    "b",
+    "code",
+    "h1",
+    "h2",
+    "h3",
+    "hr",
+    "i",
+    "img",
+    "list",
+    "noparse",
+    "olist",
+    "quote",
+    "spoiler",
+    "strike",
+    "u",
+    "url",
+]

@@ -37,9 +37,15 @@ PUBLISHED_GOODS_FLOW_EXPLORER = Path("docs/examples/goods_flow_explorer.html")
 SAVEGAME_EXPLORER = Path("graphs/savegame_explorer.html")
 SAVEGAME_PROGRESSION_EXPLORER = Path("graphs/savegame_progression.html")
 PUBLISHED_SAVEGAME_EXPLORER = Path("docs/examples/savegame_explorer.html")
+EUROPEDIA_EXPORT = Path("graphs/europedia.html")
+EUROPEDIA_ENTRIES = Path("graphs/europedia_entries.json")
+PUBLISHED_EUROPEDIA_EXPORT = Path("docs/examples/europedia.html")
+PUBLISHED_EUROPEDIA_ENTRIES = Path("docs/examples/europedia_entries.json")
 PUBLISHED_GRAPH_EXAMPLES = (
     GOODS_FLOW_EXPLORER.name,
     SAVEGAME_EXPLORER.name,
+    EUROPEDIA_EXPORT.name,
+    EUROPEDIA_ENTRIES.name,
 )
 SAVEGAME_PURGE_PATHS = (
     SAVEGAME_ARTIFACT_DIR,
@@ -197,6 +203,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "savegame",
         "Export latest savegame facts and the savegame explorer.",
         _savegame,
+    )
+    _add_command(
+        subcommands,
+        "europedia",
+        "Export the custom Prosper or Perish Europedia into the docs examples.",
+        _europedia,
     )
     savegame_purge = _add_command(
         subcommands,
@@ -1147,6 +1159,30 @@ def _savegame(args: argparse.Namespace, extra: Sequence[str], repo: Path, projec
     return _publish_graph_examples(repo, [SAVEGAME_EXPLORER.name])
 
 
+def _europedia(args: argparse.Namespace, extra: Sequence[str], repo: Path, project: Path) -> int:
+    if extra:
+        raise SystemExit("europedia does not accept extra arguments.")
+
+    from prosper_or_perish_constructor.europedia import (
+        EuropediaExportError,
+        write_europedia_export,
+    )
+
+    mod_root = _project_mod_root(repo, project)
+    try:
+        html_path, json_path = write_europedia_export(
+            mod_root,
+            repo / EUROPEDIA_EXPORT,
+            repo / EUROPEDIA_ENTRIES,
+        )
+    except EuropediaExportError as error:
+        raise SystemExit(str(error)) from error
+
+    print(f"Exported Europedia HTML: {html_path}", flush=True)
+    print(f"Exported Europedia JSON: {json_path}", flush=True)
+    return _publish_graph_examples(repo, [EUROPEDIA_EXPORT.name, EUROPEDIA_ENTRIES.name])
+
+
 def _has_option(args: Sequence[str], option: str) -> bool:
     return any(arg == option or arg.startswith(f"{option}=") for arg in args)
 
@@ -1189,7 +1225,7 @@ def _publish_graph_examples(repo: Path, examples: Sequence[str]) -> int:
         source = graphs_dir / example
         destination = examples_dir / example
         if not source.is_file():
-            raise SystemExit(f"Missing generated graph output: {source}")
+            raise SystemExit(f"Missing generated docs output: {source}")
         shutil.copy2(source, destination)
         print(f"Updated docs/examples/{example}", flush=True)
 

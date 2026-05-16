@@ -7,16 +7,17 @@ and orchestrator packages. It keeps a local mod copy under
 `mod/Prosper or Perish (Population Growth & Food Rework)` and writes generated analysis output to
 ignored artifact folders.
 
-## Example Graphs
+## Published Examples
 
-Curated example graph snapshots are published from this constructor repo's docs site:
+Curated static examples are published from this constructor repo's docs site:
 
 - [Goods Flow Explorer](https://janb1989.github.io/prosper-or-perish-constructor/examples/goods_flow_explorer.html)
 - [Savegame Market Explorer](https://janb1989.github.io/prosper-or-perish-constructor/examples/savegame_explorer.html)
+- [Europedia Export](https://janb1989.github.io/prosper-or-perish-constructor/examples/europedia.html)
 
-Generated local graph outputs stay ignored under `graphs/`; committed `docs/examples/` files are
+Generated local docs outputs stay ignored under `graphs/`; committed `docs/examples/` files are
 the public demo snapshots served by GitHub Pages. Run `uv run ppc publish-docs` after regenerating
-graphs to refresh the hosted copies before pushing.
+outputs to refresh the hosted copies before pushing.
 
 ## Command Workflows
 
@@ -45,6 +46,7 @@ uv run ppc analyze
 uv run ppc output-modifiers
 uv run ppc production-throughput
 uv run ppc savegame
+uv run ppc europedia
 uv run ppc savegame-notebooks build
 uv run ppc savegame-purge
 uv run ppc publish-docs
@@ -115,8 +117,12 @@ Existing static graph explorers can also be opened directly from:
 ```text
 graphs/goods_flow_explorer.html
 graphs/savegame_explorer.html
+graphs/europedia.html
+graphs/europedia_entries.json
 docs/examples/goods_flow_explorer.html
 docs/examples/savegame_explorer.html
+docs/examples/europedia.html
+docs/examples/europedia_entries.json
 ```
 
 ## Setup
@@ -183,6 +189,25 @@ buildings with multiple production-method slots, the command first selects the h
 method in each slot, then sums those slot winners for the building. Rows are sorted by final-age
 throughput from highest to lowest. Pass `--include-specific` to include production methods with
 potential-specific gates.
+
+## Europedia Export
+
+```bash
+uv run ppc europedia
+```
+
+STATIC_HTML_GRAPH_UPDATE: `uv run ppc europedia` regenerates `graphs/europedia.html`
+and `graphs/europedia_entries.json`, then refreshes the matching files under
+`docs/examples/`.
+
+The export is generated from the mod's custom Europedia GUI, localization, and game concept
+definitions:
+
+```text
+mod/Prosper or Perish (Population Growth & Food Rework)/in_game/gui/encyclopedia_lateralview.gui
+mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/localization/english/pp_europedia_l_english.yml
+mod/Prosper or Perish (Population Growth & Food Rework)/main_menu/common/game_concepts/
+```
 
 ## Savegame Analysis
 

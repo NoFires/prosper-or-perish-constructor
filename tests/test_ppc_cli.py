@@ -13,6 +13,51 @@ def _repo(tmp_path: Path) -> Path:
     return tmp_path
 
 
+def _write_minimal_europedia_sources(repo: Path) -> None:
+    repo.joinpath("constructor.toml").write_text(
+        '[project]\nmod_root = "mod/test-mod"\n',
+        encoding="utf-8",
+    )
+    mod_root = repo / "mod" / "test-mod"
+    gui = mod_root / "in_game" / "gui" / "encyclopedia_lateralview.gui"
+    loc = mod_root / "main_menu" / "localization" / "english" / "pp_europedia_l_english.yml"
+    concepts = mod_root / "main_menu" / "common" / "game_concepts"
+    gui.parent.mkdir(parents=True)
+    loc.parent.mkdir(parents=True)
+    concepts.mkdir(parents=True)
+    gui.write_text(
+        """
+button_regular = {
+  raw_text = "All"
+  onclick = "[GetVariableSystem.Set('pp_filter', 'all')]"
+}
+button_regular = {
+  raw_text = "Food Production"
+  onclick = "[GetVariableSystem.Set('pp_filter', 'food')]"
+}
+vbox = {
+  visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'food'))]"
+  icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+  text_single = { text = "game_concept_pp_food" }
+  text_multi = { text = "game_concept_pp_food_desc" }
+}
+""",
+        encoding="utf-8",
+    )
+    title = json.dumps("P&P: Food Production")
+    desc = json.dumps("#T Food#!\n$BULLET$ Build cookeries.")
+    loc.write_text(
+        "l_english:\n"
+        f"  game_concept_pp_food: {title}\n"
+        f"  game_concept_pp_food_desc: {desc}\n",
+        encoding="utf-8-sig",
+    )
+    (concepts / "pp_food_production.txt").write_text(
+        'pp_food = { family = food texture = "flat_icons/trade_market/food_stockpile" }\n',
+        encoding="utf-8",
+    )
+
+
 def _write_savegame_manifest(repo: Path, save_path: Path | None = None) -> None:
     manifest = repo / "graphs" / "dataset" / "manifest.parquet"
     manifest.parent.mkdir(parents=True, exist_ok=True)
@@ -461,6 +506,8 @@ def test_publish_docs_copies_generated_graphs_and_assets(tmp_path: Path) -> None
     graphs.mkdir()
     (graphs / "goods_flow_explorer.html").write_text("goods\n")
     (graphs / "savegame_explorer.html").write_text("savegame\n")
+    (graphs / "europedia.html").write_text("europedia\n")
+    (graphs / "europedia_entries.json").write_text("{}\n")
     (graphs / "assets").mkdir()
     (graphs / "assets" / "icon.svg").write_text("<svg />\n")
 
@@ -468,7 +515,30 @@ def test_publish_docs_copies_generated_graphs_and_assets(tmp_path: Path) -> None
 
     assert (repo / "docs" / "examples" / "goods_flow_explorer.html").read_text() == "goods\n"
     assert (repo / "docs" / "examples" / "savegame_explorer.html").read_text() == "savegame\n"
+    assert (repo / "docs" / "examples" / "europedia.html").read_text() == "europedia\n"
+    assert (repo / "docs" / "examples" / "europedia_entries.json").read_text() == "{}\n"
     assert (repo / "docs" / "examples" / "assets" / "icon.svg").read_text() == "<svg />\n"
+
+
+def test_europedia_generates_and_publishes_export(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    _write_minimal_europedia_sources(repo)
+
+    assert cli.main(["--repo", str(repo), "europedia"]) == 0
+
+    graph_html = repo / "graphs" / "europedia.html"
+    graph_json = repo / "graphs" / "europedia_entries.json"
+    docs_html = repo / "docs" / "examples" / "europedia.html"
+    docs_json = repo / "docs" / "examples" / "europedia_entries.json"
+    assert graph_html.exists()
+    assert graph_json.exists()
+    assert docs_html.read_text(encoding="utf-8") == graph_html.read_text(encoding="utf-8")
+    assert docs_json.read_text(encoding="utf-8") == graph_json.read_text(encoding="utf-8")
+
+    payload = json.loads(graph_json.read_text(encoding="utf-8"))
+    assert payload["metadata"]["entry_count"] == 1
+    assert payload["entries"][0]["title"] == "P&P: Food Production"
+    assert "const europediaPayload =" in graph_html.read_text(encoding="utf-8")
 
 
 def test_analyze_runs_orchestrator_then_publishes_goods_flow(

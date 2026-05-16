@@ -30,9 +30,11 @@ uv run --project /mnt/c/Development/ProsperOrPerishConstructor ppc --repo /mnt/c
 - `uv run ppc test`: run pytest; pass file names or pytest args after the command.
 - `uv run ppc analyze`: export static parser tables and refresh the goods-flow docs example.
 - `uv run ppc savegame`: export latest savegame facts and the savegame explorer.
+- `uv run ppc europedia`: export the custom Prosper or Perish Europedia into the docs examples.
 - `uv run ppc publish-docs`: copy generated graph outputs into `docs/examples`.
 - STATIC_HTML_GRAPH_UPDATE: run `uv run ppc analyze` for `graphs/goods_flow_explorer.html` and `docs/examples/goods_flow_explorer.html`.
 - STATIC_HTML_GRAPH_UPDATE: run `uv run ppc savegame` for `graphs/savegame_explorer.html` and `docs/examples/savegame_explorer.html`.
+- STATIC_HTML_GRAPH_UPDATE: run `uv run ppc europedia` for `graphs/europedia.html`, `graphs/europedia_entries.json`, and matching files under `docs/examples/`.
 - `uv run ppc dashboard`: serve the current population-capacity dashboard at `http://127.0.0.1:8000/`.
 - `uv run ppc blueprint list`: list accepted blueprints.
 - `uv run ppc blueprint parity`: compare accepted blueprints with generated mod output.

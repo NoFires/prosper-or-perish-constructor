@@ -232,6 +232,10 @@
           <h3>Savegame Market Explorer</h3>
           <span>Market supply, demand, bucket, RGO, and production-method flow graph from a real save.</span>
         </a>
+        <a class="card" href="examples/europedia.html">
+          <h3>Europedia Export</h3>
+          <span>Searchable web export generated from the mod's in-game Europedia sources.</span>
+        </a>
       </div>
     </section>
 
@@ -264,6 +268,10 @@ uv run ppc test</code></pre>
           Exports latest savegame facts and refreshes <code>docs/examples/savegame_explorer.html</code>.
         </li>
         <li>
+          <strong><code>uv run ppc europedia</code></strong>
+          Exports the custom P&amp;P Europedia and refreshes <code>docs/examples/europedia.html</code>.
+        </li>
+        <li>
           <strong><code>uv run ppc savegame-notebooks build</code></strong>
           Ingests saves into the raw parquet dataset read by the analysis workbench notebook.
         </li>
@@ -289,8 +297,8 @@ uv run ppc test</code></pre>
         <li><code>blueprints/buildings.manifest.yml</code>: blueprint enablement manifest.</li>
         <li><code>labeling_output_modifiers.yaml</code>: raw-good suitability to local output modifier config.</li>
         <li><code>population_capacity.toml</code>: generated per-location population capacity config.</li>
-        <li><code>graphs/</code>: ignored local graph, savegame, and notebook artifacts.</li>
-        <li><code>docs/examples/</code>: committed public graph snapshots served by GitHub Pages.</li>
+        <li><code>graphs/</code>: ignored local graph, Europedia, savegame, and notebook artifacts.</li>
+        <li><code>docs/examples/</code>: committed public docs snapshots served by GitHub Pages.</li>
         <li><code>constructor.local.toml</code>: ignored machine-local deploy target config.</li>
       </ul>
     </section>
@@ -325,7 +333,7 @@ uv run ppc test</code></pre>
 
   <footer>
     <div class="wrap">
-      Generated graph snapshots are reproducible artifacts. Commit reusable config, accepted blueprints,
+      Generated docs snapshots are reproducible artifacts. Commit reusable config, accepted blueprints,
       scripts, docs, and tests.
     </div>
   </footer>
