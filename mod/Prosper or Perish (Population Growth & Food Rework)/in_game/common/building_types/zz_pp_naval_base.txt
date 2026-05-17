@@ -15,6 +15,7 @@ REPLACE:naval_base = {
 	
 	town = yes
 	city = yes
+	megalopolis = yes
 	
 	
 	build_time = large_port_building_time

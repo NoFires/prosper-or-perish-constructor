@@ -10,6 +10,7 @@ icon = bog_iron_smelter
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 build_time = rural_build_time
 
 location_potential = {

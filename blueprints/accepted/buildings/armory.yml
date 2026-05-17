@@ -20,6 +20,7 @@ building:
     	
     	town = yes
     	city = yes
+    	megalopolis = yes
     	
     	important_for_AI = yes
     	build_time = soldier_building
