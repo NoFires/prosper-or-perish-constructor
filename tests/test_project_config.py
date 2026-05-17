@@ -3,6 +3,7 @@ from pathlib import Path
 
 from eu5_building_pipeline.template import load_template
 from eu5gameparser.clausewitz.parser import parse_file, parse_text
+from eu5gameparser.clausewitz.serializer import normalized_value
 from eu5gameparser.clausewitz.syntax import CList
 from eu5gameparser.domain.availability import annotate_building_data_availability
 from eu5gameparser.domain.eu5 import load_eu5_data
@@ -1514,10 +1515,40 @@ def test_pp_law_adjustments_use_existing_modifier_types() -> None:
 
     assert "army_infantry_maintenance_cost_modifier" not in text
     assert "trade_efficiency =" not in text
-    assert "army_light_infantry_maintenance_cost_modifier = -0.1" in text
-    assert "army_heavy_infantry_maintenance_cost_modifier = -0.1" in text
+    assert "enable_pronoia_subject = yes" in text
+    assert "subject_income_modifier = 0.15" in text
     assert "trade_land_efficiency = small_trade_efficiency_bonus" in text
     assert "trade_sea_efficiency = small_trade_efficiency_bonus" in text
+
+
+def test_feudal_administration_override_tracks_vanilla_law() -> None:
+    load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
+    vanilla_entries = _database_entries(
+        load_order.vanilla_root / "game" / "in_game" / "common" / "laws"
+    )
+    mod_entries = {entry.key: entry.value for entry in parse_file(LAW_ADJUSTMENTS).entries}
+
+    vanilla_admin = vanilla_entries["administrative_system"]
+    mod_admin = mod_entries["TRY_REPLACE:administrative_system"]
+    assert isinstance(vanilla_admin, CList)
+    assert isinstance(mod_admin, CList)
+
+    assert _normalized_without_entry(vanilla_admin, "feudal_administration") == (
+        _normalized_without_entry(mod_admin, "feudal_administration")
+    )
+
+    feudal = _entry_values(mod_admin)["feudal_administration"]
+    assert isinstance(feudal, CList)
+    country_modifier = _entry_values(feudal)["country_modifier"]
+    assert isinstance(country_modifier, CList)
+
+    modifier_values = _entry_values(country_modifier)
+    assert "global_monthly_food_modifier" not in modifier_values
+    assert modifier_values["global_wheat_output_modifier"] == 0.1
+    assert modifier_values["global_fish_output_modifier"] == 0.1
+    assert modifier_values["global_horses_output_modifier"] == 0.025
+    assert modifier_values["global_fiber_crops_output_modifier"] == 0.025
+    assert modifier_values["global_peasants_food_consumption"] == -0.01
 
 
 def test_pp_building_prices_have_modifier_type_assets_and_localization() -> None:
@@ -1757,6 +1788,27 @@ def _database_keys(root: Path) -> set[str]:
             if isinstance(entry.value, CList):
                 keys.add(_entry_mode(entry.key)[1])
     return keys
+
+
+def _database_entries(root: Path) -> dict[str, object]:
+    entries: dict[str, object] = {}
+    for path in sorted(root.rglob("*.txt")):
+        for entry in parse_file(path).entries:
+            if isinstance(entry.value, CList):
+                entries[_entry_mode(entry.key)[1]] = entry.value
+    return entries
+
+
+def _normalized_without_entry(block: CList, key: str) -> object:
+    normalized = normalized_value(block)
+    assert isinstance(normalized, dict)
+    normalized["entries"] = [
+        {"key": entry["key"], "op": entry["op"], "value": f"<{key}>"}
+        if entry["key"] == key
+        else entry
+        for entry in normalized["entries"]
+    ]
+    return normalized
 
 
 def _entry_mode(raw_key: str) -> tuple[str, str]:

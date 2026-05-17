@@ -2335,10 +2335,14 @@ pp_local_wheat_output_modifier = {
 			value = rgb { 128 128 128 }
 		}
 		else_if = {
-			limit = { pp_wheat_productivity_map_value <= -0.75 }
+			limit = { pp_wheat_productivity_map_value <= -1.00 }
+			value = rgb { 64 0 75 }
+		}
+		else_if = {
+			limit = { pp_wheat_productivity_map_value < -0.75 }
 			lerp = {
-				min_color = rgb { 64 0 75 }
-				max_color = rgb { 88 20 99 }
+				min_color = rgb { 75 10 88 }
+				max_color = rgb { 118 42 131 }
 				factor = {
 					value = pp_wheat_productivity_map_value
 					add = 1.00
@@ -2351,8 +2355,8 @@ pp_local_wheat_output_modifier = {
 		else_if = {
 			limit = { pp_wheat_productivity_map_value < -0.50 }
 			lerp = {
-				min_color = rgb { 102 30 115 }
-				max_color = rgb { 136 62 149 }
+				min_color = rgb { 130 69 146 }
+				max_color = rgb { 153 112 171 }
 				factor = {
 					value = pp_wheat_productivity_map_value
 					add = 0.75
@@ -2365,8 +2369,8 @@ pp_local_wheat_output_modifier = {
 		else_if = {
 			limit = { pp_wheat_productivity_map_value < -0.25 }
 			lerp = {
-				min_color = rgb { 140 94 160 }
-				max_color = rgb { 171 136 187 }
+				min_color = rgb { 166 129 184 }
+				max_color = rgb { 194 165 207 }
 				factor = {
 					value = pp_wheat_productivity_map_value
 					add = 0.50
@@ -2377,41 +2381,14 @@ pp_local_wheat_output_modifier = {
 			}
 		}
 		else_if = {
-			limit = { pp_wheat_productivity_map_value < -0.10 }
+			limit = { pp_wheat_productivity_map_value < 0 }
 			lerp = {
-				min_color = rgb { 183 151 199 }
-				max_color = rgb { 211 190 219 }
+				min_color = rgb { 211 190 219 }
+				max_color = rgb { 231 212 232 }
 				factor = {
 					value = pp_wheat_productivity_map_value
 					add = 0.25
-					divide = 0.15
-					max = 1
-					min = 0
-				}
-			}
-		}
-		else_if = {
-			limit = { pp_wheat_productivity_map_value < 0 }
-			lerp = {
-				min_color = rgb { 222 202 224 }
-				max_color = rgb { 239 227 240 }
-				factor = {
-					value = pp_wheat_productivity_map_value
-					add = 0.10
-					divide = 0.10
-					max = 1
-					min = 0
-				}
-			}
-		}
-		else_if = {
-			limit = { pp_wheat_productivity_map_value < 0.10 }
-			lerp = {
-				min_color = rgb { 247 247 247 }
-				max_color = rgb { 239 246 237 }
-				factor = {
-					value = pp_wheat_productivity_map_value
-					divide = 0.10
+					divide = 0.25
 					max = 1
 					min = 0
 				}
@@ -2420,71 +2397,88 @@ pp_local_wheat_output_modifier = {
 		else_if = {
 			limit = { pp_wheat_productivity_map_value < 0.25 }
 			lerp = {
-				min_color = rgb { 226 243 221 }
-				max_color = rgb { 203 233 197 }
+				min_color = rgb { 247 247 247 }
+				max_color = rgb { 217 240 211 }
 				factor = {
 					value = pp_wheat_productivity_map_value
-					subtract = 0.10
-					divide = 0.15
+					divide = 0.25
 					max = 1
 					min = 0
 				}
 			}
 		}
 		else_if = {
-			limit = { pp_wheat_productivity_map_value < 0.40 }
+			limit = { pp_wheat_productivity_map_value < 0.50 }
 			lerp = {
-				min_color = rgb { 182 226 176 }
-				max_color = rgb { 139 204 135 }
+				min_color = rgb { 203 233 197 }
+				max_color = rgb { 166 219 160 }
 				factor = {
 					value = pp_wheat_productivity_map_value
 					subtract = 0.25
-					divide = 0.15
+					divide = 0.25
 					max = 1
 					min = 0
 				}
 			}
 		}
 		else_if = {
-			limit = { pp_wheat_productivity_map_value < 0.60 }
+			limit = { pp_wheat_productivity_map_value < 0.75 }
 			lerp = {
-				min_color = rgb { 112 192 119 }
-				max_color = rgb { 62 153 72 }
+				min_color = rgb { 139 204 135 }
+				max_color = rgb { 90 174 97 }
 				factor = {
 					value = pp_wheat_productivity_map_value
-					subtract = 0.40
-					divide = 0.20
+					subtract = 0.50
+					divide = 0.25
 					max = 1
 					min = 0
 				}
 			}
 		}
 		else_if = {
-			limit = { pp_wheat_productivity_map_value < 0.80 }
+			limit = { pp_wheat_productivity_map_value < 1.00 }
 			lerp = {
-				min_color = rgb { 42 139 63 }
-				max_color = rgb { 12 100 41 }
+				min_color = rgb { 62 153 72 }
+				max_color = rgb { 27 120 55 }
 				factor = {
 					value = pp_wheat_productivity_map_value
-					subtract = 0.60
-					divide = 0.20
+					subtract = 0.75
+					divide = 0.25
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = { pp_wheat_productivity_map_value < 1.50 }
+			lerp = {
+				min_color = rgb { 20 110 50 }
+				max_color = rgb { 8 86 35 }
+				factor = {
+					value = pp_wheat_productivity_map_value
+					subtract = 1.00
+					divide = 0.50
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else_if = {
+			limit = { pp_wheat_productivity_map_value < 2.00 }
+			lerp = {
+				min_color = rgb { 4 77 30 }
+				max_color = rgb { 0 68 27 }
+				factor = {
+					value = pp_wheat_productivity_map_value
+					subtract = 1.50
+					divide = 0.50
 					max = 1
 					min = 0
 				}
 			}
 		}
 		else = {
-			lerp = {
-				min_color = rgb { 8 86 35 }
-				max_color = rgb { 0 68 27 }
-				factor = {
-					value = pp_wheat_productivity_map_value
-					subtract = 0.80
-					divide = 0.20
-					max = 1
-					min = 0
-				}
-			}
+			value = rgb { 0 50 20 }
 		}
 	}
 	secondary_map_color = {
@@ -2497,16 +2491,17 @@ pp_local_wheat_output_modifier = {
 		}
 	}
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXTREME_DEFICIT" color = rgb { 64 0 75 } }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_SEVERE_DEFICIT" color = rgb { 118 42 131 } }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_WEAK" color = rgb { 153 112 171 } }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_MARGINAL" color = rgb { 194 165 207 } }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_SLIGHT_DEFICIT" color = rgb { 231 212 232 } }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_NEUTRAL" color = rgb { 247 247 247 } }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_SLIGHT_ADVANTAGE" color = rgb { 217 240 211 } }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_GOOD" color = rgb { 166 219 160 } }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_STRONG" color = rgb { 90 174 97 } }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_VERY_STRONG" color = rgb { 27 120 55 } }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXCEPTIONAL" color = rgb { 0 68 27 } }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_SEVERE_DEFICIT" color = rgb { 96 25 109 } }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_DEFICIT" color = rgb { 143 86 157 } }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_WEAK" color = rgb { 179 148 195 } }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_MARGINAL" color = rgb { 222 202 224 } }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_NEUTRAL" color = rgb { 235 244 232 } }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_SLIGHT_ADVANTAGE" color = rgb { 184 225 178 } }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_GOOD" color = rgb { 112 192 119 } }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_STRONG" color = rgb { 45 138 64 } }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_VERY_STRONG" color = rgb { 12 100 41 } }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXCELLENT" color = rgb { 2 72 29 } }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXCEPTIONAL" color = rgb { 0 50 20 } }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_WHEAT_LOCATION" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {

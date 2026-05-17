@@ -132,9 +132,9 @@ def test_non_wheat_output_map_modes_keep_generic_modifier_ramp() -> None:
 def test_wheat_output_map_mode_has_multi_stop_colors_and_raw_material_stripes() -> None:
     block = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))["wheat"]
 
-    assert len(re.findall(r"rgb \{", block)) >= 30
-    assert block.count("legend_key =") >= 12
-    assert block.count("lerp = {") >= 11
+    assert len(re.findall(r"rgb \{", block)) >= 34
+    assert block.count("legend_key =") >= 13
+    assert block.count("lerp = {") >= 10
     assert "secondary_map_color = {" in block
     assert "raw_material = goods:wheat" in block
     assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_WHEAT_LOCATION" in block
@@ -143,28 +143,42 @@ def test_wheat_output_map_mode_has_multi_stop_colors_and_raw_material_stripes() 
 def test_wheat_output_map_mode_separates_mid_and_high_positive_productivity() -> None:
     block = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))["wheat"]
 
-    assert "pp_wheat_productivity_map_value < 0.60" in block
-    assert "pp_wheat_productivity_map_value < 0.80" in block
-    assert "rgb { 90 174 97 }" in block
-    assert "rgb { 27 120 55 }" in block
-    assert "rgb { 0 68 27 }" in block
+    assert "pp_wheat_productivity_map_value < 0.75" in block
+    assert "pp_wheat_productivity_map_value < 1.00" in block
+    assert "pp_wheat_productivity_map_value < 1.50" in block
+    assert "pp_wheat_productivity_map_value < 2.00" in block
+    assert "rgb { 112 192 119 }" in block
+    assert "rgb { 45 138 64 }" in block
+    assert "rgb { 0 50 20 }" in block
     assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_STRONG" in block
     assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_VERY_STRONG" in block
+    assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXCELLENT" in block
     assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXCEPTIONAL" in block
 
 
 def test_wheat_output_map_mode_shades_inside_each_productivity_bucket() -> None:
     block = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))["wheat"]
 
-    assert "min_color = rgb { 112 192 119 }" in block
-    assert "max_color = rgb { 62 153 72 }" in block
-    assert "subtract = 0.40" in block
-    assert "divide = 0.20" in block
-    assert "min_color = rgb { 42 139 63 }" in block
-    assert "max_color = rgb { 12 100 41 }" in block
-    assert "subtract = 0.60" in block
+    assert "min_color = rgb { 139 204 135 }" in block
+    assert "max_color = rgb { 90 174 97 }" in block
+    assert "subtract = 0.50" in block
+    assert "divide = 0.25" in block
+    assert "min_color = rgb { 20 110 50 }" in block
+    assert "max_color = rgb { 8 86 35 }" in block
+    assert "subtract = 1.00" in block
+    assert "divide = 0.50" in block
     assert "max = 1" in block
     assert "min = 0" in block
+
+
+def test_wheat_output_map_mode_clamps_extreme_productivity_without_gradient() -> None:
+    block = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))["wheat"]
+
+    assert re.search(
+        r"limit = \{ pp_wheat_productivity_map_value <= -1\.00 \}\s+value = rgb \{ 64 0 75 \}",
+        block,
+    )
+    assert re.search(r"else = \{\s+value = rgb \{ 0 50 20 \}", block)
 
 
 def test_wheat_productivity_script_value_neutralizes_all_variable_harvests() -> None:

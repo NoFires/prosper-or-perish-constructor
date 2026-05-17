@@ -124,7 +124,6 @@ TRY_REPLACE:total_population = {
 	
 	free_building_levels = 0.075
 	local_food_capacity = 1.5
-	local_disease_resistance = -0.001
 }
 # capped at max 100 this value
 TRY_REPLACE:location_exports = {
