@@ -1,4 +1,4 @@
-lateralview_full = {	
+﻿lateralview_full = {
 	name = "encyclopedia_lateralview"
 
     blockoverride "panel_header" {

@@ -10,6 +10,8 @@ from eu5gameparser.domain.eu5 import load_eu5_data
 ROOT = Path(__file__).resolve().parents[1]
 MOD_ROOT = ROOT / "mod" / "Prosper or Perish (Population Growth & Food Rework)"
 MAP_MODES = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_local_output_modifier_map_modes.txt"
+SCRIPT_VALUES = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_local_output_modifier_map_modes.txt"
+HARVEST_MODIFIERS = MOD_ROOT / "in_game" / "common" / "static_modifiers" / "pp_variable_harvest_modifiers.txt"
 LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_building_adjustments_l_english.yml"
 ICON_DIRS = (
     MOD_ROOT / "in_game" / "gfx" / "interface" / "icons" / "map_modes",
@@ -45,6 +47,21 @@ def _map_mode_blocks(text: str) -> dict[str, str]:
     return blocks
 
 
+def _wheat_harvest_modifier_values() -> dict[str, str]:
+    text = HARVEST_MODIFIERS.read_text(encoding="utf-8-sig")
+    values: dict[str, str] = {}
+    pattern = re.compile(r"^(pp_harvest_[a-z0-9_]+)\s*=\s*\{(?P<body>.*?)^\}", re.DOTALL | re.MULTILINE)
+    for match in pattern.finditer(text):
+        value_match = re.search(
+            r"^\s*local_wheat_output_modifier\s*=\s*([-+]?\d+(?:\.\d+)?)\s*$",
+            match.group("body"),
+            flags=re.MULTILINE,
+        )
+        if value_match is not None:
+            values[match.group(1)] = value_match.group(1)
+    return values
+
+
 def test_local_output_map_modes_match_parser_raw_materials() -> None:
     raw_materials = _raw_material_goods()
     found = _map_mode_goods(MAP_MODES.read_text(encoding="utf-8-sig"))
@@ -77,6 +94,113 @@ def test_local_output_map_modes_have_required_localization() -> None:
         missing.extend(key for key in keys if key not in loc)
 
     assert not missing
+
+
+def test_wheat_output_map_mode_uses_harvest_neutral_script_value_only_for_wheat() -> None:
+    blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
+
+    assert "pp_wheat_productivity_map_value" in blocks["wheat"]
+    assert "value = modifier:local_wheat_output_modifier" not in blocks["wheat"]
+
+    bad = [
+        good
+        for good, block in blocks.items()
+        if good != "wheat" and "pp_wheat_productivity_map_value" in block
+    ]
+    assert not bad
+
+
+def test_non_wheat_output_map_modes_keep_generic_modifier_ramp() -> None:
+    blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
+
+    bad: list[str] = []
+    for good, block in blocks.items():
+        if good == "wheat":
+            continue
+        if f"value = modifier:local_{good}_output_modifier" not in block:
+            bad.append(f"{good}: missing direct modifier value")
+        if "add = @factor_add" not in block:
+            bad.append(f"{good}: missing generic factor add")
+        if "divide = @factor_divide" not in block:
+            bad.append(f"{good}: missing generic factor divide")
+        if "secondary_map_color" in block:
+            bad.append(f"{good}: unexpected secondary map color")
+
+    assert not bad
+
+
+def test_wheat_output_map_mode_has_multi_stop_colors_and_raw_material_stripes() -> None:
+    block = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))["wheat"]
+
+    assert len(re.findall(r"rgb \{", block)) >= 30
+    assert block.count("legend_key =") >= 12
+    assert block.count("lerp = {") >= 11
+    assert "secondary_map_color = {" in block
+    assert "raw_material = goods:wheat" in block
+    assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_WHEAT_LOCATION" in block
+
+
+def test_wheat_output_map_mode_separates_mid_and_high_positive_productivity() -> None:
+    block = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))["wheat"]
+
+    assert "pp_wheat_productivity_map_value < 0.60" in block
+    assert "pp_wheat_productivity_map_value < 0.80" in block
+    assert "rgb { 90 174 97 }" in block
+    assert "rgb { 27 120 55 }" in block
+    assert "rgb { 0 68 27 }" in block
+    assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_STRONG" in block
+    assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_VERY_STRONG" in block
+    assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXCEPTIONAL" in block
+
+
+def test_wheat_output_map_mode_shades_inside_each_productivity_bucket() -> None:
+    block = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))["wheat"]
+
+    assert "min_color = rgb { 112 192 119 }" in block
+    assert "max_color = rgb { 62 153 72 }" in block
+    assert "subtract = 0.40" in block
+    assert "divide = 0.20" in block
+    assert "min_color = rgb { 42 139 63 }" in block
+    assert "max_color = rgb { 12 100 41 }" in block
+    assert "subtract = 0.60" in block
+    assert "max = 1" in block
+    assert "min = 0" in block
+
+
+def test_wheat_productivity_script_value_neutralizes_all_variable_harvests() -> None:
+    script_values = SCRIPT_VALUES.read_text(encoding="utf-8-sig")
+    harvest_values = _wheat_harvest_modifier_values()
+    assert harvest_values
+
+    found = set(re.findall(r"has_location_modifier = (pp_harvest_[a-z0-9_]+)", script_values))
+    assert found == set(harvest_values)
+
+    for modifier, value in harvest_values.items():
+        operation = "add" if value.startswith("-") else "subtract"
+        amount = value.removeprefix("-").removeprefix("+")
+        pattern = (
+            rf"has_location_modifier = {re.escape(modifier)} \}}\n"
+            rf"\t\t{operation} = {re.escape(amount)}"
+        )
+        assert re.search(pattern, script_values), modifier
+
+
+def test_wheat_map_mode_localization_explains_harvest_neutral_value_without_balance_numbers() -> None:
+    loc = LOCALIZATION.read_text(encoding="utf-8-sig")
+    wheat_keys = re.findall(
+        r"^\s+MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER[^:]*: \"(.*)\"$",
+        loc,
+        flags=re.MULTILINE,
+    )
+    assert wheat_keys
+    wheat_text = "\n".join(wheat_keys)
+
+    assert "harvest-neutral wheat productivity" in wheat_text
+    assert "Active variable harvest effects are excluded from the map color" in wheat_text
+    assert "wheat is the raw material" in wheat_text
+
+    text_without_format_precision = wheat_text.replace("|2", "")
+    assert not re.search(r"[-+]?\d+(?:\.\d+)?%?", text_without_format_precision)
 
 
 def test_local_output_map_mode_localization_uses_literal_newlines() -> None:

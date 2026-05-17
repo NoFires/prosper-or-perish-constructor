@@ -172,6 +172,13 @@ farm_max_level = {
 	min = 0
 }
 
+fruit_orchard_max_level = {
+	add = farm_max_level
+	add = {
+		value = "location_building_level(building_type:fruit_orchard)"
+	}
+}
+
 farm_capacity_available = {
 	add = farm_max_level
 }

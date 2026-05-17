@@ -6,7 +6,7 @@ pp_cull_capacity_buildings_over_max_v2 = {
 			# Land farm capacity
 			pp_cull_capacity_building_above_max = { building = farming_village max_level = farm_max_level }
 			pp_cull_capacity_building_above_max = { building = model_farm max_level = farm_max_level }
-			pp_cull_capacity_building_above_max = { building = fruit_orchard max_level = farm_max_level }
+			pp_cull_capacity_building_above_max = { building = fruit_orchard max_level = fruit_orchard_max_level }
 			pp_cull_capacity_building_above_max = { building = pomological_orchard max_level = farm_max_level }
 			pp_cull_capacity_building_above_max = { building = sheep_farms max_level = farm_max_level }
 			pp_cull_capacity_building_above_max = { building = enclosed_sheep_walks max_level = farm_max_level }

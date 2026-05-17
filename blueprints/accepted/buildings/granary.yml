@@ -20,7 +20,12 @@ building:
         city = yes
         megalopolis = yes
         location_potential = {
-            is_province_capital = yes
+            OR = {
+                location_rank = location_rank:rural_settlement
+                location_rank = location_rank:town
+                location_rank = location_rank:city
+                location_rank = location_rank:megalopolis
+            }
         }
         build_time = government_build_time
     	unique_production_methods = {
@@ -31,10 +36,10 @@ building:
     		}
     	}
     	construction_demand = granary_construction
-    	modifier = {
-    		local_food_decay_modifier = -0.0002
-    		local_food_capacity = 1200
-    	}
+        modifier = {
+            local_food_decay_modifier = -0.0002
+            local_food_capacity = 720
+        }
     	ai_forbid_shutdown = yes
     	forbidden_for_estates = no
 

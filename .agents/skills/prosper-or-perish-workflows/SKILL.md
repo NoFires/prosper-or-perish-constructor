@@ -42,6 +42,9 @@ uv run --project /mnt/c/Development/ProsperOrPerishConstructor ppc --repo /mnt/c
 - `uv run ppc blueprint good <good>`: compare methods that produce one trade good.
 - `uv run ppc blueprint build`: build accepted blueprints into the constructor mod copy.
 - `uv run ppc build`: same build workflow as `blueprint build`.
+- `uv run ppc setup-corrections`: dry-run pre-tick setup building corrections from the current EU5 `error.log`.
+- `uv run ppc setup-corrections --write`: regenerate the static setup correction override files.
+- `uv run ppc setup-corrections --disable`: remove the generated setup correction files so a fresh game launch can prove which corrections are still needed.
 - `uv run ppc sync --yes`: guarded live mirror into the configured Paradox mod folder.
 
 ## Safety Rules

@@ -121,6 +121,172 @@ def test_test_command_preserves_explicit_capture_args(
     assert calls == [[cli.sys.executable, "-m", "pytest", "-s", "tests/test_project_config.py"]]
 
 
+def test_setup_corrections_dry_run_invokes_generator(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    script = repo / "scripts" / "generate_setup_building_corrections.py"
+    script.parent.mkdir()
+    script.write_text("", encoding="utf-8")
+    calls: list[list[str]] = []
+
+    def fake_run(command, cwd):
+        calls.append([str(part) for part in command])
+        assert cwd == repo
+        return 0
+
+    monkeypatch.setattr(cli, "_run", fake_run)
+
+    assert cli.main(["--repo", str(repo), "setup-corrections", "--log", "error.log"]) == 0
+
+    assert calls == [
+        [
+            cli.sys.executable,
+            str(script),
+            "--repo",
+            str(repo),
+            "--project",
+            str(repo / "constructor.toml"),
+            "--load-order",
+            str(repo / "constructor.load_order.toml"),
+            "--log",
+            "error.log",
+        ]
+    ]
+
+
+def test_setup_corrections_write_passes_write_and_force(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    script = repo / "scripts" / "generate_setup_building_corrections.py"
+    script.parent.mkdir()
+    script.write_text("", encoding="utf-8")
+    calls: list[list[str]] = []
+
+    monkeypatch.setattr(
+        cli,
+        "_run",
+        lambda command, cwd: calls.append([str(part) for part in command]) or 0,
+    )
+
+    assert (
+        cli.main(
+            [
+                "--repo",
+                str(repo),
+                "setup-corrections",
+                "--write",
+                "--force",
+                "--building",
+                "fruit_orchard",
+                "--direct-building-manager-only",
+            ]
+        )
+        == 0
+    )
+
+    assert "--write" in calls[0]
+    assert "--force" in calls[0]
+    assert calls[0][-3:] == ["--building", "fruit_orchard", "--direct-building-manager-only"]
+
+
+def test_setup_corrections_disable_removes_generated_files(tmp_path: Path) -> None:
+    repo = tmp_path
+    mod_root = repo / "mod" / "test-mod"
+    repo.joinpath("constructor.toml").write_text(
+        '[project]\nmod_root = "mod/test-mod"\n',
+        encoding="utf-8",
+    )
+    for relative in cli.SETUP_CORRECTION_OUTPUTS:
+        path = mod_root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(cli.SETUP_CORRECTION_GENERATED_MARKER + "\n", encoding="utf-8")
+
+    assert cli.main(["--repo", str(repo), "setup-corrections", "--disable"]) == 0
+
+    assert all(not (mod_root / relative).exists() for relative in cli.SETUP_CORRECTION_OUTPUTS)
+
+
+def test_finalize_command_runs_constructor_finalizer(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    calls: list[Path] = []
+
+    monkeypatch.setattr(
+        cli,
+        "_finalize_constructor_mod",
+        lambda repo_arg, project_arg: calls.append(project_arg),
+    )
+
+    assert cli.main(["--repo", str(repo), "finalize"]) == 0
+
+    assert calls == [repo / "constructor.toml"]
+
+
+def test_constructor_text_bom_finalizer_scans_game_loaded_files(tmp_path: Path) -> None:
+    mod_root = tmp_path / "mod" / "test-mod"
+    scripted_trigger = mod_root / "in_game" / "common" / "scripted_triggers" / "pp_test.txt"
+    setup_start = mod_root / "main_menu" / "setup" / "start" / "07_test.txt"
+    setup_country = mod_root / "main_menu" / "setup" / "countries" / "pp_test.txt"
+    metadata = mod_root / ".metadata" / "metadata.json"
+    scripted_trigger.parent.mkdir(parents=True)
+    setup_start.parent.mkdir(parents=True)
+    setup_country.parent.mkdir(parents=True)
+    metadata.parent.mkdir(parents=True)
+    scripted_trigger.write_bytes('pp_test = { name = "café" }\r\n'.encode("cp1252"))
+    setup_start.write_text("locations={\n\tstockholm={ rank = town }\n}\n", encoding="utf-8-sig")
+    setup_country.write_text("countries={ countries={ SWE={ capital = stockholm } } }\n", encoding="utf-8")
+    metadata.write_text("{}", encoding="utf-8")
+
+    cli._ensure_constructor_text_boms(mod_root)
+
+    raw = scripted_trigger.read_bytes()
+    assert raw.startswith(b"\xef\xbb\xbf")
+    assert raw.decode("utf-8-sig") == 'pp_test = { name = "café" }\r\n'
+    assert not setup_start.read_bytes().startswith(b"\xef\xbb\xbf")
+    assert setup_start.read_text(encoding="utf-8") == "locations={\n\tstockholm={ rank = town }\n}\n"
+    assert setup_country.read_bytes().startswith(b"\xef\xbb\xbf")
+    assert not metadata.read_bytes().startswith(b"\xef\xbb\xbf")
+
+
+def test_clean_game_rule_presets_removes_mod_settings_only(tmp_path: Path) -> None:
+    repo = tmp_path
+    mod_root = repo / "mod" / "test-mod"
+    game_rules = mod_root / "main_menu" / "common" / "game_rules" / "pp_rules.txt"
+    preset = repo / "eu5-user" / "player" / "game_rules" / "presets.txt"
+    repo.joinpath("constructor.toml").write_text(
+        '[project]\nmod_root = "mod/test-mod"\n',
+        encoding="utf-8",
+    )
+    game_rules.parent.mkdir(parents=True)
+    game_rules.write_text(
+        "pp_test_rule = {\n"
+        "\tdefault = pp_test_normal\n"
+        "\tpp_test_normal = { flag = general_rule }\n"
+        "\tpp_test_hard = { flag = general_rule }\n"
+        "}\n",
+        encoding="utf-8-sig",
+    )
+    preset.parent.mkdir(parents=True)
+    preset.write_text(
+        'game_rules_preset={\n\tname="LastAppliedRules"\n'
+        "\tsetting={ player_normal_difficulty pp_test_normal ai_normal_difficulty pp_test_hard }\n"
+        "\tironman=no\n}\n",
+        encoding="utf-8-sig",
+    )
+
+    assert cli.main(["--repo", str(repo), "clean-game-rule-presets", "--preset", str(preset)]) == 0
+
+    text = preset.read_text(encoding="utf-8-sig")
+    assert "pp_test_normal" not in text
+    assert "pp_test_hard" not in text
+    assert "player_normal_difficulty" in text
+    assert "ai_normal_difficulty" in text
+    assert preset.read_bytes().startswith(b"\xef\xbb\xbf")
+
+
 def test_sync_requires_explicit_confirmation(tmp_path: Path) -> None:
     repo = _repo(tmp_path)
 

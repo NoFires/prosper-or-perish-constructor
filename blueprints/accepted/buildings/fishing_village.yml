@@ -40,6 +40,7 @@ building:
                 has_river = yes
                 is_adjacent_to_lake = yes
                 topography = wetlands
+                is_coastal = yes
                 raw_material = goods:fish
             }
         }
