@@ -12,6 +12,11 @@ from eu5_mod_orchestrator.blueprints import accepted_blueprint_files, validate_b
 from eu5_mod_orchestrator.config import load_project_config
 from mod_injector.config import load_mod_injector_config
 from prosper_or_perish_constructor import cli
+from scripts.generate_setup_building_corrections import (
+    expand_town_setup,
+    parse_setup_model,
+    parse_town_setups,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,6 +42,13 @@ GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
 BUILDING_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt"
 BUILDING_CAPACITY_CULLING_V2 = (
     MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_capacity_culling_v2.txt"
+)
+ESTATE_SETUP_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_estate_setup_culling.txt"
+ESTATE_START_PRESERVATION = (
+    MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_estate_start_preservation.txt"
+)
+ESTATE_SETUP_CULLING_RULES = (
+    MOD_ROOT / "main_menu" / "common" / "game_rules" / "pp_estate_setup_culling_rules.txt"
 )
 CAPACITY_CULLING_EFFECTS = (
     MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_culling_effects.txt"
@@ -1366,6 +1378,79 @@ def test_capacity_culling_v2_avoids_pooled_and_iterative_culling() -> None:
     assert not [token for token in forbidden_tokens if token in text]
 
 
+def test_setup_estate_building_culling_is_registered_and_toggleable() -> None:
+    game_start_entries = {entry.key: entry.value for entry in parse_file(GAME_START).entries}
+    game_start = game_start_entries["on_game_start"]
+    assert isinstance(game_start, CList)
+    on_actions = _entry_values(game_start)["on_actions"]
+    assert isinstance(on_actions, CList)
+
+    assert "pp_cull_setup_estate_buildings" in on_actions.items
+    assert on_actions.items.index("pp_cull_setup_estate_buildings") < on_actions.items.index(
+        "pp_game_start_effect"
+    )
+
+    culling_entries = {entry.key: entry.value for entry in parse_file(ESTATE_SETUP_CULLING).entries}
+    assert "pp_cull_setup_estate_buildings" in culling_entries
+
+    culling_text = ESTATE_SETUP_CULLING.read_text(encoding="utf-8-sig")
+    assert "has_game_rule = pp_estate_setup_culling_disabled" in culling_text
+
+    rule_entries = {entry.key: entry.value for entry in parse_file(ESTATE_SETUP_CULLING_RULES).entries}
+    rule = rule_entries["pp_estate_setup_culling_rule"]
+    assert isinstance(rule, CList)
+    rule_values = _entry_values(rule)
+    assert rule_values["default"] == "pp_estate_setup_culling_enabled"
+    assert "pp_estate_setup_culling_enabled" in rule_values
+    assert "pp_estate_setup_culling_disabled" in rule_values
+
+    localization = (LOCALIZATION_ROOT / "pp_game_rules_l_english.yml").read_text(encoding="utf-8-sig")
+    assert "rule_pp_estate_setup_culling_rule:" in localization
+    assert "setting_pp_estate_setup_culling_enabled:" in localization
+    assert "setting_pp_estate_setup_culling_disabled:" in localization
+
+
+def test_setup_estate_building_culling_covers_vanilla_estate_buildings() -> None:
+    estate_buildings = set(_vanilla_estate_buildings())
+    culling_text = ESTATE_SETUP_CULLING.read_text(encoding="utf-8-sig")
+
+    gated_buildings = set(re.findall(r"has_building = building_type:([A-Za-z0-9_]+)", culling_text))
+    destroyed_buildings = set(
+        re.findall(r"destroy_all_buildings_of_type = building_type:([A-Za-z0-9_]+)", culling_text)
+    )
+
+    assert gated_buildings == estate_buildings
+    assert destroyed_buildings == estate_buildings
+    assert culling_text.count("chance = 65") == len(estate_buildings)
+    assert "construct_building" not in culling_text
+    assert "construct_estate_building" not in culling_text
+    assert "destroy_building =" not in culling_text
+    assert "destroy_building_forcefully" not in culling_text
+
+
+def test_setup_estate_building_culling_preserves_vanilla_start_estate_locations() -> None:
+    explicit_locations = _vanilla_start_estate_locations_by_building()
+    trigger_entries = {entry.key: entry.value for entry in parse_file(ESTATE_START_PRESERVATION).entries}
+
+    expected_triggers = {
+        f"pp_vanilla_start_{building}_location" for building in explicit_locations
+    }
+    assert set(trigger_entries) == expected_triggers
+
+    culling_text = ESTATE_SETUP_CULLING.read_text(encoding="utf-8-sig")
+    for building, locations in explicit_locations.items():
+        trigger_name = f"pp_vanilla_start_{building}_location"
+        assert f"NOT = {{ {trigger_name} = yes }}" in culling_text
+
+        trigger = trigger_entries[trigger_name]
+        assert isinstance(trigger, CList)
+        values = _entry_values(trigger)
+        or_block = values["OR"]
+        assert isinstance(or_block, CList)
+        preserved = {entry.value for entry in or_block.entries if entry.key == "this"}
+        assert preserved == {f"location:{location}" for location in locations}
+
+
 def test_replaced_buildings_do_not_reuse_vanilla_unique_method_names() -> None:
     vanilla_methods_by_building = _vanilla_unique_methods_by_building()
     offenders = []
@@ -1750,6 +1835,51 @@ def test_labeling_output_modifier_config_loads_explicit_goods() -> None:
         "wool",
     ]
     assert all(g.enabled for g in cfg.goods)
+
+
+def _vanilla_estate_buildings() -> tuple[str, ...]:
+    load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
+    estate_buildings = (
+        load_order.vanilla_root
+        / "game"
+        / "in_game"
+        / "common"
+        / "building_types"
+        / "estate_buildings.txt"
+    )
+    return tuple(entry.key for entry in parse_file(estate_buildings).entries if isinstance(entry.value, CList))
+
+
+def _vanilla_start_estate_locations_by_building() -> dict[str, set[str]]:
+    load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
+    vanilla_root = load_order.vanilla_root / "game"
+    estate_buildings = set(_vanilla_estate_buildings())
+
+    setup = parse_setup_model(
+        (vanilla_root / "main_menu" / "setup" / "start" / "07_cities_and_buildings.txt").read_text(
+            encoding="utf-8-sig"
+        )
+    )
+    town_setups = parse_town_setups(
+        (vanilla_root / "in_game" / "common" / "town_setups" / "00_default.txt").read_text(
+            encoding="utf-8-sig"
+        )
+    )
+
+    result: dict[str, set[str]] = {building: set() for building in estate_buildings}
+    for entry in setup.direct_entries:
+        if entry.building in estate_buildings:
+            result[entry.building].add(entry.location)
+
+    for location, entry in setup.locations.items():
+        if entry.town_setup is None:
+            continue
+        expanded = expand_town_setup(entry.town_setup, town_setups)
+        for building in expanded:
+            if building in estate_buildings:
+                result[building].add(location)
+
+    return {building: locations for building, locations in sorted(result.items()) if locations}
 
 
 def _vanilla_unique_methods_by_building() -> dict[str, set[str]]:
