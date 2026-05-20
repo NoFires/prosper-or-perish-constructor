@@ -190,6 +190,34 @@ def _build_parser() -> argparse.ArgumentParser:
         "Export static parser tables and refresh the goods-flow docs example.",
         _analyze,
     )
+    update_audit = _add_command(
+        subcommands,
+        "update-audit",
+        "Audit Prosper or Perish vanilla data dependencies across two EU5 refs.",
+        _update_audit,
+    )
+    update_audit.add_argument(
+        "--old-ref",
+        required=True,
+        help="Older vanilla EU5 Git ref, for example eu5-1.1.10.",
+    )
+    update_audit.add_argument(
+        "--new-ref",
+        required=True,
+        help="Newer vanilla EU5 Git ref, for example eu5-1.2.3.",
+    )
+    update_audit.add_argument(
+        "--load-order",
+        type=Path,
+        default=CONSTRUCTOR_LOAD_ORDER,
+        help="Load-order TOML path relative to --repo. Defaults to constructor.load_order.toml.",
+    )
+    update_audit.add_argument(
+        "--output-dir",
+        type=Path,
+        default=None,
+        help="Report output directory. Defaults to reports/eu5_update_audit/<old>..<new>.",
+    )
     output_modifiers = _add_command(
         subcommands,
         "output-modifiers",
@@ -1154,6 +1182,45 @@ def _analyze(args: argparse.Namespace, extra: Sequence[str], repo: Path, project
     if result != 0:
         return result
     return _publish_graph_examples(repo, [GOODS_FLOW_EXPLORER.name])
+
+
+def _update_audit(
+    args: argparse.Namespace,
+    extra: Sequence[str],
+    repo: Path,
+    project: Path,
+) -> int:
+    if extra:
+        raise SystemExit("update-audit does not accept extra arguments.")
+
+    from prosper_or_perish_constructor.update_audit import run_update_audit
+
+    output_dir = None if args.output_dir is None else _resolve_repo_relative_path(repo, args.output_dir)
+    summary = run_update_audit(
+        repo=repo,
+        project=project,
+        load_order_path=_resolve_repo_relative_path(repo, args.load_order),
+        old_ref=args.old_ref,
+        new_ref=args.new_ref,
+        output_dir=output_dir,
+    )
+    print(f"dependencies={summary.dependency_count}", flush=True)
+    print(
+        "impacted="
+        f"{summary.changed_count + summary.added_count + summary.removed_count} "
+        f"(changed={summary.changed_count}, added={summary.added_count}, removed={summary.removed_count})",
+        flush=True,
+    )
+    print(f"unchanged={summary.unchanged_count}", flush=True)
+    if summary.missing_both_count:
+        print(f"missing_both={summary.missing_both_count}", flush=True)
+    if summary.warning_count:
+        print(f"warnings={summary.warning_count}", flush=True)
+    print(f"html={summary.index_html}", flush=True)
+    print(f"changed_csv={summary.changed_csv}", flush=True)
+    print(f"all_csv={summary.all_csv}", flush=True)
+    print(f"changed_json={summary.changed_json}", flush=True)
+    return 0
 
 
 def _output_modifiers(
