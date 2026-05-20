@@ -47,6 +47,15 @@ def _map_mode_blocks(text: str) -> dict[str, str]:
     return blocks
 
 
+def _script_value_blocks(text: str) -> dict[str, str]:
+    starts = list(re.finditer(r"^pp_(.+?)_productivity_map_value\s*=\s*\{", text, flags=re.MULTILINE))
+    blocks: dict[str, str] = {}
+    for index, match in enumerate(starts):
+        end = starts[index + 1].start() if index + 1 < len(starts) else len(text)
+        blocks[match.group(1)] = text[match.start() : end]
+    return blocks
+
+
 def _wheat_harvest_modifier_values() -> dict[str, str]:
     text = HARVEST_MODIFIERS.read_text(encoding="utf-8-sig")
     values: dict[str, str] = {}
@@ -60,6 +69,20 @@ def _wheat_harvest_modifier_values() -> dict[str, str]:
         if value_match is not None:
             values[match.group(1)] = value_match.group(1)
     return values
+
+
+ANCHOR_LEGEND_KEYS = [
+    "EXTREME_DEFICIT",
+    "MARGINAL",
+    "NEUTRAL",
+    "STRONG",
+    "EXCEPTIONAL",
+    "RAW_MATERIAL",
+]
+
+
+def _productivity_value_name(good: str) -> str:
+    return f"pp_{good}_productivity_map_value"
 
 
 def test_local_output_map_modes_match_parser_raw_materials() -> None:
@@ -90,95 +113,171 @@ def test_local_output_map_modes_have_required_localization() -> None:
             f"MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER",
             f"MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER_TT_LAND",
             f"MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER_TT_LAND_BREAKDOWN",
+            *(f"MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER_{suffix}" for suffix in ANCHOR_LEGEND_KEYS),
         ]
         missing.extend(key for key in keys if key not in loc)
 
     assert not missing
 
 
-def test_wheat_output_map_mode_uses_harvest_neutral_script_value_only_for_wheat() -> None:
-    blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
-
-    assert "pp_wheat_productivity_map_value" in blocks["wheat"]
-    assert "value = modifier:local_wheat_output_modifier" not in blocks["wheat"]
-
-    bad = [
-        good
-        for good, block in blocks.items()
-        if good != "wheat" and "pp_wheat_productivity_map_value" in block
-    ]
-    assert not bad
-
-
-def test_non_wheat_output_map_modes_keep_generic_modifier_ramp() -> None:
+def test_output_map_modes_use_productivity_script_values() -> None:
     blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
 
     bad: list[str] = []
     for good, block in blocks.items():
-        if good == "wheat":
-            continue
-        if f"value = modifier:local_{good}_output_modifier" not in block:
-            bad.append(f"{good}: missing direct modifier value")
-        if "add = @factor_add" not in block:
-            bad.append(f"{good}: missing generic factor add")
-        if "divide = @factor_divide" not in block:
-            bad.append(f"{good}: missing generic factor divide")
-        if "secondary_map_color" in block:
-            bad.append(f"{good}: unexpected secondary map color")
+        value_name = _productivity_value_name(good)
+        if value_name not in block:
+            bad.append(f"{good}: missing {value_name}")
+        if f"value = modifier:local_{good}_output_modifier" in block:
+            bad.append(f"{good}: uses direct modifier in map color")
 
     assert not bad
 
 
-def test_wheat_output_map_mode_has_multi_stop_colors_and_raw_material_stripes() -> None:
-    block = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))["wheat"]
+def test_local_output_map_mode_script_values_cover_every_raw_material() -> None:
+    script_values = SCRIPT_VALUES.read_text(encoding="utf-8-sig")
 
-    assert len(re.findall(r"rgb \{", block)) >= 34
-    assert block.count("legend_key =") >= 13
-    assert block.count("lerp = {") >= 10
-    assert "secondary_map_color = {" in block
-    assert "raw_material = goods:wheat" in block
-    assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_WHEAT_LOCATION" in block
+    missing: list[str] = []
+    for good in _raw_material_goods():
+        if f"{_productivity_value_name(good)} = {{" not in script_values:
+            missing.append(good)
+        if f"value = modifier:local_{good}_output_modifier" not in script_values:
+            missing.append(f"{good}: missing direct modifier source")
 
-
-def test_wheat_output_map_mode_separates_mid_and_high_positive_productivity() -> None:
-    block = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))["wheat"]
-
-    assert "pp_wheat_productivity_map_value < 0.75" in block
-    assert "pp_wheat_productivity_map_value < 1.00" in block
-    assert "pp_wheat_productivity_map_value < 1.50" in block
-    assert "pp_wheat_productivity_map_value < 2.00" in block
-    assert "rgb { 112 192 119 }" in block
-    assert "rgb { 45 138 64 }" in block
-    assert "rgb { 0 50 20 }" in block
-    assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_STRONG" in block
-    assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_VERY_STRONG" in block
-    assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXCELLENT" in block
-    assert "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXCEPTIONAL" in block
+    assert not missing
 
 
-def test_wheat_output_map_mode_shades_inside_each_productivity_bucket() -> None:
-    block = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))["wheat"]
+def test_only_wheat_productivity_script_value_neutralizes_harvests() -> None:
+    blocks = _script_value_blocks(SCRIPT_VALUES.read_text(encoding="utf-8-sig"))
 
-    assert "min_color = rgb { 139 204 135 }" in block
-    assert "max_color = rgb { 90 174 97 }" in block
-    assert "subtract = 0.50" in block
-    assert "divide = 0.25" in block
-    assert "min_color = rgb { 20 110 50 }" in block
-    assert "max_color = rgb { 8 86 35 }" in block
-    assert "subtract = 1.00" in block
-    assert "divide = 0.50" in block
-    assert "max = 1" in block
-    assert "min = 0" in block
+    bad: list[str] = []
+    for good, block in blocks.items():
+        has_harvest_logic = "has_location_modifier = pp_harvest_" in block
+        if good == "wheat":
+            if not has_harvest_logic:
+                bad.append("wheat: missing harvest-neutral correction")
+        elif has_harvest_logic:
+            bad.append(f"{good}: unexpected harvest-neutral correction")
+
+    assert not bad
 
 
-def test_wheat_output_map_mode_clamps_extreme_productivity_without_gradient() -> None:
-    block = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))["wheat"]
+def test_output_map_modes_all_use_classified_diverging_format() -> None:
+    blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
 
-    assert re.search(
-        r"limit = \{ pp_wheat_productivity_map_value <= -1\.00 \}\s+value = rgb \{ 64 0 75 \}",
-        block,
-    )
-    assert re.search(r"else = \{\s+value = rgb \{ 0 50 20 \}", block)
+    bad: list[str] = []
+    for good, block in blocks.items():
+        if "define:NMapColors|MAP_COLOR" in block:
+            bad.append(f"{good}: still uses vanilla red/green map colors")
+        if "@factor_add" in block or "@factor_divide" in block:
+            bad.append(f"{good}: still uses old generic factor ramp")
+        if block.count("legend_key =") != len(ANCHOR_LEGEND_KEYS):
+            bad.append(f"{good}: wrong concise legend key count")
+        if block.count("lerp = {") < 10:
+            bad.append(f"{good}: missing bucket shading")
+        if f"raw_material = goods:{good}" not in block:
+            bad.append(f"{good}: missing matching raw-material stripes")
+        if f"MAPMODE_PP_LOCAL_{good.upper()}_OUTPUT_MODIFIER_RAW_MATERIAL" not in block:
+            bad.append(f"{good}: missing raw-material legend key")
+
+    assert not bad
+
+
+def test_output_map_modes_have_multi_stop_colors_and_raw_material_stripes() -> None:
+    blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
+
+    bad: list[str] = []
+    for good, block in blocks.items():
+        if len(re.findall(r"rgb \{", block)) < 30:
+            bad.append(f"{good}: too few RGB stops")
+        if block.count("legend_key =") != 6:
+            bad.append(f"{good}: wrong legend key count")
+        if block.count("lerp = {") < 10:
+            bad.append(f"{good}: missing in-bucket lerps")
+        if "secondary_map_color = {" not in block:
+            bad.append(f"{good}: missing raw-material stripes")
+
+    assert not bad
+
+
+def test_output_map_mode_legends_use_concise_anchor_keys() -> None:
+    blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
+
+    bad: list[str] = []
+    for good, block in blocks.items():
+        legend_keys = re.findall(
+            rf'MAPMODE_PP_LOCAL_{good.upper()}_OUTPUT_MODIFIER_([A-Z_]+)" color',
+            block,
+        )
+        if legend_keys != ANCHOR_LEGEND_KEYS:
+            bad.append(f"{good}: {legend_keys}")
+
+    assert not bad
+
+
+def test_output_map_modes_separate_mid_and_high_positive_productivity() -> None:
+    blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
+
+    bad: list[str] = []
+    for good, block in blocks.items():
+        if f"{_productivity_value_name(good)} < 0.75" not in block:
+            bad.append(f"{good}: missing 0.75 band")
+        if f"{_productivity_value_name(good)} < 1.00" not in block:
+            bad.append(f"{good}: missing 1.00 band")
+        if f"{_productivity_value_name(good)} < 1.50" not in block:
+            bad.append(f"{good}: missing 1.50 band")
+        if f"{_productivity_value_name(good)} < 2.00" not in block:
+            bad.append(f"{good}: missing 2.00 band")
+        if "rgb { 90 174 97 }" not in block:
+            bad.append(f"{good}: missing good-band color")
+        if "rgb { 45 138 64 }" not in block:
+            bad.append(f"{good}: missing strong legend color")
+        if "rgb { 0 50 20 }" not in block:
+            bad.append(f"{good}: missing exceptional clamp")
+
+    assert not bad
+
+
+def test_output_map_modes_shade_inside_each_productivity_bucket() -> None:
+    blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
+
+    bad: list[str] = []
+    for good, block in blocks.items():
+        if "min_color = rgb { 139 204 135 }" not in block:
+            bad.append(f"{good}: missing good min color")
+        if "max_color = rgb { 90 174 97 }" not in block:
+            bad.append(f"{good}: missing good max color")
+        if "subtract = 0.50" not in block:
+            bad.append(f"{good}: missing 0.50 bucket origin")
+        if "min_color = rgb { 20 110 50 }" not in block:
+            bad.append(f"{good}: missing high min color")
+        if "max_color = rgb { 8 86 35 }" not in block:
+            bad.append(f"{good}: missing high max color")
+        if "subtract = 1.00" not in block:
+            bad.append(f"{good}: missing 1.00 bucket origin")
+        if "divide = 0.50" not in block:
+            bad.append(f"{good}: missing wide positive bucket")
+        if "max = 1" not in block or "min = 0" not in block:
+            bad.append(f"{good}: missing factor clamps")
+
+    assert not bad
+
+
+def test_output_map_modes_clamp_extreme_productivity_without_gradient() -> None:
+    blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
+
+    bad: list[str] = []
+    for good, block in blocks.items():
+        value_name = _productivity_value_name(good)
+        if not re.search(
+            rf"limit = \{{ {re.escape(value_name)} <= -1\.00 \}}\s+value = rgb \{{ 64 0 75 \}}",
+            block,
+        ):
+            bad.append(f"{good}: missing low clamp")
+        if not re.search(r"else = \{\s+value = rgb \{ 0 50 20 \}", block):
+            bad.append(f"{good}: missing high clamp")
+
+    assert not bad
 
 
 def test_wheat_productivity_script_value_neutralizes_all_variable_harvests() -> None:

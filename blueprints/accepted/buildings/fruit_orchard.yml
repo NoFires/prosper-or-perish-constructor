@@ -54,8 +54,8 @@ building:
             }
             pp_fruit_orchard_maintenance = {
                 produced = fruit
-                output = 0.394
-                lumber = 0.25
+                output = 0.828
+                lumber = 0.525 # stakes, crates, pruning frames
                 debug_max_profit = 0
                 category = building_maintenance
             }
