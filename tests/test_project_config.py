@@ -47,9 +47,6 @@ ESTATE_SETUP_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_estat
 ESTATE_START_PRESERVATION = (
     MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_estate_start_preservation.txt"
 )
-ESTATE_SETUP_CULLING_RULES = (
-    MOD_ROOT / "main_menu" / "common" / "game_rules" / "pp_estate_setup_culling_rules.txt"
-)
 CAPACITY_CULLING_EFFECTS = (
     MOD_ROOT / "in_game" / "common" / "scripted_effects" / "pp_capacity_culling_effects.txt"
 )
@@ -1153,6 +1150,76 @@ def test_fish_and_forest_capacity_maps_use_available_capacity_and_tooltips_show_
     assert "Fishing Capacity modifiers, including river size and town rights" in localization_text
 
 
+def test_market_food_price_map_mode_uses_market_price_scale_and_assets() -> None:
+    map_text = FOOD_MAP_MODES.read_text(encoding="utf-8-sig")
+    localization_text = (LOCALIZATION_ROOT / "pp_building_adjustments_l_english.yml").read_text(
+        encoding="utf-8-sig"
+    )
+    block = _text_block_between(
+        map_text,
+        "pp_market_food_price = {",
+        "\npp_fishing_village_capacity = {",
+    )
+
+    assert "@pp_market_food_price_neutral = 0.12" in map_text
+    assert "@pp_market_food_price_max = 0.24" in map_text
+    required_map_snippets = (
+        "value = market.food_price",
+        "min_color = rgb { 0 255 0 }",
+        "mid_color = rgb { 255 220 0 }",
+        "max_color = rgb { 255 0 0 }",
+        "divide = @pp_market_food_price_max",
+        "max = 1",
+        "min = 0",
+        "category = economy",
+        "small_map_names = market",
+        "market_marker = yes",
+        "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
+        "map_lines_mode = ToMarketCenter",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_CHEAP",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_NEUTRAL",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_EXPENSIVE",
+    )
+    missing_map_snippets = [snippet for snippet in required_map_snippets if snippet not in block]
+    assert not missing_map_snippets
+    assert block.count("lerp = {") == 1
+
+    required_localization = (
+        "mapmode_pp_market_food_price_name",
+        "MAPMODE_PP_MARKET_FOOD_PRICE",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_CHEAP",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_NEUTRAL",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_EXPENSIVE",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_TT_LAND",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_TT_WATER",
+        "[Market.GetName]",
+        "[Market.GetFoodPrice|2]",
+    )
+    missing_localization = [
+        snippet for snippet in required_localization if snippet not in localization_text
+    ]
+    assert not missing_localization
+
+    assert (
+        MOD_ROOT
+        / "main_menu"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "map_modes"
+        / "pp_market_food_price.dds"
+    ).is_file()
+    assert not (
+        MOD_ROOT
+        / "in_game"
+        / "gfx"
+        / "interface"
+        / "icons"
+        / "map_modes"
+        / "pp_market_food_price.dds"
+    ).exists()
+
+
 def test_capacity_map_mode_europedia_links_have_game_concepts() -> None:
     expected_concepts = (
         "pp_fish_capacity",
@@ -1378,7 +1445,7 @@ def test_capacity_culling_v2_avoids_pooled_and_iterative_culling() -> None:
     assert not [token for token in forbidden_tokens if token in text]
 
 
-def test_setup_estate_building_culling_is_registered_and_toggleable() -> None:
+def test_setup_estate_building_culling_is_registered_and_internal() -> None:
     game_start_entries = {entry.key: entry.value for entry in parse_file(GAME_START).entries}
     game_start = game_start_entries["on_game_start"]
     assert isinstance(game_start, CList)
@@ -1394,20 +1461,13 @@ def test_setup_estate_building_culling_is_registered_and_toggleable() -> None:
     assert "pp_cull_setup_estate_buildings" in culling_entries
 
     culling_text = ESTATE_SETUP_CULLING.read_text(encoding="utf-8-sig")
-    assert "has_game_rule = pp_estate_setup_culling_disabled" in culling_text
-
-    rule_entries = {entry.key: entry.value for entry in parse_file(ESTATE_SETUP_CULLING_RULES).entries}
-    rule = rule_entries["pp_estate_setup_culling_rule"]
-    assert isinstance(rule, CList)
-    rule_values = _entry_values(rule)
-    assert rule_values["default"] == "pp_estate_setup_culling_enabled"
-    assert "pp_estate_setup_culling_enabled" in rule_values
-    assert "pp_estate_setup_culling_disabled" in rule_values
+    assert "has_game_rule" not in culling_text
+    assert not (
+        MOD_ROOT / "main_menu" / "common" / "game_rules" / "pp_estate_setup_culling_rules.txt"
+    ).exists()
 
     localization = (LOCALIZATION_ROOT / "pp_game_rules_l_english.yml").read_text(encoding="utf-8-sig")
-    assert "rule_pp_estate_setup_culling_rule:" in localization
-    assert "setting_pp_estate_setup_culling_enabled:" in localization
-    assert "setting_pp_estate_setup_culling_disabled:" in localization
+    assert "estate_setup_culling" not in localization
 
 
 def test_setup_estate_building_culling_covers_vanilla_estate_buildings() -> None:

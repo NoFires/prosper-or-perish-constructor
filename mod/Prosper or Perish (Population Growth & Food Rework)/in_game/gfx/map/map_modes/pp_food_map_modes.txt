@@ -17,9 +17,94 @@
 @data_after_lighting_blend = 			0.5
 
 # Map modes for food-producing building capacity.
+@pp_market_food_price_neutral = 0.12
+@pp_market_food_price_max = 0.24
 @pp_farming_village_capacity_map_cap = 30
 @pp_fishing_village_capacity_map_cap = 30
 @pp_forest_village_capacity_map_cap = 30
+
+pp_market_food_price = {
+	map_color = {
+		if = {
+			limit = { has_owner = yes }
+			lerp = {
+				min_color = rgb { 0 255 0 }
+				mid_color = rgb { 255 220 0 }
+				max_color = rgb { 255 0 0 }
+				factor = {
+					value = market.food_price
+					divide = @pp_market_food_price_max
+					max = 1
+					min = 0
+				}
+			}
+		}
+		else = {
+			value = rgb { 128 128 128 }
+		}
+	}
+
+	legend_key = {
+		desc = "MAPMODE_PP_MARKET_FOOD_PRICE_CHEAP"
+		color = rgb { 0 255 0 }
+	}
+	legend_key = {
+		desc = "MAPMODE_PP_MARKET_FOOD_PRICE_NEUTRAL"
+		color = rgb { 255 220 0 }
+	}
+	legend_key = {
+		desc = "MAPMODE_PP_MARKET_FOOD_PRICE_EXPENSIVE"
+		color = rgb { 255 0 0 }
+	}
+
+	tooltip_key = {
+		if = { limit = { has_owner = yes } value = MAPMODE_PP_MARKET_FOOD_PRICE_TT_LAND }
+		else = { value = MAPMODE_PP_MARKET_FOOD_PRICE_TT_WATER }
+	}
+
+	small_map_names = market
+	medium_map_names = market
+	large_map_names = market
+
+	small_tooltip_context = market
+	medium_tooltip_context = market
+	large_tooltip_context = market
+
+	fill_in_impassable = no
+	enable_snow = no
+	enable_water_names = yes
+
+	flatmap_behaviour = Always
+	use_fow = no
+
+	category = economy
+	index = 3
+
+	map_markers = {
+		all = no
+		market_marker = yes
+		toll_marker = yes
+	}
+
+	gradient_parameters = {
+		zoom_step = @zoom_step_near
+		gradient_alpha_inside = 	@data_gradient_alpha_inside
+		gradient_alpha_outside = 	@data_gradient_alpha_outside
+		gradient_width = 			@data_gradient_width
+		gradient_color_mult =		@data_gradient_color_mult
+		edge_width = 				@data_edge_width
+		edge_sharpness = 			@data_edge_sharpness
+		edge_alpha = 				@data_edge_alpha
+		edge_color_mult = 			@data_edge_color_mult
+		before_lighting_blend =		@data_before_lighting_blend
+		after_lighting_blend =		@data_after_lighting_blend
+	}
+
+	refresh_colors_on_selection_change = yes
+	color_refresh_counters = { Month }
+	color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }
+	map_lines_mode = ToMarketCenter
+}
 
 pp_fishing_village_capacity = {
 	map_color = {

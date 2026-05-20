@@ -1,9 +1,0 @@
-﻿pp_estate_setup_culling_rule = {
-	default = pp_estate_setup_culling_enabled
-	pp_estate_setup_culling_enabled = {
-		flag = general_rule
-	}
-	pp_estate_setup_culling_disabled = {
-		flag = general_rule
-	}
-}
