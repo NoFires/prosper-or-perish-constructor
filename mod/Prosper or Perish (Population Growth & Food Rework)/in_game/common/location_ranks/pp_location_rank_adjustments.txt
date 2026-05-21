@@ -8,8 +8,7 @@ TRY_INJECT:megalopolis = {
 		local_monthly_food_modifier = 0.67
 		farm_rank_capacity_modifier = -20
 		forest_rank_capacity_modifier = -20
-		
-		local_pop_promotion_speed_modifier = 0.50
+		local_population_growth = -0.0035 # This is purely for balancing. The idea is that population should grow ONLY at X months of food stored
 		
 	}
 }

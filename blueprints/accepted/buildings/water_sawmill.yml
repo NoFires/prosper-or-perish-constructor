@@ -76,29 +76,29 @@ building:
         }
         pp_water_sawmill_sash_saw = {
             produced = lumber
-            output = 4.620
-            tools = 1.30 # saw frame, gearing
-            horses = 0.35 # log hauling
-            victuals = 0.25 # saw crews
+            output = 5.313
+            tools = 1.495 # saw frame, gearing
+            horses = 0.403 # log hauling
+            victuals = 0.288 # saw crews
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_water_sawmill_millrace_yards = {
             produced = lumber
-            output = 5.145
-            tools = 1.45 # waterwheel upkeep
-            horses = 0.45 # yard teams
-            victuals = 0.35 # mill hands
+            output = 5.917
+            tools = 1.668 # waterwheel upkeep
+            horses = 0.518 # yard teams
+            victuals = 0.403 # mill hands
             debug_max_profit = 0
             category = building_maintenance
         }
         pp_water_sawmill_log_ponds = {
             produced = lumber
-            output = 5.200
-            tools = 1.40 # booms, saw upkeep
-            horses = 0.55 # log hauling
-            victuals = 0.45 # pond crews
-            paper = 0.05 # cutting records
+            output = 5.980
+            tools = 1.610 # booms, saw upkeep
+            horses = 0.633 # log hauling
+            victuals = 0.518 # pond crews
+            paper = 0.058 # cutting records
             debug_max_profit = 0
             category = building_maintenance
         }
@@ -108,9 +108,9 @@ building:
             category = building_maintenance
         }
         pp_water_sawmill_extra_rations = {
-            victuals = 2.45 # crew rations
+            victuals = 2.818 # crew rations
             produced = lumber
-            output = 4.200
+            output = 4.830
             debug_max_profit = 0
             category = building_maintenance
         }
