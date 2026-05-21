@@ -1,7 +1,7 @@
-﻿# Map mode: RGO level per location (heatmap).
+﻿# Map mode: RGO level per location (traffic-light bucketed heatmap).
 # Uses rgo_workers via a named script_value (pp_rgo_level_for_map).
 
-@pp_rgo_level_cap = 20
+@pp_rgo_level_cap = 4
 
 @zoom_step_near = 2
 @data_gradient_alpha_inside = 1
@@ -23,22 +23,49 @@ pp_rgo_level = {
 		}
 		else_if = {
 			limit = { has_owner = yes }
-			lerp = {
-				min_color = define:NMapColors|MAP_COLOR_LOW
-				max_color = define:NMapColors|MAP_COLOR_HIGH
-				factor = {
-					value = pp_rgo_level_for_map
-					divide = @pp_rgo_level_cap
-					max = 1
-					min = 0
+			if = {
+				limit = { pp_rgo_level_for_map < 1 }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_MIN
+					max_color = define:NMapColors|MAP_COLOR_LOW
+					factor = { value = pp_rgo_level_for_map divide = 1 max = 1 min = 0 }
 				}
 			}
+			else_if = {
+				limit = { pp_rgo_level_for_map < 2 }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_LOW
+					max_color = define:NMapColors|MAP_COLOR_MID
+					factor = { value = pp_rgo_level_for_map subtract = 1 divide = 1 max = 1 min = 0 }
+				}
+			}
+			else_if = {
+				limit = { pp_rgo_level_for_map < 3 }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_MID
+					max_color = define:NMapColors|MAP_COLOR_HIGH
+					factor = { value = pp_rgo_level_for_map subtract = 2 divide = 1 max = 1 min = 0 }
+				}
+			}
+			else_if = {
+				limit = { pp_rgo_level_for_map < @pp_rgo_level_cap }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_HIGH
+					max_color = define:NMapColors|MAP_COLOR_MAX
+					factor = { value = pp_rgo_level_for_map subtract = 3 divide = 1 max = 1 min = 0 }
+				}
+			}
+			else = { value = define:NMapColors|MAP_COLOR_MAX }
 		}
 		else = {
 			value = rgb { 128 128 128 }
 		}
 	}
-	legend_key = { desc = "MAPMODE_PP_RGO_LEVEL" color = define:NMapColors|MAP_COLOR_HIGH }
+	legend_key = { desc = "MAPMODE_PP_RGO_LEVEL_VERY_LOW" color = define:NMapColors|MAP_COLOR_MIN }
+	legend_key = { desc = "MAPMODE_PP_RGO_LEVEL_LOW" color = define:NMapColors|MAP_COLOR_LOW }
+	legend_key = { desc = "MAPMODE_PP_RGO_LEVEL_MEDIUM" color = define:NMapColors|MAP_COLOR_MID }
+	legend_key = { desc = "MAPMODE_PP_RGO_LEVEL_HIGH" color = define:NMapColors|MAP_COLOR_HIGH }
+	legend_key = { desc = "MAPMODE_PP_RGO_LEVEL_CAPPED" color = define:NMapColors|MAP_COLOR_MAX }
 	tooltip_key = {
 		if = { limit = { is_land = yes } value = MAPMODE_PP_RGO_LEVEL_TT_LAND }
 		else = { value = MAPMODE_PP_RGO_LEVEL_TT_WATER }

@@ -1,7 +1,7 @@
-﻿# Map mode: total building levels per location (heatmap).
-# Note: map_color factor math does not reliably read global_var; use a fixed cap for divide (tune @pp_building_levels_cap).
+﻿# Map mode: total building levels per location (traffic-light bucketed heatmap).
+# Buckets are tuned from current savegame building-level distributions.
 
-@pp_building_levels_cap = 150
+@pp_building_levels_cap = 93
 
 @zoom_step_near = 2
 @data_gradient_alpha_inside = 1
@@ -23,22 +23,49 @@ pp_building_levels = {
 		}
 		else_if = {
 			limit = { has_owner = yes }
-			lerp = {
-				min_color = define:NMapColors|MAP_COLOR_LOW
-				max_color = define:NMapColors|MAP_COLOR_HIGH
-				factor = {
-					value = total_building_levels
-					divide = @pp_building_levels_cap
-					max = 1
-					min = 0
+			if = {
+				limit = { total_building_levels < 3 }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_MIN
+					max_color = define:NMapColors|MAP_COLOR_LOW
+					factor = { value = total_building_levels divide = 3 max = 1 min = 0 }
 				}
 			}
+			else_if = {
+				limit = { total_building_levels < 8 }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_LOW
+					max_color = define:NMapColors|MAP_COLOR_MID
+					factor = { value = total_building_levels subtract = 3 divide = 5 max = 1 min = 0 }
+				}
+			}
+			else_if = {
+				limit = { total_building_levels < 22 }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_MID
+					max_color = define:NMapColors|MAP_COLOR_HIGH
+					factor = { value = total_building_levels subtract = 8 divide = 14 max = 1 min = 0 }
+				}
+			}
+			else_if = {
+				limit = { total_building_levels < @pp_building_levels_cap }
+				lerp = {
+					min_color = define:NMapColors|MAP_COLOR_HIGH
+					max_color = define:NMapColors|MAP_COLOR_MAX
+					factor = { value = total_building_levels subtract = 22 divide = 71 max = 1 min = 0 }
+				}
+			}
+			else = { value = define:NMapColors|MAP_COLOR_MAX }
 		}
 		else = {
 			value = rgb { 128 128 128 }
 		}
 	}
-	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS" color = define:NMapColors|MAP_COLOR_HIGH }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_VERY_LOW" color = define:NMapColors|MAP_COLOR_MIN }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_LOW" color = define:NMapColors|MAP_COLOR_LOW }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_MEDIUM" color = define:NMapColors|MAP_COLOR_MID }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_HIGH" color = define:NMapColors|MAP_COLOR_HIGH }
+	legend_key = { desc = "MAPMODE_PP_BUILDING_LEVELS_CAPPED" color = define:NMapColors|MAP_COLOR_MAX }
 	tooltip_key = {
 		if = { limit = { is_land = yes } value = MAPMODE_PP_BUILDING_LEVELS_TT_LAND }
 		else = { value = MAPMODE_PP_BUILDING_LEVELS_TT_WATER }

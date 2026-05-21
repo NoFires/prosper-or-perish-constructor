@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import json
 from collections import Counter
 from pathlib import Path
 
@@ -13,6 +14,7 @@ MAP_MODES = MOD_ROOT / "in_game" / "gfx" / "map" / "map_modes" / "pp_local_outpu
 SCRIPT_VALUES = MOD_ROOT / "in_game" / "common" / "script_values" / "pp_local_output_modifier_map_modes.txt"
 HARVEST_MODIFIERS = MOD_ROOT / "in_game" / "common" / "static_modifiers" / "pp_variable_harvest_modifiers.txt"
 LOCALIZATION = MOD_ROOT / "main_menu" / "localization" / "english" / "pp_building_adjustments_l_english.yml"
+CALIBRATION = ROOT / "tools" / "map_mode_scale_calibration.json"
 ICON_DIRS = (
     MOD_ROOT / "in_game" / "gfx" / "interface" / "icons" / "map_modes",
     MOD_ROOT / "main_menu" / "gfx" / "interface" / "icons" / "map_modes",
@@ -73,9 +75,9 @@ def _wheat_harvest_modifier_values() -> dict[str, str]:
 
 ANCHOR_LEGEND_KEYS = [
     "EXTREME_DEFICIT",
-    "MARGINAL",
+    "DEFICIT",
     "NEUTRAL",
-    "STRONG",
+    "GOOD",
     "EXCEPTIONAL",
     "RAW_MATERIAL",
 ]
@@ -162,19 +164,26 @@ def test_only_wheat_productivity_script_value_neutralizes_harvests() -> None:
     assert not bad
 
 
-def test_output_map_modes_all_use_classified_diverging_format() -> None:
+def test_output_map_modes_all_use_vanilla_traffic_light_signed_format() -> None:
     blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
 
     bad: list[str] = []
     for good, block in blocks.items():
-        if "define:NMapColors|MAP_COLOR" in block:
-            bad.append(f"{good}: still uses vanilla red/green map colors")
         if "@factor_add" in block or "@factor_divide" in block:
             bad.append(f"{good}: still uses old generic factor ramp")
         if block.count("legend_key =") != len(ANCHOR_LEGEND_KEYS):
             bad.append(f"{good}: wrong concise legend key count")
-        if block.count("lerp = {") < 10:
+        if block.count("lerp = {") < 4:
             bad.append(f"{good}: missing bucket shading")
+        for color in (
+            "define:NMapColors|MAP_COLOR_MIN",
+            "define:NMapColors|MAP_COLOR_LOW",
+            "define:NMapColors|MAP_COLOR_MID",
+            "define:NMapColors|MAP_COLOR_HIGH",
+            "define:NMapColors|MAP_COLOR_MAX",
+        ):
+            if color not in block:
+                bad.append(f"{good}: missing {color}")
         if f"raw_material = goods:{good}" not in block:
             bad.append(f"{good}: missing matching raw-material stripes")
         if f"MAPMODE_PP_LOCAL_{good.upper()}_OUTPUT_MODIFIER_RAW_MATERIAL" not in block:
@@ -188,11 +197,11 @@ def test_output_map_modes_have_multi_stop_colors_and_raw_material_stripes() -> N
 
     bad: list[str] = []
     for good, block in blocks.items():
-        if len(re.findall(r"rgb \{", block)) < 30:
-            bad.append(f"{good}: too few RGB stops")
-        if block.count("legend_key =") != 6:
+        if block.count("define:NMapColors|MAP_COLOR") < 10:
+            bad.append(f"{good}: too few vanilla color stops")
+        if block.count("legend_key =") != len(ANCHOR_LEGEND_KEYS):
             bad.append(f"{good}: wrong legend key count")
-        if block.count("lerp = {") < 10:
+        if block.count("lerp = {") < 4:
             bad.append(f"{good}: missing in-bucket lerps")
         if "secondary_map_color = {" not in block:
             bad.append(f"{good}: missing raw-material stripes")
@@ -215,25 +224,29 @@ def test_output_map_mode_legends_use_concise_anchor_keys() -> None:
     assert not bad
 
 
-def test_output_map_modes_separate_mid_and_high_positive_productivity() -> None:
+def test_output_map_modes_use_calibrated_signed_thresholds() -> None:
     blocks = _map_mode_blocks(MAP_MODES.read_text(encoding="utf-8-sig"))
+    calibration = json.loads(CALIBRATION.read_text(encoding="utf-8"))["scales"]["local_output_modifier"]
 
     bad: list[str] = []
     for good, block in blocks.items():
-        if f"{_productivity_value_name(good)} < 0.75" not in block:
-            bad.append(f"{good}: missing 0.75 band")
-        if f"{_productivity_value_name(good)} < 1.00" not in block:
-            bad.append(f"{good}: missing 1.00 band")
-        if f"{_productivity_value_name(good)} < 1.50" not in block:
-            bad.append(f"{good}: missing 1.50 band")
-        if f"{_productivity_value_name(good)} < 2.00" not in block:
-            bad.append(f"{good}: missing 2.00 band")
-        if "rgb { 90 174 97 }" not in block:
-            bad.append(f"{good}: missing good-band color")
-        if "rgb { 45 138 64 }" not in block:
-            bad.append(f"{good}: missing strong legend color")
-        if "rgb { 0 50 20 }" not in block:
-            bad.append(f"{good}: missing exceptional clamp")
+        value_name = _productivity_value_name(good)
+        generated = [
+            float(value)
+            for value in re.findall(
+                rf"{re.escape(value_name)} < (-?[0-9]+(?:\.[0-9]+)?)",
+                block,
+            )
+        ]
+        scale = calibration[good]
+        expected = [
+            *[float(value) for value in scale["negative_thresholds"]],
+            float(scale["neutral_low"]),
+            float(scale["neutral_high"]),
+            *[float(value) for value in scale["positive_thresholds"]],
+        ]
+        if generated != expected:
+            bad.append(f"{good}: generated {generated}, calibration {expected}")
 
     assert not bad
 
@@ -243,20 +256,14 @@ def test_output_map_modes_shade_inside_each_productivity_bucket() -> None:
 
     bad: list[str] = []
     for good, block in blocks.items():
-        if "min_color = rgb { 139 204 135 }" not in block:
-            bad.append(f"{good}: missing good min color")
-        if "max_color = rgb { 90 174 97 }" not in block:
-            bad.append(f"{good}: missing good max color")
-        if "subtract = 0.50" not in block:
-            bad.append(f"{good}: missing 0.50 bucket origin")
-        if "min_color = rgb { 20 110 50 }" not in block:
-            bad.append(f"{good}: missing high min color")
-        if "max_color = rgb { 8 86 35 }" not in block:
-            bad.append(f"{good}: missing high max color")
-        if "subtract = 1.00" not in block:
-            bad.append(f"{good}: missing 1.00 bucket origin")
-        if "divide = 0.50" not in block:
-            bad.append(f"{good}: missing wide positive bucket")
+        if "min_color = define:NMapColors|MAP_COLOR_LOW" not in block:
+            bad.append(f"{good}: missing negative-to-neutral shading")
+        if "max_color = define:NMapColors|MAP_COLOR_MAX" not in block:
+            bad.append(f"{good}: missing positive shading")
+        if "subtract = 0.05" not in block:
+            bad.append(f"{good}: missing positive bucket origin")
+        if "value = define:NMapColors|MAP_COLOR_MID" not in block:
+            bad.append(f"{good}: missing neutral solid bucket")
         if "max = 1" not in block or "min = 0" not in block:
             bad.append(f"{good}: missing factor clamps")
 
@@ -270,11 +277,12 @@ def test_output_map_modes_clamp_extreme_productivity_without_gradient() -> None:
     for good, block in blocks.items():
         value_name = _productivity_value_name(good)
         if not re.search(
-            rf"limit = \{{ {re.escape(value_name)} <= -1\.00 \}}\s+value = rgb \{{ 64 0 75 \}}",
+            rf"{re.escape(value_name)} < -[0-9.]+.*?value = define:NMapColors\|MAP_COLOR_MIN",
             block,
+            flags=re.DOTALL,
         ):
             bad.append(f"{good}: missing low clamp")
-        if not re.search(r"else = \{\s+value = rgb \{ 0 50 20 \}", block):
+        if not re.search(r"else = \{\s+value = define:NMapColors\|MAP_COLOR_MAX", block):
             bad.append(f"{good}: missing high clamp")
 
     assert not bad
@@ -311,9 +319,27 @@ def test_wheat_map_mode_localization_explains_harvest_neutral_value_without_bala
     assert "harvest-neutral wheat productivity" in wheat_text
     assert "Active variable harvest effects are excluded from the map color" in wheat_text
     assert "wheat is the raw material" in wheat_text
+    assert "Red marks negative productivity" in wheat_text
+    assert "yellow marks near-neutral productivity" in wheat_text
+    assert "green marks positive productivity" in wheat_text
 
     text_without_format_precision = wheat_text.replace("|2", "")
     assert not re.search(r"[-+]?\d+(?:\.\d+)?%?", text_without_format_precision)
+
+
+def test_non_wheat_local_output_legends_do_not_reference_wheat() -> None:
+    loc = LOCALIZATION.read_text(encoding="utf-8-sig")
+
+    bad: list[str] = []
+    for good in _raw_material_goods():
+        if good == "wheat":
+            continue
+        upper = good.upper()
+        for line in re.findall(rf"^\s+MAPMODE_PP_LOCAL_{upper}_OUTPUT_MODIFIER_[A-Z_]+: .*$", loc, flags=re.MULTILINE):
+            if "wheat" in line.lower():
+                bad.append(line)
+
+    assert not bad
 
 
 def test_local_output_map_mode_localization_uses_literal_newlines() -> None:

@@ -1162,13 +1162,16 @@ def test_market_food_price_map_mode_uses_market_price_scale_and_assets() -> None
     )
 
     assert "@pp_market_food_price_neutral = 0.12" in map_text
-    assert "@pp_market_food_price_max = 0.24" in map_text
+    assert "@pp_market_food_price_cheap = 0.054" in map_text
+    assert "@pp_market_food_price_expensive = 0.171" in map_text
     required_map_snippets = (
         "value = market.food_price",
-        "min_color = rgb { 0 255 0 }",
-        "mid_color = rgb { 255 220 0 }",
-        "max_color = rgb { 255 0 0 }",
-        "divide = @pp_market_food_price_max",
+        "limit = { has_owner = yes }",
+        "min_color = define:NMapColors|MAP_COLOR_MAX",
+        "max_color = define:NMapColors|MAP_COLOR_MIN",
+        "market.food_price < @pp_market_food_price_cheap",
+        "market.food_price < @pp_market_food_price_neutral",
+        "market.food_price < @pp_market_food_price_expensive",
         "max = 1",
         "min = 0",
         "category = economy",
@@ -1176,20 +1179,24 @@ def test_market_food_price_map_mode_uses_market_price_scale_and_assets() -> None
         "market_marker = yes",
         "color_and_names_refresh_counters = { MarketReach LocationOwnerChanged }",
         "map_lines_mode = ToMarketCenter",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_VERY_CHEAP",
         "MAPMODE_PP_MARKET_FOOD_PRICE_CHEAP",
         "MAPMODE_PP_MARKET_FOOD_PRICE_NEUTRAL",
         "MAPMODE_PP_MARKET_FOOD_PRICE_EXPENSIVE",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_SEVERE",
     )
     missing_map_snippets = [snippet for snippet in required_map_snippets if snippet not in block]
     assert not missing_map_snippets
-    assert block.count("lerp = {") == 1
+    assert block.count("lerp = {") == 4
 
     required_localization = (
         "mapmode_pp_market_food_price_name",
         "MAPMODE_PP_MARKET_FOOD_PRICE",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_VERY_CHEAP",
         "MAPMODE_PP_MARKET_FOOD_PRICE_CHEAP",
         "MAPMODE_PP_MARKET_FOOD_PRICE_NEUTRAL",
         "MAPMODE_PP_MARKET_FOOD_PRICE_EXPENSIVE",
+        "MAPMODE_PP_MARKET_FOOD_PRICE_SEVERE",
         "MAPMODE_PP_MARKET_FOOD_PRICE_TT_LAND",
         "MAPMODE_PP_MARKET_FOOD_PRICE_TT_WATER",
         "[Market.GetName]",
