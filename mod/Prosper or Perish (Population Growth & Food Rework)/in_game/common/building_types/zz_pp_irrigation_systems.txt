@@ -2,6 +2,8 @@
 REPLACE:irrigation_systems = {
   is_foreign = no
   max_levels = irrigant_cap
+  # Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
+  priority = 95
   pop_type = peasants
   price = pp_irrigation_systems_price
   category = infrastructure_category

@@ -2,6 +2,8 @@
 offshore_fishery = {
 is_foreign = no
 max_levels = fish_max_level
+# Staple-food producer buildings need to be manned first to avoid being outcompeted by non-food-related buildings.
+priority = 90
 pop_type = laborers
 employment_size = 7
 price = pp_offshore_fishery_price

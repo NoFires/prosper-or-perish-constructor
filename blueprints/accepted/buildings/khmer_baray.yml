@@ -8,6 +8,8 @@ building:
   possible_production_methods: []
   body: |2-
     	price = pp_khmer_baray_price
+    	# Irrigation and other water-control buildings need high priority so food production or capacity are not destroyed through underemployment.
+    	priority = 95
     	modifier = {
     		local_monthly_food_modifier = -0.20 # vanilla 0.20
     		farm_max_level_modifier = 0.60

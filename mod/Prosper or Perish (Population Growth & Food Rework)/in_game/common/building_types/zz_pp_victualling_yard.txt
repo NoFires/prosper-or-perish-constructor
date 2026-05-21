@@ -2,6 +2,8 @@
 victualling_yard = {
 	is_foreign = no
 	max_levels = cookery_max_level
+	# Direct food production needs second highest priority so we do not enter starvation loops.
+	priority = 110
 	pop_type = laborers
     employment_size = 4.0
 	price = pp_victualling_yard_price

@@ -3,6 +3,8 @@ pomological_orchard = {
 is_foreign = no
 pop_type = laborers
 max_levels = farm_max_level
+# Staple-food producer buildings need to be manned first to avoid being outcompeted by non-food-related buildings.
+priority = 90
 employment_size = 10
 price = pp_pomological_orchard_price
 category = rgo_building_category

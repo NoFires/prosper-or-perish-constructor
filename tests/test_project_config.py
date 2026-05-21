@@ -138,6 +138,48 @@ EXCLUDED_FARM_CAP_BUILDINGS = (
     "stone_quarry",
 )
 
+BUILDING_PRIORITY_GROUPS = {
+    "food_storage": (
+        120,
+        "Food storage needs highest priority to stop fluctuations in food for AI.",
+        ("granary",),
+    ),
+    "direct_food_production": (
+        110,
+        "Direct food production needs second highest priority so we do not enter starvation loops.",
+        ("cookery", "victualling_yard"),
+    ),
+    "water_control": (
+        95,
+        (
+            "Irrigation and other water-control buildings need high priority so food production "
+            "or capacity are not destroyed through underemployment."
+        ),
+        ("irrigation_systems", "bund", "terraces", "polders", "khmer_baray"),
+    ),
+    "staple_food_production": (
+        90,
+        (
+            "Staple-food producer buildings need to be manned first to avoid being outcompeted "
+            "by non-food-related buildings."
+        ),
+        (
+            "farming_village",
+            "farming_village_rotations",
+            "model_farm",
+            "fishing_village",
+            "ocean_fishery",
+            "offshore_fishery",
+            "fruit_orchard",
+            "pomological_orchard",
+            "forest_village",
+            "managed_forest_village",
+            "sheep_farms",
+            "enclosed_sheep_walks",
+        ),
+    ),
+}
+
 
 def test_constructor_config_loads() -> None:
     config = load_project_config(ROOT / "constructor.toml")
@@ -301,6 +343,21 @@ def test_granary_storage_and_startup_placement_are_compatible() -> None:
     assert "is_province_capital = yes" not in granary_text
     for rank in ("rural_settlement", "town", "city", "megalopolis"):
         assert f"location_rank = location_rank:{rank}" in granary_text
+
+
+def test_food_security_building_priorities_are_rendered() -> None:
+    rendered_buildings = _database_entries(MOD_ROOT / "in_game" / "common" / "building_types")
+
+    for _group, (priority, comment, buildings) in BUILDING_PRIORITY_GROUPS.items():
+        for building in buildings:
+            blueprint_path = BUILDING_BLUEPRINT_ROOT / f"{building}.yml"
+            blueprint_text = blueprint_path.read_text(encoding="utf-8-sig")
+            assert f"# {comment}" in blueprint_text
+            assert _accepted_blueprint_building_values(building)["priority"] == priority
+
+            rendered = rendered_buildings[building]
+            assert isinstance(rendered, CList)
+            assert _entry_values(rendered)["priority"] == priority
 
 
 def test_land_farm_building_levels_count_all_shared_pool_buildings() -> None:
@@ -1964,6 +2021,18 @@ def _vanilla_unique_methods_by_building() -> dict[str, set[str]]:
 
 def _entry_values(block: CList) -> dict[str, object]:
     return {entry.key: entry.value for entry in block.entries}
+
+
+def _accepted_blueprint_building_values(building: str) -> dict[str, object]:
+    blueprint = BUILDING_BLUEPRINT_ROOT / f"{building}.yml"
+    template = load_template(blueprint)
+    rendered = parse_text(
+        f"{template.key} = {{\n{template.building_body}\n}}\n",
+        path=blueprint,
+    )
+    body = rendered.entries[0].value
+    assert isinstance(body, CList)
+    return _entry_values(body)
 
 
 def _rgo_bonus_values() -> dict[str, dict[str, object]]:
