@@ -1072,6 +1072,18 @@ def test_game_start_does_not_add_farming_village_or_sheep_farm_levels() -> None:
 
 def test_game_start_invalid_building_cleanup_matches_current_potentials() -> None:
     text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    on_game_start = _first_script_block(text, "on_game_start")
+    assert on_game_start.index("pp_remove_invalid_fiber_and_stud_farms") < on_game_start.index(
+        "pp_game_start_effect"
+    )
+
+    fiber_and_stud_cleanup = _first_script_block(text, "pp_remove_invalid_fiber_and_stud_farms")
+    assert "building_type:fiber_crops_farm" in fiber_and_stud_cleanup
+    assert "pp_fiber_crops_farm_location_potential = yes" in fiber_and_stud_cleanup
+    assert "building_type:horse_breeders" in fiber_and_stud_cleanup
+    assert "pp_horse_breeders_location_potential = yes" in fiber_and_stud_cleanup
+    assert "can_build_building" not in fiber_and_stud_cleanup
+
     cleanup = _first_script_block(text, "pp_remove_invalid_buildings")
 
     assert "building_type:granary" not in cleanup

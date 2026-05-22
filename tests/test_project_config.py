@@ -938,8 +938,12 @@ def test_broad_farm_capacity_buildings_have_static_location_potential_gates() ->
     horse_breeders = (BUILDING_BLUEPRINT_ROOT / "horse_breeders.yml").read_text(encoding="utf-8-sig")
     horse_potential = _text_block_between(horse_breeders, "location_potential = {", "\n\n    allow = {")
     horse_allow = _text_block_between(horse_breeders, "allow = {", "\n\n    modifier = {")
+    compatibility = (
+        MOD_ROOT / "in_game" / "common" / "scripted_triggers" / "pp_startup_building_compatibility.txt"
+    ).read_text(encoding="utf-8-sig")
 
-    assert "market = {\n                is_produced_in_market = goods:horses" in horse_potential
+    assert "pp_horse_breeders_location_potential = yes" in horse_potential
+    assert "market = {\n\t\t\tis_produced_in_market = goods:horses" in compatibility
     for snippet in (
         "raw_material = goods:wool",
         "raw_material = goods:livestock",
@@ -951,15 +955,16 @@ def test_broad_farm_capacity_buildings_have_static_location_potential_gates() ->
         "climate = continental",
         "climate = oceanic",
     ):
-        assert snippet in horse_potential
+        assert snippet in compatibility
     assert "farm_capacity_available > 0" in horse_allow
     assert "climate =" not in horse_allow
 
     fiber_crops = (BUILDING_BLUEPRINT_ROOT / "fiber_crops_farm.yml").read_text(encoding="utf-8-sig")
     fiber_potential = _text_block_between(fiber_crops, "location_potential = {", "\n\n    allow = {")
 
-    assert "raw_material = goods:fiber_crops" in fiber_potential
-    assert "NOT = {\n                raw_material = goods:fiber_crops" not in fiber_potential
+    assert "pp_fiber_crops_farm_location_potential = yes" in fiber_potential
+    assert "raw_material = goods:fiber_crops" in compatibility
+    assert "NOT = {\n\t\t\traw_material = goods:fiber_crops" not in compatibility
     for snippet in (
         "NOT = { climate = arctic }",
         "NOT = { climate = cold_arid }",
@@ -972,7 +977,7 @@ def test_broad_farm_capacity_buildings_have_static_location_potential_gates() ->
         "vegetation = woods",
         "vegetation = forest",
     ):
-        assert snippet in fiber_potential
+        assert snippet in compatibility
 
 
 def test_general_farm_eligibility_script_values_are_conservative() -> None:

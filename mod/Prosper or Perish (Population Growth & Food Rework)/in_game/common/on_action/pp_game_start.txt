@@ -10,6 +10,7 @@ on_game_start = {
 		pp_precalculate_building_capacities
 		pp_apply_location_modifiers
 		pp_cull_setup_estate_buildings
+		pp_remove_invalid_fiber_and_stud_farms
 		pp_game_start_effect
 		pp_hand_placed_startup
 		# pp_remove_invalid_buildings # we leave this off as it somehow causes crashes?
@@ -908,6 +909,46 @@ pp_remove_invalid_buildings = {
 					building = building_type:lumber_mill_improved
 					value = {
 						value = "location_building_level(building_type:lumber_mill_improved)"
+						multiply = -1
+					}
+				}
+			}
+		}
+	}
+}
+
+pp_remove_invalid_fiber_and_stud_farms = {
+	effect = {
+		every_location_in_the_world = {
+			limit = { has_owner = yes }
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:fiber_crops_farm
+						value > 0
+					}
+					NOT = { pp_fiber_crops_farm_location_potential = yes }
+				}
+				change_building_level_in_location = {
+					building = building_type:fiber_crops_farm
+					value = {
+						value = "location_building_level(building_type:fiber_crops_farm)"
+						multiply = -1
+					}
+				}
+			}
+			if = {
+				limit = {
+					location_building_level = {
+						building_type = building_type:horse_breeders
+						value > 0
+					}
+					NOT = { pp_horse_breeders_location_potential = yes }
+				}
+				change_building_level_in_location = {
+					building = building_type:horse_breeders
+					value = {
+						value = "location_building_level(building_type:horse_breeders)"
 						multiply = -1
 					}
 				}

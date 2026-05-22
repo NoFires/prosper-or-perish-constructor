@@ -11,25 +11,7 @@ city = yes
 megalopolis = yes
 
 location_potential = {
-    OR = {
-        raw_material = goods:horses
-        market = {
-            is_produced_in_market = goods:horses
-        }
-    }
-    OR = {
-        climate = mediterranean
-        climate = continental
-        climate = oceanic
-    }
-    OR = {
-        raw_material = goods:wool
-        raw_material = goods:livestock
-        raw_material = goods:horses
-        vegetation = farmland
-        vegetation = grasslands
-        vegetation = sparse
-    }
+    pp_horse_breeders_location_potential = yes
 }
 
 allow = {
