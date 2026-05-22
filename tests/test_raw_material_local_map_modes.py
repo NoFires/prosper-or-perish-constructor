@@ -58,18 +58,20 @@ def _script_value_blocks(text: str) -> dict[str, str]:
     return blocks
 
 
-def _wheat_harvest_modifier_values() -> dict[str, str]:
+def _harvest_modifier_values() -> dict[str, dict[str, str]]:
     text = HARVEST_MODIFIERS.read_text(encoding="utf-8-sig")
-    values: dict[str, str] = {}
+    raw_materials = set(_raw_material_goods())
+    values: dict[str, dict[str, str]] = {good: {} for good in raw_materials}
     pattern = re.compile(r"^(pp_harvest_[a-z0-9_]+)\s*=\s*\{(?P<body>.*?)^\}", re.DOTALL | re.MULTILINE)
     for match in pattern.finditer(text):
-        value_match = re.search(
-            r"^\s*local_wheat_output_modifier\s*=\s*([-+]?\d+(?:\.\d+)?)\s*$",
+        for value_match in re.finditer(
+            r"^\s*local_([a-z0-9_]+)_output_modifier\s*=\s*([-+]?\d+(?:\.\d+)?)\s*$",
             match.group("body"),
             flags=re.MULTILINE,
-        )
-        if value_match is not None:
-            values[match.group(1)] = value_match.group(1)
+        ):
+            good = value_match.group(1)
+            if good in raw_materials:
+                values[good][match.group(1)] = value_match.group(2)
     return values
 
 
@@ -150,17 +152,16 @@ def test_local_output_map_mode_script_values_cover_every_raw_material() -> None:
     assert not missing
 
 
-def test_only_wheat_productivity_script_value_neutralizes_harvests() -> None:
+def test_productivity_script_values_neutralize_variable_harvests() -> None:
     blocks = _script_value_blocks(SCRIPT_VALUES.read_text(encoding="utf-8-sig"))
+    harvest_values = _harvest_modifier_values()
 
     bad: list[str] = []
     for good, block in blocks.items():
-        has_harvest_logic = "has_location_modifier = pp_harvest_" in block
-        if good == "wheat":
-            if not has_harvest_logic:
-                bad.append("wheat: missing harvest-neutral correction")
-        elif has_harvest_logic:
-            bad.append(f"{good}: unexpected harvest-neutral correction")
+        expected = harvest_values.get(good, {})
+        found = set(re.findall(r"has_location_modifier = (pp_harvest_[a-z0-9_]+)", block))
+        if found != set(expected):
+            bad.append(f"{good}: generated {sorted(found)}, expected {sorted(expected)}")
 
     assert not bad
 
@@ -292,42 +293,48 @@ def test_output_map_modes_clamp_extreme_productivity_without_gradient() -> None:
     assert not bad
 
 
-def test_wheat_productivity_script_value_neutralizes_all_variable_harvests() -> None:
+def test_productivity_script_values_neutralize_all_variable_harvest_values() -> None:
     script_values = SCRIPT_VALUES.read_text(encoding="utf-8-sig")
-    harvest_values = _wheat_harvest_modifier_values()
-    assert harvest_values
+    blocks = _script_value_blocks(script_values)
+    harvest_values = _harvest_modifier_values()
+    assert any(harvest_values.values())
 
-    found = set(re.findall(r"has_location_modifier = (pp_harvest_[a-z0-9_]+)", script_values))
-    assert found == set(harvest_values)
+    missing: list[str] = []
+    for good, modifiers in harvest_values.items():
+        block = blocks[good]
+        for modifier, value in modifiers.items():
+            operation = "add" if value.startswith("-") else "subtract"
+            amount = value.removeprefix("-").removeprefix("+")
+            pattern = (
+                rf"has_location_modifier = {re.escape(modifier)} \}}\n"
+                rf"\t\t{operation} = {re.escape(amount)}"
+            )
+            if not re.search(pattern, block):
+                missing.append(f"{good}: {modifier}")
 
-    for modifier, value in harvest_values.items():
-        operation = "add" if value.startswith("-") else "subtract"
-        amount = value.removeprefix("-").removeprefix("+")
-        pattern = (
-            rf"has_location_modifier = {re.escape(modifier)} \}}\n"
-            rf"\t\t{operation} = {re.escape(amount)}"
-        )
-        assert re.search(pattern, script_values), modifier
+    assert not missing
 
 
-def test_wheat_map_mode_localization_explains_harvest_neutral_value_without_balance_numbers() -> None:
+def test_local_output_map_mode_localization_explains_harvest_neutral_values_without_balance_numbers() -> None:
     loc = LOCALIZATION.read_text(encoding="utf-8-sig")
-    wheat_keys = re.findall(
-        r"^\s+MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER[^:]*: \"(.*)\"$",
+    output_keys = re.findall(
+        r"^\s+MAPMODE_PP_LOCAL_[A-Z0-9_]+_OUTPUT_MODIFIER[^:]*: \"(.*)\"$",
         loc,
         flags=re.MULTILINE,
     )
-    assert wheat_keys
-    wheat_text = "\n".join(wheat_keys)
+    assert output_keys
+    output_text = "\n".join(output_keys)
 
-    assert "harvest-neutral wheat productivity" in wheat_text
-    assert "Active variable harvest effects are excluded from the map color" in wheat_text
-    assert "wheat is the raw material" in wheat_text
-    assert "Red marks negative productivity" in wheat_text
-    assert "yellow marks near-neutral productivity" in wheat_text
-    assert "green marks positive productivity" in wheat_text
+    assert "harvest-neutral wheat productivity" in output_text
+    assert "harvest-neutral livestock productivity" in output_text
+    assert "Active variable harvest effects are excluded from the map color" in output_text
+    assert "wheat is the raw material" in output_text
+    assert "livestock is the raw material" in output_text
+    assert "Red marks negative productivity" in output_text
+    assert "yellow marks near-neutral productivity" in output_text
+    assert "green marks positive productivity" in output_text
 
-    text_without_format_precision = wheat_text.replace("|2", "")
+    text_without_format_precision = output_text.replace("|2", "")
     assert not re.search(r"[-+]?\d+(?:\.\d+)?%?", text_without_format_precision)
 
 
