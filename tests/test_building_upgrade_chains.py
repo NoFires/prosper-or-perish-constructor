@@ -140,7 +140,7 @@ EXPECTED_CHAINS = {
     ],
     "iron_mine": [
         ("iron_mine", None),
-        ("iron_mine_improved", "efficient_mining"),
+        ("iron_mine_improved", "rgo_size_advance_discovery"),
         ("iron_mine_deep", "slitting_mills"),
     ],
     "bog_iron_smelter": [
@@ -564,7 +564,7 @@ def test_salt_production_families_are_explicit_and_unlockable() -> None:
     expected_chains = {
         "salt_mine": [
             ("salt_mine", None),
-            ("salt_mine_improved", "efficient_mining"),
+            ("salt_mine_improved", "rgo_size_advance_discovery"),
         ],
         "inland_saltworks": [
             ("inland_saltworks", None),
@@ -593,8 +593,12 @@ def test_salt_production_families_are_explicit_and_unlockable() -> None:
                 assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
                 assert raw["icon"]["output_dds"] == f"{key}.dds"
 
-    efficient_mining = _advance_block("efficient_mining", advances)
-    assert re.search(r"^\s*unlock_building\s*=\s*salt_mine_improved\s*$", efficient_mining, flags=re.M)
+    rgo_size_discovery = _advance_block("rgo_size_advance_discovery", advances)
+    assert re.search(
+        r"^\s*unlock_building\s*=\s*salt_mine_improved\s*$",
+        rgo_size_discovery,
+        flags=re.M,
+    )
 
     engineered = _load_blueprint("engineered_brine_saltworks")
     advancements = engineered.get("advancements")
