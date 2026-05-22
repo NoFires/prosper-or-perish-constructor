@@ -12,11 +12,23 @@ megalopolis = yes
 location_potential = {
     OR = {
         raw_material = goods:fiber_crops
-        NOT = {
-            raw_material = goods:fiber_crops
+        AND = {
+            NOT = { climate = arctic }
+            NOT = { climate = cold_arid }
+            OR = {
+                topography = flatland
+                topography = hills
+                topography = plateau
+                topography = wetlands
+            }
+            OR = {
+                vegetation = farmland
+                vegetation = grasslands
+                vegetation = woods
+                vegetation = forest
+            }
         }
     }
-    NOT = { climate = arctic }
 }
 
 allow = {

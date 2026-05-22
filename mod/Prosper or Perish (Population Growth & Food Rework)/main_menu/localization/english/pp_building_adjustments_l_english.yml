@@ -57,6 +57,8 @@
   BUILDING_LEVEL_IS_CITY: "City Bonus"
   BUILDING_LEVEL_AVAILABLE_SPACE: "Urbanization Penalty — #I (From Non-Farm Buildings)#!"
   BUILDING_LEVEL_FARM_SPACE_USED: "Arable Land Used by Land-Farm Buildings"
+  BUILDING_LEVEL_FARM_TOTAL_BUILDING_PRESSURE: "General Building Footprint"
+  BUILDING_LEVEL_FARM_CAPACITY_USED_ADJUSTED: "Additional Land-Farm Occupancy"
   BUILDING_LEVEL_FARM_CAPACITY_IMPROVEMENTS: "Farming Capacity Improvements — #I (Irrigation, Bunds, etc.)#!"
   BUILDING_LEVEL_BASE_FISHING: "From Natural Fishing Grounds"
   BUILDING_LEVEL_RGO_SIZE_FISHING: "From Maximum RGO Size"
@@ -68,6 +70,8 @@
   BUILDING_LEVEL_FOREST_CAPACITY_IMPROVEMENTS: "Forest Capacity Improvements"
   BUILDING_LEVEL_FOREST_URBANIZATION: "Urbanization Penalty — #I (From Non-Forest Buildings)#!"
   BUILDING_LEVEL_FOREST_SPACE_USED: "Forest Capacity Used by Forest Buildings"
+  BUILDING_LEVEL_FOREST_TOTAL_BUILDING_PRESSURE: "General Building Footprint"
+  BUILDING_LEVEL_FOREST_CAPACITY_USED_ADJUSTED: "Additional Forest Occupancy"
   BUILDING_LEVEL_FROM_LOCATION_RANK_FARMING: "Impact from Location Rank#!"
   BUILDING_LEVEL_FROM_LOCATION_RANK_FOREST: "Impact from Location Rank#!"
 

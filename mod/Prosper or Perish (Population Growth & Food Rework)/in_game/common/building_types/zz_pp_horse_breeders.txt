@@ -17,15 +17,23 @@ location_potential = {
             is_produced_in_market = goods:horses
         }
     }
-}
-
-allow = {
-    farm_capacity_available > 0
     OR = {
         climate = mediterranean
         climate = continental
         climate = oceanic
     }
+    OR = {
+        raw_material = goods:wool
+        raw_material = goods:livestock
+        raw_material = goods:horses
+        vegetation = farmland
+        vegetation = grasslands
+        vegetation = sparse
+    }
+}
+
+allow = {
+    farm_capacity_available > 0
 }
 
 modifier = {
