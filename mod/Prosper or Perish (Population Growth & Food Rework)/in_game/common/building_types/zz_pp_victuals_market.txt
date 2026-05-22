@@ -7,6 +7,7 @@ victuals_market = {
 	# price = pp_test_price_1
 	# price = pp_victuals_market_price
 	category = infrastructure_category
+	custom_tags = { pp_food_security_priority pp_food_distribution_priority }
 	icon = victuals_market
 	rural_settlement = yes
 	town = yes

@@ -5,6 +5,7 @@ REPLACE:irrigation_systems = {
   pop_type = peasants
   price = pp_irrigation_systems_price
   category = infrastructure_category
+  custom_tags = { pp_food_security_priority pp_water_control_priority }
   employment_size = generic_peasant_building_employment
   rural_settlement = yes
   town = yes

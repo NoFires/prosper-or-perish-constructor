@@ -15,6 +15,7 @@ building:
     	pop_type = laborers
     	employment_size = 0.25
     	category = infrastructure_category
+    	custom_tags = { pp_food_security_priority pp_food_storage_priority }
         rural_settlement = yes
         town = yes
         city = yes
