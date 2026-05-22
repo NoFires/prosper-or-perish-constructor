@@ -203,6 +203,18 @@ def test_static_map_modes_match_calibration_thresholds() -> None:
     assert not bad
 
 
+def test_farm_capacity_scale_keeps_developed_locations_distinguishable() -> None:
+    thresholds = [
+        float(value)
+        for value in json.loads(CALIBRATION.read_text(encoding="utf-8"))["scales"]["food_capacity"][
+            "farm"
+        ]["thresholds"]
+    ]
+
+    assert thresholds[2] < 14 < 18 < thresholds[3]
+    assert thresholds[3] - thresholds[2] >= 8
+
+
 def test_market_food_price_uses_reference_centered_buckets() -> None:
     block = _all_blocks()["pp_market_food_price"]
     scale = json.loads(CALIBRATION.read_text(encoding="utf-8"))["scales"]["market_food_price"]

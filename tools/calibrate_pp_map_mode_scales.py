@@ -333,6 +333,16 @@ def _positive_quantity_thresholds(values: Iterable[float]) -> list[float]:
 
 def _food_capacity_thresholds(capacity: str, values: Iterable[float]) -> list[float]:
     thresholds = _positive_quantity_thresholds(values)
+    if capacity == "farm":
+        # Farm capacity receives live location, improvement, and water-control bonuses
+        # that are underrepresented in the static/savegame sample. Keep the lower
+        # dynamic breaks, but reserve enough high-end range for developed farms.
+        return [
+            max(thresholds[0], 1.0),
+            max(thresholds[1], 4.0),
+            max(thresholds[2], 12.0),
+            max(thresholds[3], 24.0),
+        ]
     if min(right - left for left, right in zip(thresholds, thresholds[1:])) >= 0.25:
         return thresholds
     fallback = {
@@ -365,13 +375,20 @@ def _signed_output_scale_thresholds(values: Iterable[float]) -> dict[str, object
         negative = [-0.70, -0.25]
 
     if len(positives) >= 5:
-        positive = [_round_modifier(_quantile(positives, 0.45)), _round_modifier(_quantile(positives, 0.90))]
+        positive = [
+            _round_modifier(_quantile(positives, 0.45)),
+            _round_modifier(_quantile(positives, 0.90)),
+        ]
         positive = _strict_thresholds(positive, minimum=0.01)
         positive = [max(positive[0], 0.06), max(positive[1], 0.12)]
         if not positive[0] < positive[1]:
             positive = [0.15, 0.30]
     else:
         positive = [0.15, 0.30]
+    # Live modifiers can stack above the generated location-modifier sample.
+    # Keep the data-driven lower breaks, then reserve an upper green-to-top band
+    # so strong +50% to +75% locations do not collapse into one capped color.
+    positive = [*positive, max(positive[-1] + 0.10, 0.75)]
 
     return {
         "kind": "signed_centered",

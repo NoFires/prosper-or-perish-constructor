@@ -17,10 +17,10 @@
       "farm": {
         "kind": "sequential",
         "thresholds": [
-          0.95,
-          3.5,
-          5.5,
-          9.0
+          1.0,
+          4.0,
+          12.0,
+          24.0
         ]
       },
       "fish": {
@@ -730,7 +730,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -744,7 +745,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -758,7 +760,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.16,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -772,7 +775,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -786,7 +790,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -800,7 +805,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.16,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -814,7 +820,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -828,7 +835,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.2,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -842,7 +850,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -856,7 +865,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -870,7 +880,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.2,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -884,7 +895,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -898,7 +910,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -912,7 +925,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -926,7 +940,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -940,7 +955,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -954,7 +970,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.27
+          0.27,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -968,7 +985,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -982,7 +1000,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -996,7 +1015,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.16,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1010,7 +1030,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.16,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1024,7 +1045,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -1038,7 +1060,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1052,7 +1075,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -1066,7 +1090,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.18,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1080,7 +1105,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1094,7 +1120,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.16,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1108,7 +1135,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.19,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1122,7 +1150,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -1136,7 +1165,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1150,7 +1180,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -1164,7 +1195,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1178,7 +1210,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1192,7 +1225,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -1206,7 +1240,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1220,7 +1255,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.16,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1234,7 +1270,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.27
+          0.27,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1248,7 +1285,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.29
+          0.29,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1262,7 +1300,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -1276,7 +1315,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -1290,7 +1330,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -1304,7 +1345,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.27
+          0.27,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1318,7 +1360,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -1332,7 +1375,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -1346,7 +1390,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1360,7 +1405,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.27
+          0.27,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1374,7 +1420,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.15,
-          0.3
+          0.3,
+          0.75
         ],
         "source": "fallback_static_modifier_scale"
       },
@@ -1388,7 +1435,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.16,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1402,7 +1450,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.16,
-          0.27
+          0.27,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1416,7 +1465,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1430,7 +1480,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.17,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       },
@@ -1444,7 +1495,8 @@
         "neutral_low": -0.05,
         "positive_thresholds": [
           0.16,
-          0.28
+          0.28,
+          0.75
         ],
         "source": "generated_location_modifier_distribution"
       }

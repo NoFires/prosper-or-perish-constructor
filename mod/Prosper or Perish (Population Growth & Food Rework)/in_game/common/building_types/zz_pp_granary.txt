@@ -18,6 +18,7 @@ REPLACE:granary = {
             location_rank = location_rank:megalopolis
         }
     }
+    important_for_AI = yes
     build_time = government_build_time
 	unique_production_methods = {
 		pp_granary_maintenance = {
@@ -29,7 +30,7 @@ REPLACE:granary = {
 	construction_demand = granary_construction
     modifier = {
         local_food_decay_modifier = -0.0002
-        local_food_capacity = 720
+        local_food_capacity = 1500
     }
 	ai_forbid_shutdown = yes
 	forbidden_for_estates = no

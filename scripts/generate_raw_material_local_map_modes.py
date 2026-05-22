@@ -43,6 +43,7 @@ OUTPUT_MODIFIER_LEGEND_CLASSES = (
     "DEFICIT",
     "NEUTRAL",
     "GOOD",
+    "EXCELLENT",
     "EXCEPTIONAL",
 )
 
@@ -389,6 +390,7 @@ def _output_modifier_legend_description(good: str, suffix: str) -> str:
             "DEFICIT": "Wheat productivity deficit",
             "NEUTRAL": "Near neutral wheat productivity",
             "GOOD": "Good wheat productivity",
+            "EXCELLENT": "Excellent wheat productivity",
             "EXCEPTIONAL": "Exceptional wheat productivity",
         }[suffix]
     display = _display_name(good).lower()
@@ -397,6 +399,7 @@ def _output_modifier_legend_description(good: str, suffix: str) -> str:
         "DEFICIT": f"Local {display} productivity deficit",
         "NEUTRAL": f"Near neutral local {display} output",
         "GOOD": f"Good local {display} productivity",
+        "EXCELLENT": f"Excellent local {display} productivity",
         "EXCEPTIONAL": f"Exceptional local {display} output",
     }
     return generic_descriptions[suffix]

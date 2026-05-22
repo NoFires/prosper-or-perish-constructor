@@ -98,8 +98,24 @@ pp_local_horses_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_horses_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_horses_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -115,7 +131,8 @@ pp_local_horses_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_HORSES_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_HORSES_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_HORSES_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_HORSES_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_HORSES_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_HORSES_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_HORSES_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -237,8 +254,24 @@ pp_local_clay_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_clay_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_clay_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -254,7 +287,8 @@ pp_local_clay_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CLAY_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CLAY_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CLAY_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_CLAY_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CLAY_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CLAY_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CLAY_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -376,8 +410,24 @@ pp_local_sand_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_sand_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_sand_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -393,7 +443,8 @@ pp_local_sand_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SAND_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SAND_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SAND_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_SAND_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SAND_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SAND_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SAND_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -515,8 +566,24 @@ pp_local_coal_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_coal_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_coal_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -532,7 +599,8 @@ pp_local_coal_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COAL_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COAL_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COAL_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_COAL_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COAL_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COAL_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COAL_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -654,8 +722,24 @@ pp_local_iron_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_iron_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_iron_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -671,7 +755,8 @@ pp_local_iron_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_IRON_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_IRON_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_IRON_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_IRON_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_IRON_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_IRON_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_IRON_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -793,8 +878,24 @@ pp_local_copper_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_copper_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_copper_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -810,7 +911,8 @@ pp_local_copper_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COPPER_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COPPER_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COPPER_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_COPPER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COPPER_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COPPER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COPPER_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -932,8 +1034,24 @@ pp_local_goods_gold_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_goods_gold_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_goods_gold_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -949,7 +1067,8 @@ pp_local_goods_gold_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_GOODS_GOLD_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_GOODS_GOLD_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_GOODS_GOLD_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_GOODS_GOLD_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_GOODS_GOLD_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_GOODS_GOLD_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_GOODS_GOLD_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -1071,8 +1190,24 @@ pp_local_silver_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_silver_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_silver_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -1088,7 +1223,8 @@ pp_local_silver_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SILVER_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SILVER_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SILVER_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_SILVER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SILVER_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SILVER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SILVER_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -1210,8 +1346,24 @@ pp_local_stone_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_stone_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_stone_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -1227,7 +1379,8 @@ pp_local_stone_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_STONE_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_STONE_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_STONE_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_STONE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_STONE_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_STONE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_STONE_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -1349,8 +1502,24 @@ pp_local_tin_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_tin_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_tin_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -1366,7 +1535,8 @@ pp_local_tin_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TIN_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TIN_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TIN_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_TIN_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_TIN_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_TIN_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TIN_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -1488,8 +1658,24 @@ pp_local_lead_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_lead_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_lead_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -1505,7 +1691,8 @@ pp_local_lead_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LEAD_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LEAD_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LEAD_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_LEAD_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_LEAD_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_LEAD_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LEAD_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -1627,8 +1814,24 @@ pp_local_silk_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_silk_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_silk_productivity_map_value
+					subtract = 0.27
+					divide = 0.48
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -1644,7 +1847,8 @@ pp_local_silk_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SILK_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SILK_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SILK_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_SILK_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SILK_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SILK_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SILK_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -1766,8 +1970,24 @@ pp_local_dyes_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_dyes_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_dyes_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -1783,7 +2003,8 @@ pp_local_dyes_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_DYES_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_DYES_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_DYES_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_DYES_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_DYES_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_DYES_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_DYES_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -1905,8 +2126,24 @@ pp_local_incense_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_incense_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_incense_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -1922,7 +2159,8 @@ pp_local_incense_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_INCENSE_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_INCENSE_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_INCENSE_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_INCENSE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_INCENSE_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_INCENSE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_INCENSE_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -2044,8 +2282,24 @@ pp_local_tea_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_tea_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_tea_productivity_map_value
+					subtract = 0.27
+					divide = 0.48
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -2061,7 +2315,8 @@ pp_local_tea_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TEA_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TEA_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TEA_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_TEA_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_TEA_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_TEA_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TEA_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -2183,8 +2438,24 @@ pp_local_cocoa_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_cocoa_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_cocoa_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -2200,7 +2471,8 @@ pp_local_cocoa_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COCOA_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COCOA_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COCOA_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_COCOA_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COCOA_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COCOA_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COCOA_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -2322,8 +2594,24 @@ pp_local_coffee_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_coffee_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_coffee_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -2339,7 +2627,8 @@ pp_local_coffee_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COFFEE_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COFFEE_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COFFEE_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_COFFEE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COFFEE_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COFFEE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COFFEE_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -2461,8 +2750,24 @@ pp_local_fiber_crops_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_fiber_crops_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_fiber_crops_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -2478,7 +2783,8 @@ pp_local_fiber_crops_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FIBER_CROPS_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FIBER_CROPS_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FIBER_CROPS_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_FIBER_CROPS_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FIBER_CROPS_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FIBER_CROPS_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FIBER_CROPS_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -2600,8 +2906,24 @@ pp_local_ivory_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_ivory_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_ivory_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -2617,7 +2939,8 @@ pp_local_ivory_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_IVORY_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_IVORY_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_IVORY_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_IVORY_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_IVORY_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_IVORY_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_IVORY_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -2739,8 +3062,24 @@ pp_local_lumber_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_lumber_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_lumber_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -2756,7 +3095,8 @@ pp_local_lumber_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LUMBER_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LUMBER_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LUMBER_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_LUMBER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_LUMBER_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_LUMBER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LUMBER_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -2878,8 +3218,24 @@ pp_local_salt_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_salt_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_salt_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -2895,7 +3251,8 @@ pp_local_salt_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SALT_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SALT_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SALT_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_SALT_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SALT_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SALT_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SALT_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -3017,8 +3374,24 @@ pp_local_medicaments_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_medicaments_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_medicaments_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -3034,7 +3407,8 @@ pp_local_medicaments_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MEDICAMENTS_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MEDICAMENTS_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MEDICAMENTS_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_MEDICAMENTS_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MEDICAMENTS_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MEDICAMENTS_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MEDICAMENTS_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -3156,8 +3530,24 @@ pp_local_gems_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_gems_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_gems_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -3173,7 +3563,8 @@ pp_local_gems_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_GEMS_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_GEMS_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_GEMS_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_GEMS_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_GEMS_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_GEMS_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_GEMS_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -3295,8 +3686,24 @@ pp_local_pearls_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_pearls_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_pearls_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -3312,7 +3719,8 @@ pp_local_pearls_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_PEARLS_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_PEARLS_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_PEARLS_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_PEARLS_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_PEARLS_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_PEARLS_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_PEARLS_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -3434,8 +3842,24 @@ pp_local_amber_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_amber_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_amber_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -3451,7 +3875,8 @@ pp_local_amber_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_AMBER_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_AMBER_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_AMBER_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_AMBER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_AMBER_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_AMBER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_AMBER_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -3573,8 +3998,24 @@ pp_local_saltpeter_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_saltpeter_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_saltpeter_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -3590,7 +4031,8 @@ pp_local_saltpeter_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SALTPETER_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SALTPETER_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SALTPETER_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_SALTPETER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SALTPETER_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SALTPETER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SALTPETER_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -3712,8 +4154,24 @@ pp_local_alum_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_alum_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_alum_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -3729,7 +4187,8 @@ pp_local_alum_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_ALUM_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_ALUM_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_ALUM_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_ALUM_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_ALUM_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_ALUM_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_ALUM_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -3851,8 +4310,24 @@ pp_local_wine_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_wine_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_wine_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -3868,7 +4343,8 @@ pp_local_wine_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WINE_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WINE_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WINE_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WINE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WINE_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WINE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WINE_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -3990,8 +4466,24 @@ pp_local_elephants_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_elephants_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_elephants_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -4007,7 +4499,8 @@ pp_local_elephants_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_ELEPHANTS_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_ELEPHANTS_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_ELEPHANTS_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_ELEPHANTS_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_ELEPHANTS_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_ELEPHANTS_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_ELEPHANTS_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -4129,8 +4622,24 @@ pp_local_marble_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_marble_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_marble_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -4146,7 +4655,8 @@ pp_local_marble_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MARBLE_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MARBLE_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MARBLE_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_MARBLE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MARBLE_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MARBLE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MARBLE_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -4268,8 +4778,24 @@ pp_local_mercury_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_mercury_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_mercury_productivity_map_value
+					subtract = 0.3
+					divide = 0.45
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -4285,7 +4811,8 @@ pp_local_mercury_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MERCURY_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MERCURY_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MERCURY_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_MERCURY_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MERCURY_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MERCURY_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MERCURY_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -4407,8 +4934,24 @@ pp_local_saffron_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_saffron_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_saffron_productivity_map_value
+					subtract = 0.29
+					divide = 0.46
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -4424,7 +4967,8 @@ pp_local_saffron_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SAFFRON_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SAFFRON_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SAFFRON_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_SAFFRON_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SAFFRON_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SAFFRON_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SAFFRON_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -4546,8 +5090,24 @@ pp_local_pepper_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_pepper_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_pepper_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -4563,7 +5123,8 @@ pp_local_pepper_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_PEPPER_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_PEPPER_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_PEPPER_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_PEPPER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_PEPPER_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_PEPPER_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_PEPPER_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -4685,8 +5246,24 @@ pp_local_cloves_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_cloves_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_cloves_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -4702,7 +5279,8 @@ pp_local_cloves_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CLOVES_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CLOVES_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CLOVES_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_CLOVES_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CLOVES_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CLOVES_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CLOVES_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -4824,8 +5402,24 @@ pp_local_chili_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_chili_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_chili_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -4841,7 +5435,8 @@ pp_local_chili_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CHILI_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CHILI_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CHILI_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_CHILI_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CHILI_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_CHILI_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_CHILI_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -4963,8 +5558,24 @@ pp_local_cotton_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_cotton_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_cotton_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -4980,7 +5591,8 @@ pp_local_cotton_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COTTON_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COTTON_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COTTON_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_COTTON_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COTTON_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_COTTON_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_COTTON_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -5102,8 +5714,24 @@ pp_local_sugar_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_sugar_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_sugar_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -5119,7 +5747,8 @@ pp_local_sugar_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SUGAR_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SUGAR_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SUGAR_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_SUGAR_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SUGAR_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_SUGAR_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_SUGAR_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -5241,8 +5870,24 @@ pp_local_tobacco_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_tobacco_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_tobacco_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -5258,7 +5903,8 @@ pp_local_tobacco_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TOBACCO_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TOBACCO_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TOBACCO_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_TOBACCO_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_TOBACCO_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_TOBACCO_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_TOBACCO_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -5380,8 +6026,24 @@ pp_local_wool_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_wool_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_wool_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -5397,7 +6059,8 @@ pp_local_wool_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WOOL_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WOOL_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WOOL_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WOOL_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WOOL_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WOOL_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WOOL_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -5519,8 +6182,24 @@ pp_local_wild_game_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_wild_game_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_wild_game_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -5536,7 +6215,8 @@ pp_local_wild_game_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WILD_GAME_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WILD_GAME_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WILD_GAME_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WILD_GAME_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WILD_GAME_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WILD_GAME_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WILD_GAME_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -5658,8 +6338,24 @@ pp_local_fur_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_fur_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_fur_productivity_map_value
+					subtract = 0.27
+					divide = 0.48
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -5675,7 +6371,8 @@ pp_local_fur_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FUR_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FUR_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FUR_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_FUR_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FUR_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FUR_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FUR_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -5797,8 +6494,24 @@ pp_local_fish_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_fish_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_fish_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -5814,7 +6527,8 @@ pp_local_fish_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FISH_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FISH_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FISH_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_FISH_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FISH_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FISH_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FISH_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -5936,8 +6650,24 @@ pp_local_wheat_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_wheat_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_wheat_productivity_map_value
+					subtract = 0.27
+					divide = 0.48
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -5953,7 +6683,8 @@ pp_local_wheat_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_WHEAT_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -6075,8 +6806,24 @@ pp_local_maize_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_maize_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_maize_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -6092,7 +6839,8 @@ pp_local_maize_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MAIZE_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MAIZE_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MAIZE_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_MAIZE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MAIZE_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MAIZE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MAIZE_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -6214,8 +6962,24 @@ pp_local_rice_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_rice_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_rice_productivity_map_value
+					subtract = 0.27
+					divide = 0.48
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -6231,7 +6995,8 @@ pp_local_rice_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_RICE_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_RICE_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_RICE_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_RICE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_RICE_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_RICE_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_RICE_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -6353,8 +7118,24 @@ pp_local_millet_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_millet_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_millet_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -6370,7 +7151,8 @@ pp_local_millet_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MILLET_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MILLET_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MILLET_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_MILLET_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MILLET_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_MILLET_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_MILLET_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -6492,8 +7274,24 @@ pp_local_legumes_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_legumes_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_legumes_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -6509,7 +7307,8 @@ pp_local_legumes_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LEGUMES_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LEGUMES_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LEGUMES_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_LEGUMES_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_LEGUMES_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_LEGUMES_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LEGUMES_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -6631,8 +7430,24 @@ pp_local_potato_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_potato_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_potato_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -6648,7 +7463,8 @@ pp_local_potato_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_POTATO_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_POTATO_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_POTATO_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_POTATO_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_POTATO_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_POTATO_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_POTATO_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -6770,8 +7586,24 @@ pp_local_livestock_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_livestock_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_livestock_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -6787,7 +7619,8 @@ pp_local_livestock_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LIVESTOCK_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LIVESTOCK_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LIVESTOCK_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_LIVESTOCK_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_LIVESTOCK_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_LIVESTOCK_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_LIVESTOCK_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -6909,8 +7742,24 @@ pp_local_olives_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_olives_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_olives_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -6926,7 +7775,8 @@ pp_local_olives_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_OLIVES_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_OLIVES_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_OLIVES_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_OLIVES_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_OLIVES_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_OLIVES_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_OLIVES_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -7048,8 +7898,24 @@ pp_local_fruit_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_fruit_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_fruit_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -7065,7 +7931,8 @@ pp_local_fruit_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FRUIT_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FRUIT_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FRUIT_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_FRUIT_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FRUIT_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_FRUIT_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_FRUIT_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {
@@ -7187,8 +8054,24 @@ pp_local_beeswax_output_modifier = {
 				}
 			}
 		}
+		else_if = {
+			limit = {
+				pp_beeswax_productivity_map_value < 0.75
+			}
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_MAX
+				max_color = define:NMapColors|MAP_COLOR_TOP
+				factor = {
+					value = pp_beeswax_productivity_map_value
+					subtract = 0.28
+					divide = 0.47
+					max = 1
+					min = 0
+				}
+			}
+		}
 		else = {
-			value = define:NMapColors|MAP_COLOR_MAX
+			value = define:NMapColors|MAP_COLOR_TOP
 		}
 	}
 	secondary_map_color = {
@@ -7204,7 +8087,8 @@ pp_local_beeswax_output_modifier = {
 	legend_key = { desc = "MAPMODE_PP_LOCAL_BEESWAX_OUTPUT_MODIFIER_DEFICIT" color = define:NMapColors|MAP_COLOR_LOW }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_BEESWAX_OUTPUT_MODIFIER_NEUTRAL" color = define:NMapColors|MAP_COLOR_MID }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_BEESWAX_OUTPUT_MODIFIER_GOOD" color = define:NMapColors|MAP_COLOR_HIGH }
-	legend_key = { desc = "MAPMODE_PP_LOCAL_BEESWAX_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_BEESWAX_OUTPUT_MODIFIER_EXCELLENT" color = define:NMapColors|MAP_COLOR_MAX }
+	legend_key = { desc = "MAPMODE_PP_LOCAL_BEESWAX_OUTPUT_MODIFIER_EXCEPTIONAL" color = define:NMapColors|MAP_COLOR_TOP }
 	legend_key = { desc = "MAPMODE_PP_LOCAL_BEESWAX_OUTPUT_MODIFIER_RAW_MATERIAL" color = rgb { 246 197 75 } }
 	tooltip_key = {
 		if = {

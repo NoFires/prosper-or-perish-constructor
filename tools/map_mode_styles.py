@@ -13,6 +13,7 @@ MAP_COLOR_LOW = "define:NMapColors|MAP_COLOR_LOW"
 MAP_COLOR_MID = "define:NMapColors|MAP_COLOR_MID"
 MAP_COLOR_HIGH = "define:NMapColors|MAP_COLOR_HIGH"
 MAP_COLOR_MAX = "define:NMapColors|MAP_COLOR_MAX"
+MAP_COLOR_TOP = "define:NMapColors|MAP_COLOR_TOP"
 STARVATION_STRIPE = "define:NMapColors|POPULATION_STARVING_COLOR_STRIPE"
 NO_DATA_GREY = "rgb { 128 128 128 }"
 
@@ -45,7 +46,7 @@ class SignedCenteredScale:
     negative_thresholds: tuple[float, float]
     neutral_low: float
     neutral_high: float
-    positive_thresholds: tuple[float, float]
+    positive_thresholds: tuple[float, ...]
 
 
 FALLBACK_SEQUENTIAL_SCALE = SequentialScale((0.25, 1.0, 4.0, 16.0))
@@ -53,7 +54,7 @@ FALLBACK_LOCAL_OUTPUT_SCALE = SignedCenteredScale(
     negative_thresholds=(-0.70, -0.25),
     neutral_low=-0.05,
     neutral_high=0.05,
-    positive_thresholds=(0.15, 0.30),
+    positive_thresholds=(0.15, 0.30, 0.75),
 )
 FALLBACK_FOOD_PRICE_SCALE = ReferenceCenteredScale(
     reference=0.12,
@@ -97,19 +98,33 @@ def reference_centered(scale: ReferenceCenteredScale, low_is_good: bool) -> tupl
 
 def signed_centered(scale: SignedCenteredScale) -> tuple[MapColorBucket, ...]:
     neg_a, neg_b = scale.negative_thresholds
-    pos_a, pos_b = scale.positive_thresholds
+    positives = scale.positive_thresholds
+    if len(positives) not in {2, 3}:
+        raise ValueError(f"signed centered scale supports 2 or 3 positive thresholds: {positives}")
     _ensure_increasing(
-        (neg_a, neg_b, scale.neutral_low, scale.neutral_high, pos_a, pos_b),
+        (neg_a, neg_b, scale.neutral_low, scale.neutral_high, *positives),
         "signed centered scale",
     )
-    return (
+    negative_and_neutral = (
         MapColorBucket("EXTREME_DEFICIT", f"< {_format_number(neg_a)}", None, None, MAP_COLOR_MIN, MAP_COLOR_MIN, MAP_COLOR_MIN),
         MapColorBucket("DEFICIT", f"< {_format_number(neg_b)}", neg_a, neg_b - neg_a, MAP_COLOR_MIN, MAP_COLOR_LOW, MAP_COLOR_LOW),
         MapColorBucket("LOW", f"< {_format_number(scale.neutral_low)}", neg_b, scale.neutral_low - neg_b, MAP_COLOR_LOW, MAP_COLOR_MID, MAP_COLOR_LOW),
         MapColorBucket("NEUTRAL", f"< {_format_number(scale.neutral_high)}", None, None, MAP_COLOR_MID, MAP_COLOR_MID, MAP_COLOR_MID),
+    )
+    if len(positives) == 2:
+        pos_a, pos_b = positives
+        return negative_and_neutral + (
+            MapColorBucket("GOOD", f"< {_format_number(pos_a)}", scale.neutral_high, pos_a - scale.neutral_high, MAP_COLOR_MID, MAP_COLOR_HIGH, MAP_COLOR_HIGH),
+            MapColorBucket("STRONG", f"< {_format_number(pos_b)}", pos_a, pos_b - pos_a, MAP_COLOR_HIGH, MAP_COLOR_MAX, MAP_COLOR_HIGH),
+            MapColorBucket("EXCEPTIONAL", None, None, None, MAP_COLOR_MAX, MAP_COLOR_MAX, MAP_COLOR_MAX),
+        )
+
+    pos_a, pos_b, pos_c = positives
+    return negative_and_neutral + (
         MapColorBucket("GOOD", f"< {_format_number(pos_a)}", scale.neutral_high, pos_a - scale.neutral_high, MAP_COLOR_MID, MAP_COLOR_HIGH, MAP_COLOR_HIGH),
         MapColorBucket("STRONG", f"< {_format_number(pos_b)}", pos_a, pos_b - pos_a, MAP_COLOR_HIGH, MAP_COLOR_MAX, MAP_COLOR_HIGH),
-        MapColorBucket("EXCEPTIONAL", None, None, None, MAP_COLOR_MAX, MAP_COLOR_MAX, MAP_COLOR_MAX),
+        MapColorBucket("EXCELLENT", f"< {_format_number(pos_c)}", pos_b, pos_c - pos_b, MAP_COLOR_MAX, MAP_COLOR_TOP, MAP_COLOR_MAX),
+        MapColorBucket("EXCEPTIONAL", None, None, None, MAP_COLOR_TOP, MAP_COLOR_TOP, MAP_COLOR_TOP),
     )
 
 
@@ -177,11 +192,12 @@ def reference_scale_from_data(raw: dict | None, fallback: ReferenceCenteredScale
 def signed_scale_from_data(raw: dict | None, fallback: SignedCenteredScale = FALLBACK_LOCAL_OUTPUT_SCALE) -> SignedCenteredScale:
     if not raw:
         return fallback
+    positive_thresholds = _number_tuple_one_of(raw.get("positive_thresholds"), {2, 3}, fallback.positive_thresholds)
     return SignedCenteredScale(
         negative_thresholds=_number_tuple(raw.get("negative_thresholds"), 2, fallback.negative_thresholds),
         neutral_low=float(raw.get("neutral_low", fallback.neutral_low)),
         neutral_high=float(raw.get("neutral_high", fallback.neutral_high)),
-        positive_thresholds=_number_tuple(raw.get("positive_thresholds"), 2, fallback.positive_thresholds),
+        positive_thresholds=positive_thresholds,
     )
 
 
@@ -239,6 +255,15 @@ def _number_tuple(values: object, length: int, fallback: Sequence[float]) -> tup
         values = fallback
     numbers = tuple(float(value) for value in values)
     if len(numbers) != length:
+        numbers = tuple(float(value) for value in fallback)
+    return numbers
+
+
+def _number_tuple_one_of(values: object, lengths: set[int], fallback: Sequence[float]) -> tuple[float, ...]:
+    if not isinstance(values, Sequence) or isinstance(values, (str, bytes)):
+        values = fallback
+    numbers = tuple(float(value) for value in values)
+    if len(numbers) not in lengths:
         numbers = tuple(float(value) for value in fallback)
     return numbers
 

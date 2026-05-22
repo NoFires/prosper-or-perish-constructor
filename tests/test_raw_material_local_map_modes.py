@@ -78,6 +78,7 @@ ANCHOR_LEGEND_KEYS = [
     "DEFICIT",
     "NEUTRAL",
     "GOOD",
+    "EXCELLENT",
     "EXCEPTIONAL",
     "RAW_MATERIAL",
 ]
@@ -173,7 +174,7 @@ def test_output_map_modes_all_use_vanilla_traffic_light_signed_format() -> None:
             bad.append(f"{good}: still uses old generic factor ramp")
         if block.count("legend_key =") != len(ANCHOR_LEGEND_KEYS):
             bad.append(f"{good}: wrong concise legend key count")
-        if block.count("lerp = {") < 4:
+        if block.count("lerp = {") < 5:
             bad.append(f"{good}: missing bucket shading")
         for color in (
             "define:NMapColors|MAP_COLOR_MIN",
@@ -181,6 +182,7 @@ def test_output_map_modes_all_use_vanilla_traffic_light_signed_format() -> None:
             "define:NMapColors|MAP_COLOR_MID",
             "define:NMapColors|MAP_COLOR_HIGH",
             "define:NMapColors|MAP_COLOR_MAX",
+            "define:NMapColors|MAP_COLOR_TOP",
         ):
             if color not in block:
                 bad.append(f"{good}: missing {color}")
@@ -197,11 +199,11 @@ def test_output_map_modes_have_multi_stop_colors_and_raw_material_stripes() -> N
 
     bad: list[str] = []
     for good, block in blocks.items():
-        if block.count("define:NMapColors|MAP_COLOR") < 10:
+        if block.count("define:NMapColors|MAP_COLOR") < 12:
             bad.append(f"{good}: too few vanilla color stops")
         if block.count("legend_key =") != len(ANCHOR_LEGEND_KEYS):
             bad.append(f"{good}: wrong legend key count")
-        if block.count("lerp = {") < 4:
+        if block.count("lerp = {") < 5:
             bad.append(f"{good}: missing in-bucket lerps")
         if "secondary_map_color = {" not in block:
             bad.append(f"{good}: missing raw-material stripes")
@@ -260,6 +262,8 @@ def test_output_map_modes_shade_inside_each_productivity_bucket() -> None:
             bad.append(f"{good}: missing negative-to-neutral shading")
         if "max_color = define:NMapColors|MAP_COLOR_MAX" not in block:
             bad.append(f"{good}: missing positive shading")
+        if "max_color = define:NMapColors|MAP_COLOR_TOP" not in block:
+            bad.append(f"{good}: missing upper positive shading")
         if "subtract = 0.05" not in block:
             bad.append(f"{good}: missing positive bucket origin")
         if "value = define:NMapColors|MAP_COLOR_MID" not in block:
@@ -282,7 +286,7 @@ def test_output_map_modes_clamp_extreme_productivity_without_gradient() -> None:
             flags=re.DOTALL,
         ):
             bad.append(f"{good}: missing low clamp")
-        if not re.search(r"else = \{\s+value = define:NMapColors\|MAP_COLOR_MAX", block):
+        if not re.search(r"else = \{\s+value = define:NMapColors\|MAP_COLOR_TOP", block):
             bad.append(f"{good}: missing high clamp")
 
     assert not bad
