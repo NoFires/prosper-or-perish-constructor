@@ -2,8 +2,8 @@
 victuals_market = {
 	is_foreign = no
 	max_levels = victuals_market_max_level
-	pop_type = peasants
-	employment_size = 1.0
+	pop_type = laborers
+	employment_size = 0.25
 	# price = pp_test_price_1
 	# price = pp_victuals_market_price
 	category = infrastructure_category

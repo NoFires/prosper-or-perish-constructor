@@ -37,6 +37,11 @@ BUILDING_CAP_ADJUSTMENTS = (
 BUILDING_CAPACITY_VALUES = (
     MOD_ROOT / "in_game" / "common" / "script_values" / "pp_building_capacity_values.txt"
 )
+BUILDING_TYPE_ROOT = MOD_ROOT / "in_game" / "common" / "building_types"
+EMPLOYMENT_SYSTEMS_ROOT = MOD_ROOT / "in_game" / "common" / "employment_systems"
+FOOD_SECURITY_PRIORITY_VALUE = (
+    MOD_ROOT / "in_game" / "common" / "script_values" / "pp_food_security_building_priority.txt"
+)
 AQUEDUCT_SYSTEM = MOD_ROOT / "in_game" / "common" / "building_types" / "pp_aqueduct_system.txt"
 GAME_START = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_game_start.txt"
 BUILDING_CULLING = MOD_ROOT / "in_game" / "common" / "on_action" / "pp_building_culling.txt"
@@ -138,7 +143,7 @@ EXCLUDED_FARM_CAP_BUILDINGS = (
     "stone_quarry",
 )
 
-BUILDING_PRIORITY_GROUPS = {
+FOOD_SECURITY_PRIORITY_GROUPS = {
     "food_storage": (
         120,
         "Food storage needs highest priority to stop fluctuations in food for AI.",
@@ -178,6 +183,20 @@ BUILDING_PRIORITY_GROUPS = {
             "enclosed_sheep_walks",
         ),
     ),
+}
+EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY = (
+    "equality",
+    "first_come_first_serve",
+    "capitalism",
+    "capitalism_prioritising_infrastructure",
+    "capitalism_prioritising_infrastructure_trade",
+    "capitalism_prioritising_infrastructure_trade_and_culture",
+)
+FOOD_SECURITY_LABORER_BUILDINGS = {
+    "cookery": ("laborers", 2),
+    "victualling_yard": ("laborers", 4.0),
+    "victuals_market": ("laborers", 0.25),
+    "granary": ("laborers", 0.25),
 }
 
 
@@ -345,19 +364,73 @@ def test_granary_storage_and_startup_placement_are_compatible() -> None:
         assert f"location_rank = location_rank:{rank}" in granary_text
 
 
-def test_food_security_building_priorities_are_rendered() -> None:
-    rendered_buildings = _database_entries(MOD_ROOT / "in_game" / "common" / "building_types")
+def test_food_security_priority_syntax_matches_vanilla_employment_systems() -> None:
+    load_order = LoadOrderConfig.load(ROOT / "constructor.load_order.toml")
+    vanilla_game = load_order.vanilla_root / "game"
+    employment_readme = (
+        vanilla_game / "in_game" / "common" / "employment_systems" / "readme.txt"
+    ).read_text(encoding="utf-8-sig")
+    employment_defaults = (
+        vanilla_game / "in_game" / "common" / "employment_systems" / "00_default.txt"
+    ).read_text(encoding="utf-8-sig")
+    building_scope_example = (
+        vanilla_game / "in_game" / "common" / "generic_actions" / "japanese_shogunate.txt"
+    ).read_text(encoding="utf-8-sig")
 
-    for _group, (priority, comment, buildings) in BUILDING_PRIORITY_GROUPS.items():
+    assert "# priority = script value to return the building priority" in employment_readme
+    assert "priority = {\n\t\tvalue = building_potential_profit" in employment_defaults
+    assert "building_type = building_type:kokufu" in building_scope_example
+
+
+def test_building_types_do_not_render_unsupported_priority_fields() -> None:
+    priority_field = re.compile(r"^\s*priority\s*=", re.MULTILINE)
+    roots = (BUILDING_BLUEPRINT_ROOT, BUILDING_TYPE_ROOT)
+    offenders = [
+        path.relative_to(ROOT).as_posix()
+        for root in roots
+        for path in sorted(root.glob("*.*"))
+        if priority_field.search(path.read_text(encoding="utf-8-sig"))
+    ]
+
+    assert offenders == []
+
+
+def test_food_security_building_priorities_are_in_employment_systems() -> None:
+    priority_text = FOOD_SECURITY_PRIORITY_VALUE.read_text(encoding="utf-8-sig")
+
+    for _group, (priority, comment, buildings) in FOOD_SECURITY_PRIORITY_GROUPS.items():
+        assert f"# {comment}" in priority_text
         for building in buildings:
-            blueprint_path = BUILDING_BLUEPRINT_ROOT / f"{building}.yml"
-            blueprint_text = blueprint_path.read_text(encoding="utf-8-sig")
-            assert f"# {comment}" in blueprint_text
-            assert _accepted_blueprint_building_values(building)["priority"] == priority
+            pattern = re.compile(
+                rf"building_type\s*=\s*building_type:{re.escape(building)}[\s\S]*?add\s*=\s*{priority}"
+            )
+            assert pattern.search(priority_text), building
 
-            rendered = rendered_buildings[building]
-            assert isinstance(rendered, CList)
-            assert _entry_values(rendered)["priority"] == priority
+    employment_systems = _database_entries(EMPLOYMENT_SYSTEMS_ROOT)
+    for system in EMPLOYMENT_SYSTEMS_WITH_FOOD_SECURITY_PRIORITY:
+        system_block = employment_systems[system]
+        assert isinstance(system_block, CList)
+        priority_block = _entry_values(system_block)["priority"]
+        assert isinstance(priority_block, CList)
+        assert any(
+            entry.key == "add" and entry.value == "pp_food_security_building_priority"
+            for entry in priority_block.entries
+        )
+
+
+def test_food_security_storage_and_market_workers_are_laborers() -> None:
+    rendered_buildings = _database_entries(BUILDING_TYPE_ROOT)
+
+    for building, (pop_type, employment_size) in FOOD_SECURITY_LABORER_BUILDINGS.items():
+        blueprint_values = _accepted_blueprint_building_values(building)
+        assert blueprint_values["pop_type"] == pop_type
+        assert blueprint_values["employment_size"] == employment_size
+
+        rendered = rendered_buildings[building]
+        assert isinstance(rendered, CList)
+        rendered_values = _entry_values(rendered)
+        assert rendered_values["pop_type"] == pop_type
+        assert rendered_values["employment_size"] == employment_size
 
 
 def test_land_farm_building_levels_count_all_shared_pool_buildings() -> None:
