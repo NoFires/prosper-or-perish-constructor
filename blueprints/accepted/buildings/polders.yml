@@ -2,9 +2,12 @@ version: 2
 tag: polders
 building:
   key: polders
-  mode: REPLACE #TODO: Is this OK?
+  mode: REPLACE
   source: pp_building_adjustments.txt
-  production_method_slots: []
+  production_method_slots:
+    - name: slot_0
+      methods:
+        - pp_polders_maintenance
   possible_production_methods: []
   body: |2-
     	price = pp_polders_price
@@ -30,11 +33,10 @@ building:
       }
 
       modifier = {
-        local_population_capacity = 2.5 #
+        local_population_capacity = 2.5
         local_monthly_development_modifier = 0.025
         local_road_building_time = -0.05
 
-        local_monthly_food_modifier = -0.05 # vanilla 0.05
         farm_max_level_modifier = 0.60
         local_wheat_output_modifier = 0.025
         local_livestock_output_modifier = 0.025
@@ -46,7 +48,7 @@ building:
       }
 
       unique_production_methods = {
-        polders_maintenance = {
+        pp_polders_maintenance = {
           clay = 0.5
           tools = 0.05
 
@@ -63,4 +65,16 @@ prices:
       {gold = 200}
 localization:
   entries:
+    polders_slot_0: Maintenance
+    pp_polders_maintenance: Polders Maintenance
     pp_polders_price: Polders Price
+
+evaluation:
+  building:
+    employment_size: 1.0
+  production_methods:
+    pp_polders_maintenance:
+      allow_rules:
+        profit_percent: Polders maintenance is a support method with upkeep inputs and no direct goods output.
+        input_throughput: Polders maintenance is a low-volume support method, not a worked production method.
+        output_throughput: Polders maintenance is a support method with no direct goods output.

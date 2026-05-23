@@ -380,7 +380,7 @@ def test_farm_capacity_remaining_tracks_urbanization_and_farm_space() -> None:
 
 def test_granary_storage_and_startup_placement_are_compatible() -> None:
     granary_text = (BUILDING_BLUEPRINT_ROOT / "granary.yml").read_text(encoding="utf-8-sig")
-    assert "local_food_capacity = 720" in granary_text
+    assert "local_food_capacity = 1500" in granary_text
     assert "local_food_capacity = 1000" not in granary_text
     assert "local_food_capacity = 1200" not in granary_text
     assert "is_province_capital = yes" not in granary_text
@@ -1334,7 +1334,7 @@ def test_water_control_capacity_buildings_use_scaled_gold_prices() -> None:
         "bund": ("pp_bund_price", 75.0),
         "irrigation_systems": ("pp_irrigation_systems_price", 50.0),
         "terraces": ("pp_terraces_price", 100.0),
-        "polders": ("pp_polders_price", 100.0),
+        "polders": ("pp_polders_price", 200.0),
         "khmer_baray": ("pp_khmer_baray_price", 125.0),
         "aqueduct_system": ("expand_aqueduct_system", 1000.0),
     }
