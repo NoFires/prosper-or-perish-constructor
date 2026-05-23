@@ -47,10 +47,11 @@ building:
   body: |2-
     	is_foreign = no
     	max_levels = cookery_max_level
-    	pop_type = peasants
+    	pop_type = laborers
     	employment_size = 2
     	price = pp_cookery_price
     	category = consumer_goods_category
+    	custom_tags = { pp_food_security_priority pp_direct_food_priority }
     	icon = cookery
     	rural_settlement = yes
     	town = yes

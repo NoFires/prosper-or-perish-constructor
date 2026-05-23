@@ -9,6 +9,7 @@ employment_size = 3
 rural_settlement = yes
 town = yes
 city = yes
+megalopolis = yes
 
     location_potential = {
         OR = {

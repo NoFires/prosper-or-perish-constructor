@@ -167,13 +167,34 @@ farm_capacity_remaining = {
 	}
 }
 
-farm_max_level = {
-	add = farm_capacity_remaining
+farm_capacity_available = {
+	# Hot path for building allow/max_levels. This is equivalent to
+	# farm_gross_capacity - 0.05 * non_farm_building_levels - land_farm_building_levels
+	# when land-farm buildings are a subset of total building levels, but it only
+	# evaluates land_farm_building_levels once.
+	add = farm_gross_capacity
+	add = {
+		desc = "BUILDING_LEVEL_FARM_TOTAL_BUILDING_PRESSURE"
+		value = total_building_levels
+		multiply = -0.05
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FARM_CAPACITY_USED_ADJUSTED"
+		value = land_farm_building_levels
+		multiply = -0.95
+	}
 	min = 0
 }
 
-farm_capacity_available = {
+farm_max_level = {
+	add = farm_capacity_available
+}
+
+fruit_orchard_max_level = {
 	add = farm_max_level
+	add = {
+		value = "location_building_level(building_type:fruit_orchard)"
+	}
 }
 
 fish_building_levels = {
@@ -235,13 +256,20 @@ fish_capacity_remaining = {
 	}
 }
 
-fish_max_level = {
-	add = fish_capacity_remaining
+fish_capacity_available = {
+	# Hot path for building allow/max_levels. Keep this direct so capacity-gated
+	# fish buildings do not pay extra script-value indirection in allow.
+	add = fish_gross_capacity
+	add = {
+		desc = "BUILDING_LEVEL_FISH_SPACE_USED"
+		value = fish_building_levels
+		multiply = -1
+	}
 	min = 0
 }
 
-fish_capacity_available = {
-	add = fish_max_level
+fish_max_level = {
+	add = fish_capacity_available
 }
 
 forest_building_levels = {
@@ -317,13 +345,31 @@ forest_capacity_remaining = {
 	}
 }
 
-forest_max_level = {
-	add = forest_capacity_remaining
+forest_capacity_available = {
+	# Hot path for building allow/max_levels. This is equivalent to
+	# forest_gross_capacity + rank - 0.1 * non_forest_building_levels
+	# - forest_building_levels when forest buildings are a subset of total
+	# building levels, but it only evaluates forest_building_levels once.
+	add = forest_gross_capacity
+	add = {
+		desc = "BUILDING_LEVEL_FROM_LOCATION_RANK_FOREST"
+		value = modifier:forest_rank_capacity_modifier
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FOREST_TOTAL_BUILDING_PRESSURE"
+		value = total_building_levels
+		multiply = -0.1
+	}
+	add = {
+		desc = "BUILDING_LEVEL_FOREST_CAPACITY_USED_ADJUSTED"
+		value = forest_building_levels
+		multiply = -0.9
+	}
 	min = 0
 }
 
-forest_capacity_available = {
-	add = forest_max_level
+forest_max_level = {
+	add = forest_capacity_available
 }
 
 victuals_market_max_level = {

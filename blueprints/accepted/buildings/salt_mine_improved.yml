@@ -5,7 +5,7 @@ upgrade_chain:
   tier: 1
   previous: salt_mine
   next: null
-  unlock_advance: efficient_mining
+  unlock_advance: rgo_size_advance_discovery
 building:
   key: salt_mine_improved
   mode: CREATE

@@ -10,13 +10,7 @@ city = yes
 megalopolis = yes
 
 location_potential = {
-    OR = {
-        raw_material = goods:fiber_crops
-        NOT = {
-            raw_material = goods:fiber_crops
-        }
-    }
-    NOT = { climate = arctic }
+    pp_fiber_crops_farm_location_potential = yes
 }
 
 allow = {

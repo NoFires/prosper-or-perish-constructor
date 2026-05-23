@@ -6,6 +6,10 @@ TRY_INJECT:rgo_logistics_mil_choice = {
 TRY_INJECT:rgo_logistics_discovery = {
 	raw_material_in_province_impact = 0.025
 }
+TRY_INJECT:rgo_size_advance_discovery = {
+	unlock_building = iron_mine_improved
+	unlock_building = salt_mine_improved
+}
 
 REPLACE:advanced_mining = {
 	age = age_1_traditions
@@ -24,8 +28,6 @@ REPLACE:efficient_mining = {
 	for = adm
 	expand_rgo_mining_cost_modifier = -0.1
 	global_copper_output_modifier = 0.1
-	unlock_building = iron_mine_improved
-	unlock_building = salt_mine_improved
 }
 
 REPLACE:new_currency_demands = {

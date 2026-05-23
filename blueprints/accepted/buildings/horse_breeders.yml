@@ -25,21 +25,11 @@ building:
     megalopolis = yes
 
     location_potential = {
-        OR = {
-            raw_material = goods:horses
-            market = {
-                is_produced_in_market = goods:horses
-            }
-        }
+        pp_horse_breeders_location_potential = yes
     }
 
     allow = {
         farm_capacity_available > 0
-        OR = {
-            climate = mediterranean
-            climate = continental
-            climate = oceanic
-        }
     }
 
     modifier = {

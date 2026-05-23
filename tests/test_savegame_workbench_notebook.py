@@ -69,7 +69,7 @@ def test_savegame_workbench_notebook_executes_tiny_dataset(
         "pm_values",
     ):
         assert isinstance(namespace[name], pl.DataFrame)
-    assert "region_label" in namespace["population_latest"].columns
+    assert "macro_region_label" in namespace["population_latest"].columns
     assert "year" in namespace["population_ts"].columns
     assert "good_label" in namespace["goods_global_ts"].columns
     assert "market_label" in namespace["food_rank"].columns

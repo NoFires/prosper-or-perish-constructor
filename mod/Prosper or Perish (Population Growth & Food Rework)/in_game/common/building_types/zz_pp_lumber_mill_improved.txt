@@ -54,11 +54,11 @@ unique_production_methods = {
     }
     pp_lumber_mill_improved_forest_ordinances = {
         produced = lumber
-        output = 8.140
-        tools = 1.85 # saw frames, axes
-        horses = 1.15 # log hauling
-        victuals = 0.75 # saw crews
-        paper = 0.10 # harvest registers
+        output = 10.419
+        tools = 2.368 # saw frames, axes
+        horses = 1.472 # log hauling
+        victuals = 0.960 # saw crews
+        paper = 0.128 # harvest registers
         debug_max_profit = 0
         category = building_maintenance
     }

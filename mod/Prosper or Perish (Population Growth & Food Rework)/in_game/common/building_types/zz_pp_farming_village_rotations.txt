@@ -8,6 +8,7 @@ pop_type = peasants
 employment_size = 7
 price = pp_farming_village_rotations_price
 category = village_category
+custom_tags = { pp_food_security_priority pp_staple_food_priority }
 icon = farming_village_rotations
 rural_settlement = yes
 town = yes

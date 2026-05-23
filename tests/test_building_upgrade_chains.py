@@ -140,7 +140,7 @@ EXPECTED_CHAINS = {
     ],
     "iron_mine": [
         ("iron_mine", None),
-        ("iron_mine_improved", "efficient_mining"),
+        ("iron_mine_improved", "rgo_size_advance_discovery"),
         ("iron_mine_deep", "slitting_mills"),
     ],
     "bog_iron_smelter": [
@@ -178,6 +178,15 @@ GAME_START_DIRECT_RGO_BUILDINGS = {
     "saltpeter_beds",
     "tin_streamworks",
 }
+GAME_START_CAPACITY_BUILDING_GATES = {
+    "fiber_crops_farm": "farm",
+    "fishing_village": "fish",
+    "forest_village": "forest",
+    "horse_breeders": "farm",
+    "lumber_mill": "forest",
+    "ocean_fishery": "fish",
+}
+GAME_START_DISABLED_CAPACITY_STARTUP_BUILDINGS = {"farming_village", "fruit_orchard", "sheep_farms"}
 RAW_MATERIAL_BASE_PRODUCERS = {
     "horse_breeders": ("horses", "pp_horse_breeders_base_horses"),
     "sand_pit": ("sand", "pp_sand_pit_base_sand"),
@@ -239,8 +248,6 @@ NON_SLAVE_CROP_FARMS = {
 }
 RAW_PROCESSOR_EXCLUSIONS = {
     "perfumery": "incense",
-    "winery": "wine",
-    "winery_manufactory": "wine",
     "saltpeter_guild": "saltpeter",
     "saltpeter_workshop": "saltpeter",
     "putrefaction_works": "saltpeter",
@@ -390,6 +397,49 @@ def _base_production_method_input_offenders(path: Path) -> list[str]:
     return offenders
 
 
+def _matching_brace_index(text: str, opening_index: int) -> int:
+    depth = 0
+    for index in range(opening_index, len(text)):
+        character = text[index]
+        if character == "{":
+            depth += 1
+        elif character == "}":
+            depth -= 1
+            if depth == 0:
+                return index
+    raise AssertionError(f"unclosed script block starting at {opening_index}")
+
+
+def _iter_script_blocks(text: str, name: str) -> list[tuple[int, int, str]]:
+    blocks: list[tuple[int, int, str]] = []
+    pattern = re.compile(rf"(?m)^[ \t]*{re.escape(name)}\s*=\s*\{{")
+    position = 0
+    while match := pattern.search(text, position):
+        opening_index = text.find("{", match.start(), match.end())
+        closing_index = _matching_brace_index(text, opening_index)
+        blocks.append((match.start(), closing_index + 1, text[match.start() : closing_index + 1]))
+        position = match.end()
+    return blocks
+
+
+def _first_script_block(text: str, name: str) -> str:
+    blocks = _iter_script_blocks(text, name)
+    assert blocks, f"{name} block missing"
+    return blocks[0][2]
+
+
+def _enclosing_script_block(
+    blocks: list[tuple[int, int, str]], position: int, name: str
+) -> tuple[int, int, str]:
+    candidates = [block for block in blocks if block[0] <= position < block[1]]
+    assert candidates, f"{name} block missing around character {position}"
+    return min(candidates, key=lambda block: block[1] - block[0])
+
+
+def _script_line_number(text: str, position: int) -> int:
+    return text.count("\n", 0, position) + 1
+
+
 def test_metal_building_upgrade_chains_are_explicit_and_unlockable() -> None:
     manifest = yaml.safe_load(MANIFEST_PATH.read_text(encoding="utf-8"))
     enabled = set(manifest["enabled"])
@@ -514,7 +564,7 @@ def test_salt_production_families_are_explicit_and_unlockable() -> None:
     expected_chains = {
         "salt_mine": [
             ("salt_mine", None),
-            ("salt_mine_improved", "efficient_mining"),
+            ("salt_mine_improved", "rgo_size_advance_discovery"),
         ],
         "inland_saltworks": [
             ("inland_saltworks", None),
@@ -543,8 +593,12 @@ def test_salt_production_families_are_explicit_and_unlockable() -> None:
                 assert re.search(rf"^\s*obsolete\s*=\s*{re.escape(previous)}\s*$", body, flags=re.M)
                 assert raw["icon"]["output_dds"] == f"{key}.dds"
 
-    efficient_mining = _advance_block("efficient_mining", advances)
-    assert re.search(r"^\s*unlock_building\s*=\s*salt_mine_improved\s*$", efficient_mining, flags=re.M)
+    rgo_size_discovery = _advance_block("rgo_size_advance_discovery", advances)
+    assert re.search(
+        r"^\s*unlock_building\s*=\s*salt_mine_improved\s*$",
+        rgo_size_discovery,
+        flags=re.M,
+    )
 
     engineered = _load_blueprint("engineered_brine_saltworks")
     advancements = engineered.get("advancements")
@@ -928,6 +982,133 @@ def test_game_start_direct_rgo_construction_checks_buildability() -> None:
             offenders.append(f"{building} near line {index + 1}")
 
     assert not offenders
+
+
+def test_game_start_capacity_construction_checks_capacity_and_existing_buildings() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    game_start = _first_script_block(text, "pp_game_start_effect")
+    if_blocks = _iter_script_blocks(game_start, "if")
+    offenders: list[str] = []
+    seen: set[str] = set()
+
+    for start, _, construct_block in _iter_script_blocks(game_start, "construct_building"):
+        match = re.search(r"\bbuilding_type\s*=\s*building_type:([A-Za-z0-9_]+)\b", construct_block)
+        assert match is not None
+        building = match.group(1)
+        capacity = GAME_START_CAPACITY_BUILDING_GATES.get(building)
+        if capacity is None:
+            continue
+
+        seen.add(building)
+        _, _, if_block = _enclosing_script_block(if_blocks, start, "if")
+        limit_block = _first_script_block(if_block, "limit")
+        line = _script_line_number(game_start, start)
+        checks = {
+            "can_build_building": rf"\bcan_build_building\s*=\s*building_type:{re.escape(building)}\b",
+            "capacity": rf"\b{re.escape(capacity)}_capacity_available\s*>\s*0\b",
+            "not existing": rf"NOT\s*=\s*\{{\s*has_building\s*=\s*building_type:{re.escape(building)}\s*\}}",
+        }
+        for name, pattern in checks.items():
+            if not re.search(pattern, limit_block, flags=re.S):
+                offenders.append(f"{building} line {line}: missing {name}")
+
+    assert seen == set(GAME_START_CAPACITY_BUILDING_GATES)
+    assert not offenders
+
+
+def test_game_start_capacity_levelups_are_single_guarded_steps() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    game_start = _first_script_block(text, "pp_game_start_effect")
+    if_blocks = _iter_script_blocks(game_start, "if")
+    offenders: list[str] = []
+    seen: set[str] = set()
+
+    for start, _, action_block in _iter_script_blocks(game_start, "change_building_level_in_location"):
+        match = re.search(r"\bbuilding\s*=\s*building_type:([A-Za-z0-9_]+)\b", action_block)
+        assert match is not None
+        building = match.group(1)
+        capacity = GAME_START_CAPACITY_BUILDING_GATES.get(building)
+        if capacity is None:
+            continue
+
+        _, _, if_block = _enclosing_script_block(if_blocks, start, "if")
+        limit_block = _first_script_block(if_block, "limit")
+        if "value < 2" not in limit_block:
+            continue
+
+        seen.add(building)
+        line = _script_line_number(game_start, start)
+        checks = {
+            "can_build_building": rf"\bcan_build_building\s*=\s*building_type:{re.escape(building)}\b",
+            "capacity": rf"\b{re.escape(capacity)}_capacity_available\s*>\s*0\b",
+            "single step": r"\bvalue\s*=\s*1\b",
+        }
+        for name, pattern in checks.items():
+            search_space = action_block if name == "single step" else limit_block
+            if not re.search(pattern, search_space, flags=re.S):
+                offenders.append(f"{building} line {line}: missing {name}")
+        if re.search(r"\bvalue\s*=\s*\{", action_block):
+            offenders.append(f"{building} line {line}: computes a multi-level jump")
+
+    assert seen
+    assert not offenders
+
+
+def test_game_start_does_not_add_farming_village_or_sheep_farm_levels() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    game_start = _first_script_block(text, "pp_game_start_effect")
+    offenders: list[str] = []
+
+    for start, _, construct_block in _iter_script_blocks(game_start, "construct_building"):
+        match = re.search(r"\bbuilding_type\s*=\s*building_type:([A-Za-z0-9_]+)\b", construct_block)
+        if match is None or match.group(1) not in GAME_START_DISABLED_CAPACITY_STARTUP_BUILDINGS:
+            continue
+        offenders.append(f"{match.group(1)} construct near line {_script_line_number(game_start, start)}")
+
+    for start, _, action_block in _iter_script_blocks(game_start, "change_building_level_in_location"):
+        match = re.search(r"\bbuilding\s*=\s*building_type:([A-Za-z0-9_]+)\b", action_block)
+        if match is None or match.group(1) not in GAME_START_DISABLED_CAPACITY_STARTUP_BUILDINGS:
+            continue
+        offenders.append(f"{match.group(1)} level-up near line {_script_line_number(game_start, start)}")
+
+    assert not offenders
+
+
+def test_game_start_invalid_building_cleanup_matches_current_potentials() -> None:
+    text = GAME_START_PATH.read_text(encoding="utf-8-sig")
+    on_game_start = _first_script_block(text, "on_game_start")
+    assert on_game_start.index("pp_remove_invalid_fiber_and_stud_farms") < on_game_start.index(
+        "pp_game_start_effect"
+    )
+
+    fiber_and_stud_cleanup = _first_script_block(text, "pp_remove_invalid_fiber_and_stud_farms")
+    assert "building_type:fiber_crops_farm" in fiber_and_stud_cleanup
+    assert "pp_fiber_crops_farm_location_potential = yes" in fiber_and_stud_cleanup
+    assert "building_type:horse_breeders" in fiber_and_stud_cleanup
+    assert "pp_horse_breeders_location_potential = yes" in fiber_and_stud_cleanup
+    assert "can_build_building" not in fiber_and_stud_cleanup
+
+    cleanup = _first_script_block(text, "pp_remove_invalid_buildings")
+
+    assert "building_type:granary" not in cleanup
+
+    cleanup_ifs = _iter_script_blocks(cleanup, "if")
+    fruit_orchard_block = next(
+        block
+        for _, _, block in cleanup_ifs
+        if "building_type:fruit_orchard" in block and "change_building_level_in_location" in block
+    )
+    fruit_orchard_limit = _first_script_block(fruit_orchard_block, "limit")
+    assert "pp_orchard_friendly_location > 0" in fruit_orchard_limit
+    assert "pp_vanilla_start_fruit_orchard_location = yes" in fruit_orchard_limit
+
+    fishing_village_block = next(
+        block
+        for _, _, block in cleanup_ifs
+        if "building_type:fishing_village" in block and "change_building_level_in_location" in block
+    )
+    fishing_village_limit = _first_script_block(fishing_village_block, "limit")
+    assert "is_coastal = yes" in fishing_village_limit
 
 
 def test_building_production_method_quantities_use_at_most_three_decimals() -> None:

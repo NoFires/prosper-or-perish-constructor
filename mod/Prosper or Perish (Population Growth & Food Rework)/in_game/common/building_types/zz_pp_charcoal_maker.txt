@@ -12,6 +12,7 @@ REPLACE:charcoal_maker = {
 	rural_settlement = yes
 	town = yes
 	city = yes
+	megalopolis = yes
 	
 	location_potential = {
 		NOT = {

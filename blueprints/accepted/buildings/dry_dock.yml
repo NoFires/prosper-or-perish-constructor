@@ -26,6 +26,7 @@ building:
     	
     	town = yes
     	city = yes
+    	megalopolis = yes
     	
     	
     	build_time = medium_port_building_time

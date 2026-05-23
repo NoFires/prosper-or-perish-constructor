@@ -42,6 +42,9 @@ uv run --project /mnt/c/Development/ProsperOrPerishConstructor ppc --repo /mnt/c
 - `uv run ppc blueprint good <good>`: compare methods that produce one trade good.
 - `uv run ppc blueprint build`: build accepted blueprints into the constructor mod copy.
 - `uv run ppc build`: same build workflow as `blueprint build`.
+- `uv run ppc setup-corrections`: dry-run pre-tick setup building corrections from the current EU5 `error.log`.
+- `uv run ppc setup-corrections --write`: regenerate the static setup correction override files.
+- `uv run ppc setup-corrections --disable`: remove the generated setup correction files so a fresh game launch can prove which corrections are still needed.
 - `uv run ppc sync --yes`: guarded live mirror into the configured Paradox mod folder.
 
 ## Safety Rules
@@ -75,6 +78,7 @@ When reporting results, mention the exact `ppc` command used and summarize the i
 - Treat localization as player-facing in-game text, not developer notes or a restatement of requested implementation details.
 - Do not hardcode balance values in localization when a modifier, scripted value, building tooltip, or generated modifier effect can show the current value.
 - Write localization around what the player sees, what it means, and where to inspect the effects; let modifiers carry exact changing numbers.
+- When a linked modifier or concept tooltip already displays food-storage modifier effects, do not restate those values in Europedia prose.
 - Use plain text in situation panes and generated static-modifier descriptions unless that target UI is verified to support inline concept links; unsupported formatter tags spam `error.log`.
 - Use mod-owned plain localization keys for situation map legends rather than inherited or generic `LEGEND_KEY_*` keys; the legend UI is sensitive to formatter syntax.
 - In GUI files, do not prefix `default_format` style names with `#`; use the raw style key such as `yellow_titles` so the text formatter does not parse it as an inline tag.

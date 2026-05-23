@@ -37,6 +37,7 @@ pp_farm_base_capacity_value = {
 				raw_material = goods:medicaments
 				raw_material = goods:tea
 				raw_material = goods:wine
+				raw_material = goods:beeswax
 			}
 		}
 		add = 4
@@ -59,6 +60,7 @@ pp_general_farmable_food_location = {
 				raw_material = goods:olives
 				raw_material = goods:fruit
 				raw_material = goods:wool
+				raw_material = goods:beeswax
 			}
 		}
 		add = 1

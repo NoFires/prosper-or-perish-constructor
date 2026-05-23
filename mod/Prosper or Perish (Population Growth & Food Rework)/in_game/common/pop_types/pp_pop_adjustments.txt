@@ -12,7 +12,7 @@ TRY_INJECT:laborers = {
 	pop_food_consumption = 1.75
 	upper = yes
 	pop_percentage_impact = {
-		local_monthly_development = 0.007
+		local_monthly_development = 0.004
 	}
 	literacy_impact = {
 		local_max_rgo_size_modifier = 0.05

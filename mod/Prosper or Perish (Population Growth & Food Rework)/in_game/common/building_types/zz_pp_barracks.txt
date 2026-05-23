@@ -10,6 +10,7 @@ REPLACE:barracks = {
 	
 	town = yes
 	city = yes
+	megalopolis = yes
 	
 	obsolete = armory
 	

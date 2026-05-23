@@ -6,6 +6,7 @@ victualling_yard = {
     employment_size = 4.0
 	price = pp_victualling_yard_price
 	category = consumer_goods_category
+	custom_tags = { pp_food_security_priority pp_direct_food_priority }
 	icon = victualling_yard
 	obsolete = cookery
 	rural_settlement = yes

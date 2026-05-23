@@ -22,9 +22,10 @@ building:
   body: |2-
         is_foreign = no
         pop_type = peasants
-        max_levels = farm_max_level
+        max_levels = fruit_orchard_max_level
         employment_size = 5
         category = rgo_building_category
+        custom_tags = { pp_food_security_priority pp_staple_food_priority }
         rural_settlement = yes
         town = yes
         city = yes
@@ -32,7 +33,10 @@ building:
         forbidden_for_estates = yes
         ai_forbid_shutdown = no
         location_potential = {
-            pp_orchard_friendly_location > 0
+            OR = {
+                pp_orchard_friendly_location > 0
+                pp_vanilla_start_fruit_orchard_location = yes
+            }
         }
 
         allow = {
@@ -51,8 +55,8 @@ building:
             }
             pp_fruit_orchard_maintenance = {
                 produced = fruit
-                output = 0.394
-                lumber = 0.25
+                output = 0.828
+                lumber = 0.525 # stakes, crates, pruning frames
                 debug_max_profit = 0
                 category = building_maintenance
             }

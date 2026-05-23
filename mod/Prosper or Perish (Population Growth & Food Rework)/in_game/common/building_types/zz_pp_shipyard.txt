@@ -15,6 +15,7 @@ REPLACE:shipyard = {
 	
 	town = yes
 	city = yes
+	megalopolis = yes
 	
 	
 	build_time = large_port_building_time
