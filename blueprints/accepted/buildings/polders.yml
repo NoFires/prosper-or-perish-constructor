@@ -4,10 +4,7 @@ building:
   key: polders
   mode: REPLACE #TODO: Is this OK?
   source: pp_building_adjustments.txt
-  production_method_slots:
-    - name: slot_0
-      methods:
-        - pp_polders_maintenance
+  production_method_slots: []
   possible_production_methods: []
   body: |2-
     	price = pp_polders_price
@@ -65,6 +62,4 @@ prices:
       {gold = 200}
 localization:
   entries:
-    polders_slot_0: Maintenance #TODO: Is this OK?
     pp_polders_price: Polders Price
-    pp_polders_maintenance: Polders Maintenance
