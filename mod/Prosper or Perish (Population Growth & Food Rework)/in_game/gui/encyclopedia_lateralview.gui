@@ -352,7 +352,7 @@
                             layoutpolicy_vertical = expanding
                             visible = "[GetVariableSystem.HasValue('pp_encyclopedia_active', 'yes')]"
 
-                            # Filter buttons — row 1 (target order 1-7)
+                            # Filter buttons — row 1 (target order 1-8)
                             hbox = {
                                 layoutpolicy_horizontal = expanding
                                 margin = { 10 3 }
@@ -390,6 +390,16 @@
 	                                }
 	                                button_regular = {
 	                                    layoutpolicy_horizontal = expanding
+	                                    raw_text = "Update 0.8.1"
+	                                    onclick = "[GetVariableSystem.Set('pp_filter', 'update_0_8_1')]"
+	                                    down = "[GetVariableSystem.HasValue('pp_filter', 'update_0_8_1')]"
+	                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+	                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+	                                    blockoverride "background" {}
+	                                }
+	                                button_regular = {
+	                                    layoutpolicy_horizontal = expanding
 	                                    raw_text = "Overview"
 	                                    onclick = "[GetVariableSystem.Set('pp_filter', 'overview')]"
                                     down = "[GetVariableSystem.HasValue('pp_filter', 'overview')]"
@@ -403,6 +413,16 @@
                                     raw_text = "Urbanisation"
                                     onclick = "[GetVariableSystem.Set('pp_filter', 'urbanization')]"
                                     down = "[GetVariableSystem.HasValue('pp_filter', 'urbanization')]"
+                                    action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
+                                    tooltipwidget = { BasicFunctionalTooltip = {} }
+
+                                    blockoverride "background" {}
+                                }
+                                button_regular = {
+                                    layoutpolicy_horizontal = expanding
+                                    raw_text = "Food in EU5"
+                                    onclick = "[GetVariableSystem.Set('pp_filter', 'food_in_eu5')]"
+                                    down = "[GetVariableSystem.HasValue('pp_filter', 'food_in_eu5')]"
                                     action_tooltip = { title = "ENCYCLOPEDIAGE_OPEN_PAGE" }
                                     tooltipwidget = { BasicFunctionalTooltip = {} }
 
@@ -430,7 +450,7 @@
                                 }
                             }
 
-                            # Filter buttons — row 2 (target order 8-14)
+                            # Filter buttons — row 2 (target order 10-18)
                             hbox = {
                                 layoutpolicy_horizontal = expanding
                                 margin = { 10 3 }
@@ -534,6 +554,42 @@
 
                                 blockoverride "scrollbox_content" {
                                     vbox = {
+
+	                                        # ---- Update 0.8.1 ----
+	                                        vbox = {
+	                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'update_0_8_1'))]"
+	                                            set_parent_size_to_minimum = yes
+	                                            margin = { 0 10 }
+	                                            vbox = {
+	                                                layoutpolicy_horizontal = expanding
+	                                                spacing = 10
+	                                                using = bg_paper_card
+	                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+	                                                max_width = 1450
+	                                                min_width = 1450
+	                                                icon = {
+	                                                    layoutpolicy_horizontal = expanding
+	                                                    using = button_main_tab_texture
+	                                                    frame = 4
+	                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+	                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+	                                                    hbox = {
+	                                                        margin = { 40 0 }
+	                                                        margin_top = 8
+	                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+	                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_update_0_8_1" }
+	                                                    }
+	                                                }
+	                                                TooltipListScrollArea = {
+	                                                    blockoverride "scrollarea_content" {
+	                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+	                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_update_0_8_1_desc" margin = { 40 10 } }
+	                                                        }
+	                                                    }
+	                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+	                                                }
+	                                            }
+	                                        }
 
 	                                        # ---- Update 0.8: Foundations ----
 	                                        vbox = {
@@ -672,6 +728,42 @@
                                                     blockoverride "scrollarea_content" {
                                                         vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
                                                             text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_urbanization_desc" margin = { 40 10 } }
+                                                        }
+                                                    }
+                                                    block "block_scrollarea" { maximumsize = { -1 800 } }
+                                                }
+                                            }
+                                        }
+
+                                        # ---- Food in EU5 ----
+                                        vbox = {
+                                            visible = "[Or(GetVariableSystem.HasValue('pp_filter', 'all'), GetVariableSystem.HasValue('pp_filter', 'food_in_eu5'))]"
+                                            set_parent_size_to_minimum = yes
+                                            margin = { 0 10 }
+                                            vbox = {
+                                                layoutpolicy_horizontal = expanding
+                                                spacing = 10
+                                                using = bg_paper_card
+                                                blockoverride "card_color" { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                max_width = 1450
+                                                min_width = 1450
+                                                icon = {
+                                                    layoutpolicy_horizontal = expanding
+                                                    using = button_main_tab_texture
+                                                    frame = 4
+                                                    modify_texture = { using = color_intense_bg_blue_texture blend_mode = multiply }
+                                                    modify_texture = { using = overlay_leather_texture blend_mode = overlay alpha = 0.2 }
+                                                    hbox = {
+                                                        margin = { 40 0 }
+                                                        margin_top = 8
+                                                        icon = { texture = "gfx/interface/icons/flat_icons/trade_market/food_stockpile.dds" size = { 45 45 } }
+                                                        text_single = { name = "title" using = layoutpolicy_expanding using = Font_Size_Medium fontsize = 18 autoresize = no default_format = "yellow_titles" text = "game_concept_pp_food_in_eu5" }
+                                                    }
+                                                }
+                                                TooltipListScrollArea = {
+                                                    blockoverride "scrollarea_content" {
+                                                        vbox = { set_parent_dimension_to_minimum = height layoutpolicy_horizontal = expanding
+                                                            text_multi = { name = "body" max_width = 1450 min_width = 1450 autoresize = yes text = "game_concept_pp_food_in_eu5_desc" margin = { 40 10 } }
                                                         }
                                                     }
                                                     block "block_scrollarea" { maximumsize = { -1 800 } }
