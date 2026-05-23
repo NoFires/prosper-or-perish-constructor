@@ -15,6 +15,7 @@ building:
       pop_type = laborers
       category = infrastructure_category
       employment_size = village_employment_size # 1000 laborers
+      build_time = infrastructure_build_time
       rural_settlement = yes
       town = yes
       city = yes
